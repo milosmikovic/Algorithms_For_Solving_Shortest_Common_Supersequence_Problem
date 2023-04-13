@@ -1,0 +1,58 @@
+Miskovic i Vlada u komisiji
+
+https://www.csc.kth.se/~viggo/wwwcompendium/node165.html
+
+https://arxiv.org/pdf/2210.09986.pdf
+https://www.ac.tuwien.ac.at/files/pub/mayerhofer-22.pdf
+
+https://digital.csic.es/bitstream/10261/282381/1/1-s2.0-S156849462200237X-main.pdf
+
+Shortest common superstring
+
+Metode:
+1. Pretraga sa odsecanjem (Branch and bound)
+-- ako si vec nasao dopustivo resenje duzine M i nalazis se na dubini drveta M onda nema smisla
+ici dalje u dubinu
+
+Ulaz: 
+a) azbuka, npr. {a, c, t, g}
+b) ulazne niske koje trebaju da budu pokrivene, npr.:
+actgag
+aggcta
+accgta
+
+jedno dopustivo resenje:
+acggctgtag
+
+
+2. BS -- beam search -- ukratko:
+BFS sa maksimalnom sirinom
+
+Beam size = 20
+
+0: {}
+1: a c t g
+2: aa ac at ag ca cc ct cg ta tc tt tg ga gc gt gg
+3: aaa aac ...  (4^3 = 64) --> aac ata acg agg ctg ccc ctg...
+4: aaca aact aacc aacg ataa ...
+
+Heuristika -- biram 20 od 64 prema nekoj heuristici
+
+Osmisliti naslov:
+
+Algoritmi za rešavanje problema najkraće zajedničke nadniske (nadsekvence)
+
+Algorithms_For_Solving_Shortest_Common_Supersequence_Problem
+
+
+
+
+Shortest Common Supersequence Problem:
+- ako imamo nisku S1 velicine n i nisku S2 velicine m, Shortest Common Supersequence je duzine n + m - len(LCSub(S1,S2)),
+gde je LCSub - Longest Common Subsequence  
+
+Primer : 
+S1 = “AGGTAB”, S2 = “GXTXAYB” 
+LCSub = “GTAB” 
+a
+
