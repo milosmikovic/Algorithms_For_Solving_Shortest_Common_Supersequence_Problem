@@ -1,2 +1,4 @@
 # Algorithms_For_Solving_Shortest_Common_Supersequence_Problem
 Algorithms for solving shortest common supersequence problem
+
+Milos Mikovic
