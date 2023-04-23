@@ -1,35 +1,74 @@
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <set>
 
 
-
+// the sequence that represents the solution to the problem and its size 
 std::string *shortestCommonSupersequence = nullptr;
 std::size_t shortestCommonSupersequenceLen = 0;
 
-int scsMaxDepth(std::set<std::string> &setOfStrings)
+// maximal and minimal depth to consider in algorithm
+std::size_t maxDepth = 0;
+std::size_t minDepth = 0;
+
+// we do not want to process a depth greater than the sum of the sizes of all input strings
+std::size_t scsMaxDepth(std::set<std::string> &setOfStrings)
 {
-    std::size_t maxDepth = 0;
+    std::size_t maximalDepth = 0;
+
     for(auto &s : setOfStrings)
     {
-        maxDepth += s.length();
+        maximalDepth += s.length();
     }
 
-    // we do not want to process a depth greater than the sum of the sizes of all input strings
-    return maxDepth;
+    return maximalDepth;
 }
 
+// we do not want to consider solutions that are smaller than the largest sequence in the set
+std::size_t scsMinDepth(std::set<std::string> &setOfStrings)
+{
+    std::size_t minimalDepth = 0;
+
+    for(auto &s : setOfStrings)
+    {
+        std::size_t curDepth = s.length();
+
+        if(curDepth > minimalDepth)
+        {
+            minimalDepth = curDepth;
+        }
+    }
+
+    return minimalDepth;
+}
+
+// tests whether the given sequence is a solution
 bool isCommonSupersequence(const std::string &scs, const std::set<std::string> &setOfStrings)
 {
+
+    // begin and end iterators of given solution
+    std::string::const_iterator scsTmpPos;
+    std::string::const_iterator scsEnd;
+
+    // begin and end iterators of current sequnce in set
+    std::string::const_iterator sTmpPos;
+    std::string::const_iterator sEnd;
+
     for(const std::string &s : setOfStrings)
     {
-        auto scsTmpPos = scs.cbegin();
-        auto scsEnd = scs.cend();
-        auto sTmpPos = s.cbegin();
-        auto sEnd = s.cend();
+        scsTmpPos = scs.cbegin();
+        scsEnd = scs.cend();
+
+        sTmpPos = s.cbegin();
+        sEnd = s.cend();
+
 
         while(sTmpPos != sEnd)
         {
+
+            // if we have reached the last character in the solution, it means that the current string
+            //  is not contained and the solution (scs) is not supersquence so we do not need to consider the other sequences in the set
             if(scsTmpPos == scsEnd)
             {
                 return false;
@@ -49,37 +88,22 @@ bool isCommonSupersequence(const std::string &scs, const std::set<std::string> &
     return true;
 }
 
-template <typename T>
-void printCollection(T &alphabet)
-{
-    std::cout << "Collection printing..." << std::endl;
-    auto end = alphabet.cend();
-    for(auto it = alphabet.cbegin(); it != end; ++it)
-    {
-        std::cout << *it << std::endl;
-    }
-}
-
-// std::pair<std::string,int> 
+// Shortest Common Supersequence Backtracking Algorithm
 void Shortest_Common_Supersequence(const std::vector<char> &alphabet, 
                                    const std::set<std::string> &setOfStrings,
-                                   const int maxDepth,
                                    const std::string &scs)
 {
 
     std::size_t scsLen = scs.length();
 
-    if(scsLen == (maxDepth + 1))
+    // we stop the search when we reach a depth greater than maxDepth or when we have already found a solution shorter than the current length 
+    // of scsLen
+    if(scsLen >= (maxDepth + 1) || shortestCommonSupersequenceLen <= scsLen)
     {
         return;
     }
 
-    if(shortestCommonSupersequenceLen <= scsLen)
-    {
-        return;
-    }
-
-    if(isCommonSupersequence(scs,setOfStrings))
+    if(scsLen >= minDepth && isCommonSupersequence(scs,setOfStrings))
     {
         // we know that the size of scsLen is certainly smaller than shortestCommonSupersequenceLen, so we don't need to check
         shortestCommonSupersequenceLen = scsLen;
@@ -91,9 +115,9 @@ void Shortest_Common_Supersequence(const std::vector<char> &alphabet,
     }
 
 
-    for(auto letter : alphabet)
+    for(auto &letter : alphabet)
     {
-        Shortest_Common_Supersequence(alphabet, setOfStrings, maxDepth, scs + letter);
+        Shortest_Common_Supersequence(alphabet, setOfStrings, scs + letter);
     }
 
     
@@ -102,43 +126,48 @@ void Shortest_Common_Supersequence(const std::vector<char> &alphabet,
 int main(int argc, char **argv)
 {
 
+    // initialize result sequence to the empty string at the beginning
     shortestCommonSupersequence = new std::string("");
 
     std::vector<char> alphabet;
     std::set<std::string> setOfStrings;
 
-    std::cout << "Enter the letters of the alphabet: " << std::endl;
-    char inputC;
-    while((inputC = std::getchar()) != '\n')
+    std::ifstream testInstance("TestInstances.txt");
+
+    std::string inputAlphabet;
+    std::getline(testInstance, inputAlphabet);
+    std::cout << "Alphabet : ";
+    for(auto &c : inputAlphabet)
     {
-        alphabet.push_back(inputC);
+        alphabet.emplace_back(c);
+        std::cout << c << " ";
     }
-    printCollection(alphabet);
+    std::cout << std::endl;
 
-
-    std::cout << "Enter the set of strings: " << std::endl;
     std::string inputS;
-    while(std::getline(std::cin,inputS))
+    std::cout << "Sequences:" << std::endl;
+    while(std::getline(testInstance, inputS))
     {
         setOfStrings.emplace(inputS);
+        std::cout << inputS << std::endl;
     }
-    printCollection(setOfStrings);
 
 
     std::cout << "#####Shortest_Common_Supersequence#####" << std::endl;
 
-    int maxDepth = scsMaxDepth(setOfStrings);
+    maxDepth = scsMaxDepth(setOfStrings);
+    minDepth = scsMinDepth(setOfStrings);
 
     // set shortest common supersequence length to the sum of the lengths of all strings
     shortestCommonSupersequenceLen = maxDepth;
 
-    Shortest_Common_Supersequence(alphabet, setOfStrings, maxDepth, std::string(""));
+    Shortest_Common_Supersequence(alphabet, setOfStrings, std::string(""));
 
 
     std::cout << "#####Shortest_Common_Supersequence Solution#####" << std::endl;
 
-    std::cout << "SCS:" + *shortestCommonSupersequence << std::endl;
-    std::cout << "Length:" + shortestCommonSupersequenceLen << std::endl;
+    std::cout << "SCS : " + *shortestCommonSupersequence << std::endl;
+    std::cout << "Length : " << shortestCommonSupersequenceLen << std::endl;
 
     if(shortestCommonSupersequence)
     {
