@@ -1,5 +1,7 @@
 <h1 align="center">Algorithms for solving Shortest common supersequence problem</h1>
 
+## About
+
 INSTANCE: Finite alphabet $\Sigma$, finite set R of strings from $(\Sigma)^*$       
 
 SOLUTION: A string $w\in\Sigma^*$ such that each string $x\in R$ is a subsequence of w, i.e. one can get x by taking away letters from w
