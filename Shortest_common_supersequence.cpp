@@ -153,7 +153,7 @@ int main(int argc, char **argv)
     }
 
 
-    std::cout << "#####Shortest_Common_Supersequence#####" << std::endl;
+    std::cout << "-List of solutions-" << std::endl;
 
     maxDepth = scsMaxDepth(setOfStrings);
     minDepth = scsMinDepth(setOfStrings);
@@ -164,7 +164,7 @@ int main(int argc, char **argv)
     Shortest_Common_Supersequence(alphabet, setOfStrings, std::string(""));
 
 
-    std::cout << "#####Shortest_Common_Supersequence Solution#####" << std::endl;
+    std::cout << "-Optimal solution-" << std::endl;
 
     std::cout << "SCS : " + *shortestCommonSupersequence << std::endl;
     std::cout << "Length : " << shortestCommonSupersequenceLen << std::endl;

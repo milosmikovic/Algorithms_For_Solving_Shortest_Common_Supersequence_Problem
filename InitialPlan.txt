@@ -7,6 +7,12 @@ https://www.ac.tuwien.ac.at/files/pub/mayerhofer-22.pdf
 
 https://digital.csic.es/bitstream/10261/282381/1/1-s2.0-S156849462200237X-main.pdf
 
+
+https://www.sciencedirect.com/science/article/pii/S0952197611001497
+https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-7-S4-S12
+https://upcommons.upc.edu/bitstream/handle/2117/87415/R06-36.pdf?sequence=1&isAllowed=y
+https://www.sciencedirect.com/science/article/pii/030439758190075X
+
 Shortest common superstring
 
 Metode:
