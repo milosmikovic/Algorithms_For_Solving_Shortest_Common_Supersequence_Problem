@@ -10,8 +10,8 @@ MEASURE: Length of the supersequence, i.e., $\vert w\vert$
 
 ## Steps to compile and run the program
 1) Run "make" command in terminal to compile source code
-2) The TestInstances.txt file contains the test instances that the algorithm will use, the first line in the file represents the alphabet (letters of the alphabet must be listed consecutively), and each subsequent line represents one sequence in the set
-3) Run ./Shortest_common_supersequence to run program
+2) The TestInstances (1,2,3...) files contains the test instances that the algorithm will use, the first line in the file represents the alphabet (letters of the alphabet must be listed consecutively), and each subsequent line represents one sequence in the set
+3) Run ./SCS to run program
 4) Run "make clean" to clean directory 
 
 ## Authors
