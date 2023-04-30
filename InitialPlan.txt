@@ -57,9 +57,47 @@ Shortest Common Supersequence Problem:
 - ako imamo nisku S1 velicine n i nisku S2 velicine m, Shortest Common Supersequence je duzine n + m - len(LCSub(S1,S2)),
 gde je LCSub - Longest Common Subsequence  
 
-Primer : 
-S1 = “AGGTAB”, S2 = “GXTXAYB” 
-LCSub = “GTAB” 
-a
+
+# MAX DUBINA BRUTE FORCE PRETRAGE
+
+Azbuka (S - oznaka za azbuku) : a, b, c
+Duzina najduze reci u skupu (L - oznaka duzine najduze reci) : 4  za ovaj skup npr: Skup = {abc,abcc,a,b}
+
+1. resenje:
+
+Sekvenca koja sigurno sadrzi sve reci iz skupa L:
+aaaabbbbcccc
+aaaaccccbbbb
+bbbbaaaacccc
+bbbbccccaaaa
+ccccaaaabbbb
+ccccbbbbaaaa
 
 
+Formula za izracunavanje duzine takve sekvence:
+3! * (4*3)  = 72 - za primer gore, poprilicno duboko, ali garantuje optimalnu dubinu
+|S|! * (L*|S|) - generalno (onda se ovo moze uzeti kao sigurno max dubina do koje ide pretraga)
+
+Onda formula |S|! * (L*|S|) sigurno garantuje da ce se na ovoj ili manjoj dubini naci optimalno resenje.
+
+2. resenje:
+
+Max duzina reci je npr. 4 
+
+aaaabbbbcccc aaaabbbbcccc aaaabbbbcccc aaaabbbbcccc
+
+L * (L * |S|) = 4 * (4 * 3) = 48
+
+3. resenje:
+
+aaaabbbbcccc aaabbbccc aabbcc abc
+
+3*4 + 3*3 + 3*2 + 3*1 = 3 * (4 + 3 + 2 + 1) = 3 * 10 = 30
+|S| * sum(from 1 to L) 
+
+4. resenje (najbolje)
+
+abc abc abc abc 
+
+4 * 3 = 12
+L * |S| 
