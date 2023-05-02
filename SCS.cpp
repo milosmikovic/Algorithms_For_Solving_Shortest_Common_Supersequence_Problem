@@ -2,40 +2,56 @@
 #include <fstream>
 #include <vector>
 #include <set>
+#include <algorithm>
 #include <bits/stdc++.h>
+
 
 class SCS
 {
     public: 
-        SCS()
+        SCS(const std::string &testInstance)
         {
+            inPath += testInstance + ".txt";
+            outPath += testInstance + ".txt";
             loadResources();
+        }
+
+        ~SCS()
+        {
+            fResults.close();
+            fInput.close();
         }
 
         void SCS_BFBT_Algorithm()
         {
+            fResults << "------------------" << std::endl;
+            fResults << "SCS_BFBT_Algorithm" << std::endl;
             time_t start, end;
             time(&start);
 
             setScsMinDepth();
             setScsMaxDepth();
+
             // +1 to cover trivial soultions
             shortestCommonSupersequenceLen = maxDepth + 1;
 
-            std::cout << "---List of solutions---" << std::endl;
+            fResults << "---List of solutions---" << std::endl;
             Shortest_Common_SupersequenceBFBT(std::string(""));
 
 
-            std::cout << "-Optimal solution-" << std::endl;
-            std::cout << "SCS : " + shortestCommonSupersequence << std::endl;
-            std::cout << "SCS length : " << shortestCommonSupersequenceLen << std::endl;
+            fResults << "-Optimal solution-" << std::endl;
+            fResults << "SCS : " + shortestCommonSupersequence << std::endl;
+            fResults << "SCS length : " << shortestCommonSupersequenceLen << std::endl;
 
             time(&end);
             measureTime(start, end);
+            fResults << "------------------" << std::endl;
         }
 
         void SCS_BS_Algorithm()
         {
+            fResults << "------------------" << std::endl;
+            fResults << "SCS_BS_Algorithm" << std::endl;
             time_t start, end;
             time(&start);
 
@@ -43,11 +59,20 @@ class SCS
             setScsMaxDepth();
             shortestCommonSupersequenceLen = maxDepth;
 
-            std::cout << "---List of solutions---" << std::endl;
             Shortest_Common_SupersequenceBS();
+
+            fResults << "-Beam Search solution-" << std::endl;
+            fResults << "SCS : " + shortestCommonSupersequence << std::endl;
+            fResults << "SCS length : " << shortestCommonSupersequenceLen << std::endl;
 
             time(&end);
             measureTime(start, end);
+            fResults << "------------------" << std::endl;
+        }
+
+        static bool sortrev(const std::pair<std::size_t, std::string> &a,  const std::pair<std::size_t, std::string> &b) 
+        { 
+            return (a.first > b.first); 
         }
 
     private: 
@@ -55,32 +80,35 @@ class SCS
         void measureTime(std::time_t &start, std::time_t &end)
         {
             double time_taken = double(end - start);
-            std::cout << "Time taken by program is : " << std::fixed
+            fResults << "Time taken by program is : " << std::fixed
                 << time_taken << std::setprecision(5);
-            std::cout << " sec " << std::endl;
+            fResults << " sec " << std::endl;
         }
 
         void loadResources()
         {
-            std::ifstream testInstance(fPath);
+            fInput = std::ifstream(inPath);
+            fResults = std::ofstream(outPath);
 
             std::string inputAlphabet;
-            std::getline(testInstance, inputAlphabet);
-            std::cout << "Alphabet : ";
+            std::getline(fInput, inputAlphabet);
+            fResults << "Alphabet : ";
             for(auto &c : inputAlphabet)
             {
                 alphabet.emplace_back(c);
-                std::cout << c << " ";
+                fResults << c << " ";
             }
-            std::cout << std::endl;
+            fResults << std::endl;
 
             std::string inputS;
-            std::cout << "Sequences:" << std::endl;
-            while(std::getline(testInstance, inputS))
+            fResults << "Sequences:" << std::endl;
+            while(std::getline(fInput, inputS))
             {
                 setOfStrings.emplace(inputS);
-                std::cout << inputS << std::endl;
+                fResults << inputS << std::endl;
             }
+
+            setOfStringsSize = setOfStrings.size();
         }
 
         void setScsMinDepth()
@@ -100,7 +128,7 @@ class SCS
                 }
             }
 
-            std::cout << "MIN DEPTH: " << minDepth << std::endl;
+            fResults << "MIN DEPTH: " << minDepth << std::endl;
 
         }
 
@@ -130,7 +158,7 @@ class SCS
 
             maxDepth = maxSequenceSize * alphabet.size();
 
-            std::cout << "MAX DEPTH: " << maxDepth << std::endl;
+            fResults << "MAX DEPTH: " << maxDepth << std::endl;
 
         }
 
@@ -138,41 +166,11 @@ class SCS
         bool isCommonSupersequence(const std::string &scs)
         {
 
-            // begin and end iterators of given solution
-            std::string::const_iterator scsTmpPos;
-            std::string::const_iterator scsEnd;
-
-            // begin and end iterators of current sequnce in set
-            std::string::const_iterator sTmpPos;
-            std::string::const_iterator sEnd;
-
             for(const std::string &s : setOfStrings)
             {
-                scsTmpPos = scs.cbegin();
-                scsEnd = scs.cend();
-
-                sTmpPos = s.cbegin();
-                sEnd = s.cend();
-
-
-                while(sTmpPos != sEnd)
+                if(!isSubsequence(s,scs))
                 {
-
-                    // if we have reached the last character in the solution, it means that the current string
-                    //  is not contained and the solution (scs) is not supersquence so we do not need to consider the other sequences in the set
-                    if(scsTmpPos == scsEnd)
-                    {
-                        return false;
-                    }
-                    else if(*sTmpPos == *scsTmpPos)
-                    {
-                        ++sTmpPos;
-                        ++scsTmpPos;
-                    }
-                    else
-                    {
-                        ++scsTmpPos;
-                    }
+                    return false;
                 }
             }
 
@@ -195,10 +193,30 @@ class SCS
             if(scsLen >= minDepth && isCommonSupersequence(scs))
             {
                 // we know that the size of scsLen is certainly smaller than shortestCommonSupersequenceLen, so we don't need to check
-                shortestCommonSupersequenceLen = scsLen;
-                shortestCommonSupersequence = scs;
+                              
+                // optimization is possible if the sequence is of the form aaaR if R is the solution then we can 
+                // remove the a's from the beginning...
+                std::string::const_iterator scsPos = scs.cbegin();
+                std::string::const_iterator scsEnd = scs.cend();
+                bool isStillSupersequence = true;
+                while(isStillSupersequence)
+                {
+                    if(isCommonSupersequence(std::string(scsPos + 1, scsEnd)))
+                    {
+                        ++scsPos;
+                    }
+                    else
+                    {
+                        isStillSupersequence = false;
+                    }
+                }
+
                 
-                std::cout << scs << std::endl;
+                shortestCommonSupersequence = std::string(scsPos, scsEnd);
+                shortestCommonSupersequenceLen = shortestCommonSupersequence.length();
+                
+                fResults << shortestCommonSupersequence << std::endl;
+ 
 
                 return;
             }
@@ -214,11 +232,25 @@ class SCS
 
         void Shortest_Common_SupersequenceBS()
         {
-            std::vector<std::string> *sls1 = new std::vector<std::string>({"a","b","c"});
+
+            std::vector<std::string> *sls1 = new std::vector<std::string>();
+            for(auto &c : alphabet)
+            {
+                sls1->emplace_back(1,c);
+            }
+
             std::vector<std::string> *sls2 = new std::vector<std::string>();
 
-            for(int i = 2;i < 4;++i)
+            bool isSuperSequenceFound = false;
+
+            // set depth to 1 because we start from level 1 of the search tree
+            std::size_t depth = 1;
+
+            while(!isSuperSequenceFound)
             {
+
+                ++depth;
+
                 for(auto &s : *sls1)
                 {
                     for(auto &c : alphabet)
@@ -226,15 +258,16 @@ class SCS
                         sls2->emplace_back(s + c);
                     }
                 }
-                
-                
 
-                std::cout << "####" << std::endl;
-                for(auto &s : *sls2)
+                // 1. odaberem beta sekvenci, za svaku proverim da li je supersequence, ako ne nadjem idem dalje ako nadjem stajem
+                // optimizacija da ne vracam vector stringova pa da za svaki proveravam da li je supersequence nego
+                // da posaljem vector parova pa ako je vrednost nekog para == broju sekvenci u setOfString onda imam resenje...
+
+                // start taking beta sequances when depth >= minDepth
+                if(depth >= minDepth)
                 {
-                    std::cout << s << std::endl;
+                    sls2 = takeBetaSequances(sls2, isSuperSequenceFound);
                 }
-                std::cout << "####" << std::endl;
 
                 sls1->clear();
                 std::vector<std::string> *tmpSls = sls1;
@@ -243,27 +276,98 @@ class SCS
             }
 
             delete sls1;
+            delete sls2;
         }
-
         
-        std::vector<std::string>* takeBetaSequances(std::vector<std::string> *sls)
+        std::vector<std::string>* takeBetaSequances(std::vector<std::string> *sls, bool &isSuperSequenceFound)
         {
+            std::vector<std::pair<std::size_t, std::string>> slsCnt;
             
+            for(auto &s : *sls)
+            {
+                slsCnt.emplace_back(std::pair<std::size_t, std::string>(countSubsequences(s), s));
+            }
+
+            // deleting sls because we dont need it anymore
+            delete sls;
+
+            std::sort(slsCnt.begin(),slsCnt.end(),sortrev);
+
+            fResults << "---SLS---" << std::endl;
+            for(auto &s : slsCnt)
+            {
+                fResults << s.first << " " << s.second << std::endl;
+            }
+
+
+            const std::pair<std::size_t, std::string> potentialSuperSequence = slsCnt[0];
+            if(potentialSuperSequence.first == setOfStringsSize)
+            {
+                isSuperSequenceFound = true;
+                shortestCommonSupersequence = potentialSuperSequence.second;
+                shortestCommonSupersequenceLen = potentialSuperSequence.second.length();
+            }
+
+            std::vector<std::string> *newSls = new std::vector<std::string>();
+            for(int i = 0;i < beamSize;++i)
+            {
+                newSls->emplace_back(slsCnt[i].second);
+            }
+
+            fResults << "---SLS_NEW---" << std::endl;
+            for(auto &s : *newSls)
+            {
+                fResults << s << std::endl;
+            }
+
+            return newSls;
+
         }
 
         // count how many subsequences scs have in setOfString
-        std::size_t countSubsequences(std::string &scs)
+        std::size_t countSubsequences(const std::string &scs)
         {
             std::size_t ct = 0;
+
             for(auto &s : setOfStrings)
             {
-                
+                if(isSubsequence(s,scs))
+                {
+                    ++ct;
+                }
             }
+
+            return ct;
+
         }
 
         // is s subsequence of scs
-        bool isSubsequence(std::string &s, std::string &scs)
+        bool isSubsequence(const std::string &s,const std::string &scs)
         {
+            std::string::const_iterator sPos = s.cbegin();
+            std::string::const_iterator sEnd = s.cend();
+
+            std::string::const_iterator scsPos = scs.cbegin();
+            std::string::const_iterator scsEnd = scs.cend();
+
+            while(sPos != sEnd)
+            {
+                if(scsPos == scsEnd)
+                {
+                    return false;
+                }
+                else if(*sPos == *scsPos)
+                {
+                    ++sPos;
+                    ++scsPos;
+                }
+                else
+                {
+                    ++scsPos;
+                }
+            }
+
+            return true;
 
         }
 
@@ -277,16 +381,29 @@ class SCS
 
         std::vector<char> alphabet;
         std::set<std::string> setOfStrings;
+        std::size_t setOfStringsSize;
 
-        const std::string fPath = "TestInstances3.txt";
-        
         const std::size_t beamSize = 5;
+
+        std::string inPath = "TestInstances";
+        std::string outPath = "Results";
+        std::ofstream fResults;
+        std::ifstream fInput;
+         
 
 };
 
 int main(int argc, char **argv)
 {
-    SCS alg;
+    
+    if(argc != 2)
+    {
+        std::cout << "Run: ./SCS N(number of test instance to load)" << std::endl;
+        return 0;
+    }
+
+    SCS alg(argv[1]);
+    alg.SCS_BFBT_Algorithm();
     alg.SCS_BS_Algorithm();
 
     return 0;
