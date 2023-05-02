@@ -7,4 +7,4 @@ SCS.o : SCS.cpp
 	$(CXX) $(CXXFLAGS) -c SCS.cpp
 
 clean:
-	rm -f *.o SCS
+	rm -f *.o SCS Results*.txt

@@ -1,8 +1,5 @@
 actg
-acgt
-gtgg
-ggca
-gcaa
-ttac
-ctta
-aacg
+acct
+cctt
+cgta
+ggct

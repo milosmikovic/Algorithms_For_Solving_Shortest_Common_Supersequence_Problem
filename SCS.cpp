@@ -291,6 +291,11 @@ class SCS
             // deleting sls because we dont need it anymore
             delete sls;
 
+            // shuffle elements before sorting to avoid same sort order every time, and avoid algorithm loop bug when most of 
+            // sequences have same count of subsequences ...
+            auto rng = std::default_random_engine();
+            std::shuffle(slsCnt.begin(), slsCnt.end(), rng);
+
             std::sort(slsCnt.begin(),slsCnt.end(),sortrev);
 
             fResults << "---SLS---" << std::endl;
