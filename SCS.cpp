@@ -404,12 +404,12 @@ int main(int argc, char **argv)
     if(argc != 2)
     {
         std::cout << "Run: ./SCS N(number of test instance to load)" << std::endl;
-        return 0;
+        return EXIT_SUCCESS;
     }
 
     SCS alg(argv[1]);
     alg.SCS_BFBT_Algorithm();
     alg.SCS_BS_Algorithm();
 
-    return 0;
+    return EXIT_SUCCESS;
 }
