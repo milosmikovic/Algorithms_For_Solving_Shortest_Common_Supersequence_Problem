@@ -34,3 +34,7 @@
 # TestFiles
 TestInstances*.txt
 Results*.txt
+
+#Out files
+SCS
+testInstanceGenerator
