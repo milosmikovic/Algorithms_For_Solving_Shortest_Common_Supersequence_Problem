@@ -3,7 +3,10 @@
 #include <fstream>
 #include <filesystem>
 #include <regex>
-#include <time.h>
+#include <random>
+
+
+const double removeProb = 0.2;
 
 std::string generateFName()
 {
@@ -43,65 +46,135 @@ std::string generateFName()
     }
 }
 
-void generateTestInstances(const std::size_t &n, const std::size_t &m)
+void generateTestInstances(const std::size_t &t)
 {
 
     std::string fName = generateFName();
     std::ofstream os(fName);
 
-    std::cout << "Insert alphabet:";
-    char c;
-    std::vector<char> alphabet;
-
-    while(std::cin >> c)
+    if(t == 1)
     {
-        alphabet.emplace_back(c);
-        os << c;
-    }
-    os << std::endl;
+        std::size_t n,m;
+        std::cout << "N(length of sequences) M(number of sequences):";
+        std::cin >> n >> m;
+        
+        std::cout << "Insert alphabet:";
+        char c;
+        std::vector<char> alphabet;
 
-    std::vector<std::string> sqs;
-    std::size_t cnt = 0;
-
-    while(cnt < m)
-    {
-        std::string sequence("");
-        for(int j = 0;j < n;++j)
+        while(std::cin >> c)
         {
-            std::size_t rElem = std::rand() % alphabet.size();
-            char c = alphabet[rElem];
-            sequence += std::string(1,c);
+            alphabet.emplace_back(c);
+            os << c;
         }
+        os << std::endl;
 
-        // if we need to have all different sequences in set of sequences
-        if(std::find(sqs.begin(),sqs.end(),sequence) == sqs.end())
+    
+        std::vector<std::string> sqs;
+        std::size_t cnt = 0;
+
+        std::random_device rd;
+        std::mt19937 generator(rd());
+        std::uniform_int_distribution<int> distribution(0, alphabet.size() - 1);
+
+        while(cnt < m)
         {
-            os << sequence;
-            sqs.emplace_back(sequence);
+            std::string sequence("");
+            for(int j = 0;j < n;++j)
+            {
+                int rElem = distribution(generator);
+                char c = alphabet[rElem];
+                sequence += std::string(1,c);
+            }
+
+            // if we need to have all different sequences in set of sequences
+            if(std::find(sqs.begin(),sqs.end(),sequence) == sqs.end())
+            {
+                os << sequence;
+                sqs.emplace_back(sequence);
+                ++cnt;
+                if(cnt != m)
+                {
+                    os << std::endl;
+                }
+            }
+        }
+    }
+    else if(t == 2)
+    {
+        std::cout << "Insert path to file with solution:";
+        std::string path;
+        std::getline(std::cin,path);
+        std::cout << "M(number of sequences):";
+        std::size_t numSeq;
+        std::cin >> numSeq;
+
+        std::cout << "Insert alphabet:";
+        char c;
+        std::vector<char> alphabet;
+
+        while(std::cin >> c)
+        {
+            alphabet.emplace_back(c);
+            os << c;
+        }
+        os << std::endl;
+
+        std::string solution("");
+        std::ifstream solutionStream(path);
+        std::getline(solutionStream,solution);
+
+        std::random_device rd;
+        std::mt19937 generator(rd());
+        std::uniform_real_distribution<double> distribution(0.0, 1.0);
+        double randomNum;
+        std::size_t cnt = 0;
+        while(cnt < numSeq)
+        {
+            std::string sls("");
+
+            for(auto &c : solution)
+            {
+                randomNum = distribution(generator);
+                if(randomNum > removeProb)
+                {
+                    sls += c;
+                }
+            }
+
+            os << sls;
             ++cnt;
-            if(cnt != m)
+            if(cnt != numSeq)
             {
                 os << std::endl;
             }
         }
+
+    }
+    else
+    {
+        std::cout << "Test instance generator error!" << std::endl;
     }
 }
 
 int main(int argc, char **argv)
 {
 
-    std::srand(std::time(NULL));
-
-    if(argc != 3)
+    if(argc != 2)
     {
-        std::cout << "Run: ./testInstanceGenerator N(length of sequences) M(number of sequences)" << std::endl;
+        std::cout << "Run: ./testInstanceGenerator T(gen mode 1 or 2)" << std::endl;
         return EXIT_SUCCESS;
     }
 
-    std::size_t n = std::atoi(argv[1]);
-    std::size_t m = std::atoi(argv[2]);
+    std::size_t t = std::atoi(argv[1]);
 
-    generateTestInstances(n, m);
+    if(t != 1 && t != 2)
+    {
+        std::cout << "Run: ./testInstanceGenerator T(gen mode 1 or 2)" << std::endl;
+        return EXIT_SUCCESS;
+    }
+
+    generateTestInstances(t);
 
     return EXIT_SUCCESS;
 }

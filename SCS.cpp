@@ -33,6 +33,9 @@ class SCS
             setScsMinDepth();
             setScsMaxDepth();
 
+            fResults << "MIN DEPTH: " << minDepth << std::endl;
+            fResults << "MAX DEPTH: " << maxDepth << std::endl;
+
             // +1 to cover trivial soultions
             shortestCommonSupersequenceLen = maxDepth + 1;
 
@@ -59,37 +62,15 @@ class SCS
 
             setScsMinDepth();
             setScsMaxDepth();
+
+            std::size_t minimalDepth = (minDepth < bsGreedyMinDepth) ? minDepth : bsGreedyMinDepth;
+            fResults << "MIN DEPTH: " << minimalDepth << std::endl;
+
             shortestCommonSupersequenceLen = maxDepth;
 
             Shortest_Common_SupersequenceBS();
 
             fResults << "-Beam Search solution-" << std::endl;
-            fResults << "SCS : " + shortestCommonSupersequence << std::endl;
-            fResults << "SCS length : " << shortestCommonSupersequenceLen << std::endl;
-
-            time(&end);
-            measureTime(start, end);
-            fResults << "------------------" << std::endl;
-        }
-
-        void WMMAlgorithm()
-        {
-            printAlphabetAndSequences();
-            fResults << "------------------" << std::endl;
-            fResults << "ProbabilisticBS_Algorithm" << std::endl;
-            time_t start, end;
-            time(&start);
-
-            setScsMinDepth();
-            setScsMaxDepth();
-
-            // +1 to cover trivial soultions
-            shortestCommonSupersequenceLen = maxDepth + 1;
-
-            fResults << "---List of solutions---" << std::endl;
-            WMMCONTROL();
-
-            fResults << "-Optimal solution-" << std::endl;
             fResults << "SCS : " + shortestCommonSupersequence << std::endl;
             fResults << "SCS length : " << shortestCommonSupersequenceLen << std::endl;
 
@@ -113,7 +94,7 @@ class SCS
             shortestCommonSupersequenceLen = maxDepth + 1;
 
             fResults << "---List of solutions---" << std::endl;
-            // WMMCONTROL();
+ 
             LAWMMCONTROL();
 
             fResults << "-Optimal solution-" << std::endl;
@@ -206,8 +187,6 @@ class SCS
                 }
             }
 
-            fResults << "MIN DEPTH: " << minDepth << std::endl;
-
         }
 
         void setScsMaxDepth()
@@ -235,8 +214,6 @@ class SCS
             }
 
             maxDepth = maxSequenceSize * alphabet.size();
-
-            fResults << "MAX DEPTH: " << maxDepth << std::endl;
 
         }
 
@@ -311,6 +288,8 @@ class SCS
         void Shortest_Common_SupersequenceBS()
         {
 
+            bool printIndicator = false;
+            
             std::vector<std::string> *sls1 = new std::vector<std::string>();
             for(auto &c : alphabet)
             {
@@ -323,6 +302,10 @@ class SCS
 
             // set depth to 1 because we start from level 1 of the search tree
             std::size_t depth = 1;
+
+            // start taking beta sequances when depth >= minDepth, sometimes the minimum depth can be
+            // too big, which drastically affects the performance, that's why we limit the depth with a parameter
+            std::size_t minimalDepth = (minDepth < bsGreedyMinDepth) ? minDepth : bsGreedyMinDepth;
 
             while(!isSuperSequenceFound)
             {
@@ -341,10 +324,10 @@ class SCS
                 // optimizacija da ne vracam vector stringova pa da za svaki proveravam da li je supersequence nego
                 // da posaljem vector parova pa ako je vrednost nekog para == broju sekvenci u setOfString onda imam resenje...
 
-                // start taking beta sequances when depth >= minDepth
-                if(depth >= minDepth)
+                if(depth >= minimalDepth)
                 {
-                    sls2 = takeBetaSequancesGreedyApproach(sls2, isSuperSequenceFound);
+                    sls2 = takeBetaSequancesGreedyApproach(sls2, isSuperSequenceFound, printIndicator);
+                    printIndicator = true;
                 }
 
                 sls1->clear();
@@ -357,7 +340,9 @@ class SCS
             delete sls2;
         }
         
-        std::vector<std::string>* takeBetaSequancesGreedyApproach(std::vector<std::string> *sls, bool &isSuperSequenceFound)
+        std::vector<std::string>* takeBetaSequancesGreedyApproach(std::vector<std::string> *sls,
+                                                                  bool &isSuperSequenceFound,
+                                                                  bool &printIndicator)
         {
             std::vector<std::pair<std::size_t, std::string>> slsCnt;
             
@@ -372,16 +357,42 @@ class SCS
             // shuffle elements before sorting to avoid same sort order every time, and avoid algorithm loop bug when most of 
             // sequences have same count of subsequences ...
             auto rng = std::default_random_engine();
+            rng.seed(std::chrono::system_clock::now().time_since_epoch().count());
             std::shuffle(slsCnt.begin(), slsCnt.end(), rng);
 
             std::sort(slsCnt.begin(),slsCnt.end(),sortRev1);
 
-            fResults << "---SLS---" << std::endl;
-            for(auto &s : slsCnt)
+            if(printIndicator)
             {
-                fResults << s.first << " " << s.second << std::endl;
+                fResults << "---SLS---" << std::endl;
+                for(auto &s : slsCnt)
+                {
+                    fResults << s.first << " " << s.second << std::endl;
+                }
             }
 
+            // std::size_t sameCnt = 0;
+            // std::size_t bestCnt = slsCnt[0].first;
+            // for(auto &s : slsCnt)
+            // {
+            //     if(s.first == bestCnt)
+            //     {
+            //         ++sameCnt;
+            //     }
+            // }
+            // fResults << "SAME CNT:" << sameCnt  << std::endl;
+            // if(sameCnt >= beamSize)
+            // {
+            //     slsCnt = std::vector<std::pair<std::size_t, std::string>>(slsCnt.begin(),slsCnt.begin() + sameCnt);
+            // }
+            // fResults << "BEGIN REDUCING*********"  << std::endl;
+            // for(auto &s : slsCnt)
+            // {
+            //     fResults << s.first << " " << s.second << std::endl;
+            // }
+            // fResults << "END REDUCING*********"  << std::endl;
+
+            // std::shuffle(slsCnt.begin(), slsCnt.end(), rng);
 
             const std::pair<std::size_t, std::string> potentialSuperSequence = slsCnt[0];
             if(potentialSuperSequence.first == setOfStringsSize)
@@ -457,42 +468,97 @@ class SCS
 
         void LAWMMCONTROL()
         {
+            // scss solution for lawmm heuristic
             std::string solution("");
+
+            // we make a copy of setOfStrings so they don't change the real set
             std::vector<std::string>setOfStringsCpy;
             for(std::string s : setOfStrings)
             {
                 setOfStringsCpy.emplace_back(s);
             }
 
+            // end of algorithm indicator
             bool end = false;
-            std::size_t emptyStringsCounter;
+
             while(!end)
             {
-                // ideja je da napravis kombinacije velicine lookAhead a,b,c ili aa,ab,ac,ba,bb,bc,ca,cb,cc...
-                // zatim napravis WMM algoritam koji skida pocetno slovo sa date kombinacije i racuna tezinu,
-                // za ab skida prvo a, racuna tezinu i onda skida b i racuna tezinu i vrati tezinu za ab ...
-                // zatim se sve to popakuje u neku strukturu, sortira se i dobiju se rankovi bira se resenje sa najvecim rankom(tezinom)
-                // skida se pocetno slovo tog resenja sa setOfStrings i nastavlja se proces dok se setOfStrings ne isprazni...
-                fResults << "BEGIN:FAZA ODABIRA NAJBOLJEG KARAKTERA" << std::endl;
+                fResults << "BEGIN:PHASE OF CHOOSING THE BEST CHARACTER" << std::endl;
+
+                // vector of pairs <solution, weight>
                 std::vector<std::pair<std::string, std::size_t>> vecSls;
+
                 std::vector<std::string> lookAheadCombinations;
                 makeLACombinations(std::string(""), 0, lookAheadCombinations);
+
+                // for each combination of length max lookAhead we calculate the weight
                 for(std::string &s : lookAheadCombinations)
                 {
-                    std::pair<std::string, std::size_t> sls = WMMForSolution(setOfStringsCpy, s);
-                    vecSls.emplace_back(sls);
+                    std::pair<std::string, std::size_t> sls = WMMForGivenSolution(setOfStringsCpy, s);
+
+                    /* 
+                    do not insert sls that already exists or one that could not be generated because not a single word
+                    starts with the first character of the sequence s
+                    
+                        Example1:
+                            Alphabet = {a,b}
+                            setOfStringsCpy: {
+                                "abb",
+                                "ab"
+                                "a",
+                                }
+                            lookAhead = 2
+                            lookAheadCombinations = {aa,ab,ba,bb}
+
+                            WMMForGivenSolution will return in order for "aa" -> ["a",3]
+                                                                     for "ab" -> ["ab",4]
+                                                                     for "ba" -> ["",0]
+                                                                     for "bb" -> ["",0]
+                            so we don't include "ba" and "bb"
+                        Example2:
+                            Alphabet = {a,b,c}
+                            setOfStringsCpy: {
+                                "abba",
+                                "abcc"
+                                "abcc",
+                                }    
+                            lookAhead = 3   
+                            lookAheadCombinations = {aaa,aab, ... , aca, acb, ...}
+
+                            WMMForGivenSolution will return for "aca" and "acb" the following:
+                                for "aca" -> ["a",9]
+                                for "acb" -> ["a",9] 
+                            so there is no need to insert the same value (also a better one could not be generated)
+                    */
+
+                    if(sls.first != std::string("") && (std::find(vecSls.begin(),vecSls.end(),sls) == vecSls.end()))
+                    {
+                        vecSls.emplace_back(sls);
+                    }
                 }
+
+                // weight sorting
                 std::sort(vecSls.begin(), vecSls.end(), sortRev3);
+                
                 for(auto s : vecSls)
                 {
                     fResults << s.first << "-" << s.second << std::endl;
                 }
-                char bestChar = vecSls[0].first[0];
-                solution += bestChar;
-                std::size_t bestWeigth = vecSls[0].second;
-                fResults << "Best Char To Remove:" << bestChar << std::endl;
-                fResults << "END:FAZA ODABIRA NAJBOLJEG KARAKTERA" << std::endl;
 
+                // for the best character we take the first character of the best lookAhead solution
+                char bestChar = vecSls[0].first[0];
+                
+                // we add the best character to the scss solution
+                solution += bestChar;
+
+                //weight of the best solution
+                std::size_t bestWeigth = vecSls[0].second;
+
+                fResults << "Best letter to remove:" << bestChar << std::endl;
+                fResults << "END:PHASE OF CHOOSING THE BEST CHARACTER" << std::endl;
+
+               // from each sequence that starts with the best selected character in setOfStrings we
+               // remove that character from the beginning of that sequence
                 for(std::string &s : setOfStringsCpy)
                 {
                     if(s.starts_with(bestChar))
@@ -500,20 +566,21 @@ class SCS
                         s.erase(s.begin());
                     }
                     fResults << s << std::endl;
-                    if(s.empty())
-                    {
-                        ++emptyStringsCounter;
-                    }
                 }
 
+                /*
+                    If bestWeigth == 0 we know that we have reached the end and that there are only words left that
+                    are either empty or have only one character, because otherwise wmm would calculate a weight greater than 0
+                */
                 if(bestWeigth == 0)
                 {
                     std::string postRes("");
                     for(std::string &s : setOfStringsCpy)
                     {
-                        // pri nadovezivanju karaktera koji su preostali (setOfStringsCpy je prazan ili ima stringova sa po jednim karakterom)
-                        // treba da nadovezemo preostale karaktere ali bez ponavljanja zato ide deo sa && u if-u ("","a","a","")--> nadovezati
-                        // a ali samo jedanput
+                        /* 
+                        when appending the remaining characters (setOfStringsCpy is empty or there are strings with one character each)
+                        we need to connect the remaining characters, but without repetition ("","a","a","")--> connect 'a' but only once
+                        */
                         if(!s.empty() && std::find(postRes.begin(),postRes.end(),s[0]) == postRes.end())
                         {
                             postRes += s[0];
@@ -525,15 +592,30 @@ class SCS
                 fResults << "Temp Solution:" << solution << std::endl;
             }
 
-            shortestCommonSupersequence = solution;
-            shortestCommonSupersequenceLen = solution.length();
+            if(isCommonSupersequence(solution))
+            {
+                shortestCommonSupersequence = solution;
+                shortestCommonSupersequenceLen = solution.length();
+            }
+            else
+            {
+                fResults << "LAWMM could not find a solution" << std::endl;
+            }
         }
 
-        // NAPRAVI SAMO VALIDNE KOMBINACIJE VELICINE MAX lookAhead
+        // makes all combinations of letters from alphabet, the sequence size is lookAhead size
         void makeLACombinations(const std::string &sls, 
                                 const std::size_t &counter,
                                 std::vector<std::string>  &lookAheadCombinations)
         {
+
+            /*
+                Example:    
+                    Alphanet = {a,b}
+                    lookAhead = 2
+                    function return {aa,ab,ba,bb}
+            */
+
             if(counter == lookAhead)
             {
                 lookAheadCombinations.emplace_back(sls);
@@ -547,89 +629,35 @@ class SCS
             }
         }
 
-        void WMMCONTROL()
+        std::pair<std::string, std::size_t> WMMForGivenSolution(std::vector<std::string> &setOfStrings, std::string &sls)
         {
-            std::string solution("");
-            std::vector<std::string>setOfStringsCpy;
-            for(std::string s : setOfStrings)
-            {
-                setOfStringsCpy.emplace_back(s);
-            }
 
-            bool end = false;
-            std::size_t emptyStringsCounter;
-            while(!end)
-            {
-                emptyStringsCounter = 0;
-                std::vector<std::pair<char, std::size_t>> res = WMM(setOfStringsCpy);
-                char bestChar = res[0].first;
-                // bitno ako je najbolja tezina 0 znaci da su reci iz seta ili prazne ili imaju po jedan karakter,
-                // u tom slucaju samo nadovezemo preostale karaktere na solution
-                std::size_t bestWeigth = res[0].second;
-                solution += bestChar;
-                for(std::string &s : setOfStringsCpy)
-                {
-                    if(s.starts_with(bestChar))
-                    {
-                        s.erase(s.begin());
-                    }
-                    fResults << s << std::endl;
-                    if(s.empty())
-                    {
-                        ++emptyStringsCounter;
-                    }
-                }
-                if(bestWeigth == 0)
-                {
-                    std::string postRes("");
-                    for(std::string &s : setOfStringsCpy)
-                    {
-                        // pri nadovezivanju karaktera koji su preostali (setOfStringsCpy je prazan ili ima stringova sa po jednim karakterom)
-                        // treba da nadovezemo preostale karaktere ali bez ponavljanja zato ide deo sa && u if-u ("","a","a","")--> nadovezati
-                        // a ali samo jedanput
-                        if(!s.empty() && std::find(postRes.begin(),postRes.end(),s[0]) == postRes.end())
-                        {
-                            postRes += s[0];
-                        }
-                    }
-                    solution += postRes;
-                    end = true;
-                }
-                fResults << "Temp Solution:" << solution << std::endl;
-            }
-            shortestCommonSupersequence = solution;
-            shortestCommonSupersequenceLen = solution.length();
-        }
+        /* 
 
+            For a given setOfStrings and a given sequence (sls), the function calculates the wmm weight for the selected sequence,
+            and if it is not possible for the whole sequence, then for the part of the sequence that can be calculated
+         
+            example1: 
+                Alphabet : a, b, c
+                setOfStrings: {
+                                "abc",
+                                "cab"
+                                "bac"
+                                }
+                sls = "ab"
+                ret = {"ab",5}
 
-        // treba mi wmm koji za datu azbuku (skracenu ili celu) daje slovo koje je najbolje za jedan wmm prolaz
-        // posle ovo iskoristiti kada zatreba vise puta za lawmm
-
-        std::vector<std::pair<char, std::size_t>> WMM(std::vector<std::string> &setOfStrings)
-        {
-            std::vector<std::pair<char, std::size_t>> res;
-            for(char c : alphabet)
-            {
-                std::size_t weight = 0;
-                for(std::string &s: setOfStrings)
-                {
-                    if(s.starts_with(c))
-                    {
-                        weight += (s.length() - 1);
-                    }
-                }
-                res.emplace_back(std::pair(c,weight));
-            }
-            std::sort(res.begin(), res.end(), sortRev2);
-            for(auto i : res)
-            {
-                fResults << i.first << " " << i.second << std::endl;
-            }
-            return res;
-        }
-
-        std::pair<std::string, std::size_t> WMMForSolution(std::vector<std::string> &setOfStrings, std::string &sls)
-        {
+            example2:
+                Alphabet : a, b, c
+                setOfStrings: {
+                                "abc",
+                                "cab"
+                                "bac"
+                                }
+                sls = "cc"
+                ret = {"c",2}
+        
+        */
             
             std::vector<std::string>setOfStringsCpy;
             for(std::string s : setOfStrings)
@@ -678,9 +706,10 @@ class SCS
         std::size_t setOfStringsSize;
 
         const std::size_t beamSize = 5;
+        const std::size_t bsGreedyMinDepth = 6;
 
         // Probabilistic Beam Search
-        std::size_t lookAhead = 2;
+        std::size_t lookAhead = 1;
 
         std::string inPath = "TestInstances";
         std::string outPath = "Results";
@@ -701,8 +730,7 @@ int main(int argc, char **argv)
 
     SCS alg(argv[1]);
     // alg.SCS_BFBT_Algorithm();
-    // alg.SCS_BS_Algorithm();
-    alg.WMMAlgorithm();
+    alg.SCS_BS_Algorithm();
     alg.LAWMMAlgorithm();
 
     return EXIT_SUCCESS;
