@@ -710,7 +710,10 @@ class SCS
 
         void LAWMM_Beam_Search()
         {
-            
+            // BEGIN : algorithm initialization
+            /* 
+                solutions are pairs where first is solution string, second is pair where second.first is rank of solution and second.second is vector os positions is setOfStrings
+            */
             std::vector<std::pair<std::string, std::pair<size_t, std::vector<std::size_t>>>> *sls1 
                                                 = new std::vector<std::pair<std::string, std::pair<size_t, std::vector<std::size_t>>>>();
 
@@ -742,22 +745,29 @@ class SCS
                 updatePositions(tmpSls);
                 sls1->emplace_back(tmpSls);
             }
-
-
+    
             bool isSuperSequenceFound = false;
 
+            // END : algorithm initialization
+
+            // main loop of Beam Search algorithms
             while(!isSuperSequenceFound)
             {
                 for(auto &s : *sls1)
                 {
-                    std::vector<std::pair<char, std::size_t>> lr = LAWMM(s);
-                    // ako su svi rankovi slova 0 onda postoji resenje, zapravo ako je rank prvog slova 0 znaci da su i ostali jer su sortirani
-                    if(lr[0].second == 0)
+                    // calculation of ranks of partial solutions
+                    std::vector<std::pair<char, std::size_t>> letterRanks = LAWMM(s);
+                    /*
+                     if all the ranks of the letters are 0 then there is a solution, actually if the rank of the first
+                     letter is 0 it means that the others are also because they are sorted
+                    */
+                    if(letterRanks[0].second == 0)
                     {
                         std::string solution = s.first;
                         std::string postRes("");
                         for(int i = 0;i < setOfStringsSize;++i)
                         {
+                            // inside the loop we remove the remaining letters from setOfStrings but without repetition
                             std::size_t posInSqs = s.second.second[i];
                             while(posInSqs < setOfStringsVec[i].size())
                             {
@@ -768,6 +778,7 @@ class SCS
                                 }
 
                                 ++posInSqs;
+                                // if we find a supersequence we terminate the loop execution earlyer
                                 if(isCommonSupersequence(solution + postRes))
                                 {
                                     solution += postRes;
@@ -784,30 +795,41 @@ class SCS
                         }
                     }
 
+                    //we add characters from the alphabet to the fixed partial solution and assign a new rank based on the ranks of the letters
                     for(auto &c : alphabet)
                     {
                         std::size_t rankOfC;
-                        for(int i = 0;i < lr.size();++i)
+                        for(int i = 0;i < letterRanks.size();++i)
                         {
-                            if(c == lr[i].first)
+                            if(c == letterRanks[i].first)
                             {
                                 rankOfC = i + 1;
                             }
                         }
                         std::pair<std::string, std::pair<size_t, std::vector<std::size_t>>> newSLS
                         (
-                            std::string(s.first + c), std::pair<size_t, std::vector<std::size_t>>(s.second.first + rankOfC,s.second.second)
+                            std::string(s.first + c), std::pair<size_t, std::vector<std::size_t>>(s.second.first + rankOfC, s.second.second)
                         );
                         sls2->emplace_back(newSLS);
                     }
                 }
                 
+                // we choose the best beam size solutions from the newly created partial solutions
                 sls1 = takeBetaSequances(sls2,isSuperSequenceFound);
                 sls2 = new std::vector<std::pair<std::string, std::pair<size_t, std::vector<std::size_t>>>>();       
             }
-            // ne zaboravi da deletujes memoriju...
-            delete sls1;
-            delete sls2;
+            
+
+            if(sls1)
+            {
+                delete sls1;
+            }
+
+            if(sls2)
+            {
+                delete sls2;
+            }
+
         }
 
 
@@ -815,6 +837,7 @@ class SCS
                                     takeBetaSequances(std::vector<std::pair<std::string, std::pair<size_t, std::vector<std::size_t>>>> *sls,
                                                              bool &isSuperSequenceFound)
         {
+            // if the number of partial solutions is less than the beam size, it means that we take all the solutions, but we have to calculate new positions for partial solutions
             if(sls->size() < beamSize)
             {
                 for(auto &s : *sls)
@@ -829,28 +852,42 @@ class SCS
                 }
                 return sls;
             }
+            
+            // we mix the elements before sorting to avoid same sort order if all elemts have same ranks (we do shuffle in LAWMM so it's not necessary here)
+            auto rng = std::default_random_engine();
+            rng.seed(std::chrono::system_clock::now().time_since_epoch().count());
+            std::shuffle(sls->begin(), sls->end(), rng);
 
+            // we sort the partial solutions in relation to the sum of the ranks
             std::sort(sls->begin(), sls->end(), sortAsc);
-            fResults << "Sorted VALUES" << std::endl;
-            for(auto &s : *sls)
-            {
-                fResults << s.first << "-" << s.second.first << std::endl;
-            }
+
+            // fResults << "Sorted VALUES" << std::endl;
+            // for(auto &s : *sls)
+            // {
+            //     fResults << s.first << "-" << s.second.first << std::endl;
+            // }
+
+            // we create a vector of new partial solutions
             std::vector<std::pair<std::string, std::pair<size_t, std::vector<std::size_t>>>> *slsNew =
                                          new std::vector<std::pair<std::string, std::pair<size_t, std::vector<std::size_t>>>>();
             
+            // we choose the best beam size solutions from the newly created partial solutions
             for(int i = 0;i < beamSize;++i)
             {
+                // a roulette selection can be added here
                 std::pair<std::string, std::pair<size_t, std::vector<std::size_t>>> &elemRef = (*sls)[i];
+
+                // updating positions of the partial solution
                 updatePositions(elemRef);
 
+                // if a partial solution is a solution to the problem, we stop the algorithm
                 if(isCommonSupersequence(elemRef.first))
                 {
                     shortestCommonSupersequence = elemRef.first;
                     shortestCommonSupersequenceLen = elemRef.first.length();
                     isSuperSequenceFound = true;
                 }
-                fResults << "Nova izabrana sekvenca:" << (*sls)[i].first << std::endl;
+                // fResults << "Nova izabrana sekvenca:" << (*sls)[i].first << std::endl;
                 slsNew->emplace_back((*sls)[i]);
             }
             delete sls;
@@ -860,16 +897,19 @@ class SCS
 
         std::vector<std::pair<char, std::size_t>> LAWMM(std::pair<std::string, std::pair<size_t, std::vector<std::size_t>>> &s)
         {
-
+            // contains all possible combinations
             std::vector<std::pair<std::string, std::size_t>> laWeightedCombinations;
-            makeLACombinationsPair(std::string(""), 0, laWeightedCombinations);
-            
+            // contains only possible combinations
             std::vector<std::pair<std::string, std::size_t>> finalLaWeightedCombinations;
 
-            std::vector<std::pair<char, std::size_t>> latterRanks;
+            // we make all possible combinations of letters from the alphabet of length lookAhead
+            makeLACombinationsPair(std::string(""), 0, laWeightedCombinations);
+
+            // 
+            std::vector<std::pair<char, std::size_t>> letterRanks;
             for(auto &c : alphabet)
             {
-                latterRanks.emplace_back(c,0);
+                letterRanks.emplace_back(c,0);
             }
 
             for(std::pair<std::string, std::size_t> &comb: laWeightedCombinations)
@@ -909,7 +949,7 @@ class SCS
                     char firstCharOfCombination = comb.first[0];
                     std::size_t weigthOfCombination = comb.second;
 
-                    for(auto &lr : latterRanks)
+                    for(auto &lr : letterRanks)
                     {
                         if(lr.first == firstCharOfCombination && lr.second < weigthOfCombination)
                         {
@@ -919,32 +959,33 @@ class SCS
                 } 
             }
 
-            std::sort(finalLaWeightedCombinations.begin(), finalLaWeightedCombinations.end(), sortRev3);
-
-            // mesamo elemente da ne bi uvek birali 'a' ako recimo a,c,t svi imaju istu vrednost
+            // we mix the elements so that 'a' would not always be selected if say a,c,t all have the same value
             auto rng = std::default_random_engine();
             rng.seed(std::chrono::system_clock::now().time_since_epoch().count());
-            std::shuffle(latterRanks.begin(), latterRanks.end(), rng);
+            std::shuffle(letterRanks.begin(), letterRanks.end(), rng);
 
-            std::sort(latterRanks.begin(), latterRanks.end(), sortRev2);
+            std::sort(letterRanks.begin(), letterRanks.end(), sortRev2);
 
-            fResults << "LAWMM ranks for all lawmm combinations for seq:" << s.first << std::endl;            
+            // std::sort(finalLaWeightedCombinations.begin(), finalLaWeightedCombinations.end(), sortRev3);
 
-            for(auto &i : finalLaWeightedCombinations)
-            {
-                fResults << i.first << "-" << i.second << std::endl;
-            }
+            // fResults << "LAWMM ranks for all lawmm combinations for seq:" << s.first << std::endl;            
 
-            fResults << "LAWMM ranks latters" << " in seq:" << s.first << std::endl;
+            // for(auto &i : finalLaWeightedCombinations)
+            // {
+            //     fResults << i.first << "-" << i.second << std::endl;
+            // }
 
-            for(auto &rank : latterRanks)
-            {
-                fResults << rank.first << "-" << rank.second << std::endl;
-            }
+            // fResults << "LAWMM ranks latters" << " in seq:" << s.first << std::endl;
+
+            // for(auto &rank : letterRanks)
+            // {
+            //     fResults << rank.first << "-" << rank.second << std::endl;
+            // }
             
-            return latterRanks;
+            return letterRanks;
         }
 
+        // updating positions for partial solution: We move in each sequence in setOfStrings for the last added letter in partial solution
         void updatePositions(std::pair<std::string, std::pair<size_t, std::vector<std::size_t>>> &s)
         {
             // fResults << "Updating positions for:" << s.first << std::endl;
@@ -976,7 +1017,7 @@ class SCS
                 Example:    
                     Alphanet = {a,b}
                     lookAhead = 2
-                    function return {aa,ab,ba,bb}
+                    function return {[aa,0],[ab,0],[ba,0],[bb,0]}
             */
 
             if(counter == lookAhead)
@@ -1008,10 +1049,12 @@ class SCS
         std::vector<std::string> setOfStringsVec;
         std::size_t setOfStringsSize;
 
+        // Beam size paramether of Beam Search algorithm
         const std::size_t beamSize = 300;
+
         const std::size_t bsGreedyMinDepth = 3;
 
-        // Probabilistic Beam Search
+        // LAWMM lookAhead parameter
         std::size_t lookAhead = 2;
 
         std::string inPath = "TestInstances";
@@ -1019,7 +1062,6 @@ class SCS
         std::ofstream fResults;
         std::ifstream fInput;
          
-
 };
 
 int main(int argc, char **argv)
@@ -1032,10 +1074,13 @@ int main(int argc, char **argv)
     }
 
     SCS alg(argv[1]);
+
+    // running different algorithms
     // alg.SCS_BFBT_Algorithm();
     // alg.SCS_BS_Greedy_Algorithm();
     alg.LAWMMAlgorithm();
     alg.SCS_LAWMM_Beam_Search_Algorithm();
 
     return EXIT_SUCCESS;
+
 }

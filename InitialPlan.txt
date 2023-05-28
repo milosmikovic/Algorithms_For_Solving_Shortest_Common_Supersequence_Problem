@@ -109,7 +109,7 @@ L * |S|
 3. Test slucaji tipa 2. za testiranje performansi bs alg
 4. std::size_t minimalDepth = (minDepth < bsGreedyMinDepth) ? minDepth : bsGreedyMinDepth;
 5. rng.seed(std::chrono::system_clock::now().time_since_epoch().count()); --> podesi seed da uvek bude isti, stavi da bude globalan na
-nivou celog programa, i stavi fixan seed\
+nivou celog programa, i stavi fixan seed --> nekada nadje bolje nekada gore resenje zavisi od ovog seeda i skupa sekvenci!!!
 6. takeBetaSequancesGreedyApproach --> heuristiku promeni da broji koliko karaktera je pogodio iz skupa L a ne koliko je celih sekvenci pogodio
 7. 
 
