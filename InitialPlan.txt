@@ -101,3 +101,132 @@ abc abc abc abc
 
 4 * 3 = 12
 L * |S| 
+
+
+1. Testiraj parametar za generisanje sekvenci...
+2. Uporedjivanje sa BF: napraviti male slucajne instance tipa 1 ili 2 (5,20 - 6,30 - 7,40) - pustamo i ostale
+ metode za ove instance (test korektnosti)
+3. Test slucaji tipa 2. za testiranje performansi bs alg
+4. std::size_t minimalDepth = (minDepth < bsGreedyMinDepth) ? minDepth : bsGreedyMinDepth;
+5. rng.seed(std::chrono::system_clock::now().time_since_epoch().count()); --> podesi seed da uvek bude isti, stavi da bude globalan na
+nivou celog programa, i stavi fixan seed\
+6. takeBetaSequancesGreedyApproach --> heuristiku promeni da broji koliko karaktera je pogodio iz skupa L a ne koliko je celih sekvenci pogodio
+7. 
+
+
+A = {a c t g}
+L = {
+    accgta,
+    ctgaac,
+    tcgaac,
+    ttgcat
+}
+
+Look Ahead Weighted Majority Merge Heuristika (LAWMM(l), l-lookahead) radi ovako:
+
+1. Ako je l = 1 tada algoritam izgleda ovako:
+
+LAWMM(L - skup sekvenci, A - azbuka):
+    superSequence = ""
+    do until SUM(|Si|) == 0 za Si iz L: - vrti ovaj kod dok sve sekvence iz L ne budu duzine 0 zapravo dok sva slova ne poskidas...
+        for alpha in A:
+            // tezina slova alpha
+            v(alpha | s) = SUM(|Si^|) gde Si iz L, Si = alpha + Si^  --> znaci za svaku sekvencu iz L koja pocinje sa alpha 
+                                                                         uzima se duzina ostatka i dodaje na tezinu slova alpha...
+        beta = argmax{v(alpha | s) | alpha iz A} - uzima se slovo sa najvecom tezinom
+        L = L|beta - skida se izabrano slovo sa svih sekvenci 
+        superSequence += beta - dodaje se izabrano slovo na resenje
+
+Ukratko: skidaj slova u svakom koraku i racunaj tezine kao sto je objasnjeno gore, uzmi slovo sa najvecom tezinom,
+skini ga sa pocetka sekvenci i dodaj to slovo na resenje...
+
+2. Ako je l = 2+ tada algoritam radi isto samo sto u svakom koraku algoritma uzimamo slovo koje ima najvecu tezinu 
+u odnosu na 2+ prolaza WMM(). Ja sam to shvatio na sledeci nacin:
+- npr. za l = 2 probaj da skines 'a' izracunaj tezinu i onda skini 'a' sa svih sekvenci iz L sada na takvom redukovanom
+skupu L probaj da skidas redom a,t,c,g i racunaj tezine. Zapravo onda dobijamo tezine redom za aa,ac,at,ag. Sada se vrati
+ponovo na pocetak i probaj sa 'b'. Skini 'b' sa pocetka sekvenci iz L racunaj tezinu za 'b' sada na takvom redukovanom
+skupu L probaj dalje da skidas a,c,t,g i racunaj tezine, dobijamo tezine redom za ba,bc,bt,bg. Nastavi tako dalje za sva slova
+azbuke i na kraju dobijamo tezine za sve kombinacije koje su bile moguce uzimamo kombinaciju sa najvecom tezinom recimo da je to
+ac = 50 i onda kao najbolje slovo za ukloniti u ovom krugu uzimamo 'a' (to slovo dodajemo na resenje) algoritam radi isto kao ovaj 
+gore na dalje.
+
+
+Zapravo heuristika ce raditi dok ne poskida sva slova sa svih sekvenci iz L.
+Ako heuristika za fixan parametar l = k da resenje duzine n tada mi zapravo u svakom od tih n koraka dobijamo
+rangirana resenja od najboljeg do najgoreg:
+Npr:
+1.Korak: a-55 c-40 t-30 g-20 (odradi L=L|a, skini 'a' sa pocetka sekvenci iz L jer je 'a' najbolje ocenjeno slovo)
+2.Korak: c-30 a-20 t-15 g-10 (....)
+.
+.
+.
+n-ti Korak: c-1 t-0 g-0 a-o (....)
+
+
+Sada se vracamo na onaj problem da li ja ovo za poznati skup L na pocetku mogu da izracunam unapred i da kasnije koristim 
+za ocenjivanje nekih parcijalnih resenje u BeamSearch algoritmu.
+
+Ako imam neko parcijalno resenje recimo "tg" i ako uzmemo one tezine gore koje je heursika izracunala
+onda bih mogao da kazem da je tezina za "tg" = 't' + 'g' = 30 + 10 = 40 ali sada vidim gde sam pogresio,
+a vi me ispravite ako gresim, tezine koje su izracunate u 2. koraku su tezine koje su dobijene na redukovanom skupu
+L = L|a (L kada se skine 'a' sa pocetka svih sekvenci, jer je 'a' bilo najbolje resenje u 1. koraku LAWMM) 
+i zapravo ocene u 2. koraku: c-30 a-20 t-15 g-10 vaze samo ako u prvom koraku skinem 'a' iz L, ali ne vaze u slucaju "tg" gde bih 
+prvo skidao 't' pa onda dalje nastavljao. Sto dalje znaci da bih ipak za svako parcijalno resenje morao da racunam vrednosti
+heuristike, i to bih onda radio na sledeci nacin a vi me opet ispravite ako gresim:
+
+Npr. imamo parcijalno resenje "tg" i skup L-originalan skup sekvenci:
+- sada racunaj opet onaj prvi korak kao gore 1.Korak: a-55 c-40 t-30 g-20 znaci Tezina{"tg"} += 30.
+- ali sada drugi korak nije isti kao onaj gore sada bih radio L = L|t i na takvom skupu L koji se dobija uklanjanjem 't' sa pocetka
+sekvenci bih dalje racunao tezine za redom a,c,t,g i u ovom slucaju bih dobio resenje koje se razlikuje od resenja dobijenog
+u 2. koraku: c-30 a-20 t-15 g-10
+
+Dodatak koji planiram da uvedem je sledeci:
+- ne zelim da uzimam tezine resenja vec da uzimam rangove, za a-55 c-40 t-30 g-20 dodelio bih redom rangove resenjima
+a-1 c-2 t-3 g-4 i tako u svakom koraku bih imao rangove, tada bi za neko parcijalno resenje recimo "tg" imao sumu rangova
+recimo "tg" = 3 + 1 = 4. (sada ove sume rangova deluju nezavisno za svako parc. resenje jer ne gledam globalno najbolje resenje
+izracunato LAWMM unapred)
+Sada bih za svako parc. resenje koje je izabrano (ima ih beamSize) racunao verovatnocu:
+Pparc = sumaRangovaParcResenja / SUM(sumaRangovaParcResenja)
+Recimo da bih uveo parametar g = 0.2 npr. i onda racunam slucajan broj izmedju [0,1] ako dobijem >= g onda ubacim najbolje resenje 
+redukujem skup i ponovo racunam slucajan broj, ako u nekom trenutku dobijem < g onda biram sledece resenje ruletskom selekcijom recimo.
+
+Jer ako ne bih radio na ovaj nacin, onda za gore navden primer:
+1.Korak: a-55 c-40 t-30 g-20 
+2.Korak: c-30 a-20 t-15 g-10 
+.
+. 
+.
+
+Meni bi algoritam uvek birao najbolje resenje kao da sam pustio LAWMM da radi nezavisno od Beam searcha,
+Beam search bi izabrao "ac" kao najbolje resenje i jos bi dodao (beamSize - 1) resenja koja potencijalno daju lufta ali 
+mi ova ideja gore deluje okej. 
+
+Ceo ovaj dodatak mi ima smisla da ne bih grubo pratio LAWMM heuristiku vec da uvedem malo lufta, sad dal ce se to pokazati dobro na kraju
+ne znam :).
+
+Sada jos ostaje pitanje implementacije:
+- lakse bi bilo napraviti funkciju koja racuna LAWMM za neko parc resenje tako sto mu uvek dam ceo skup L,
+i on zapravo racuna od pocetka svaki put tako sto redom skida slova i dodeljuje rangove, drugo resenje bi bilo da se cuva
+za svako parc. resenje od beamSize resenja skup pokazivaca recimo ili iteratora na pozicije u L u odnosu na to dokle se stiglo,
+jer ako je "tg" u skupu onda samo na njega dalje dodajem a,c,t,g i zapravo nema potrebe ponovo racunati rangove za "tg" ali u tom slucaju
+treba cuvati sumu rangova koja je do tada izracunata i (beam size * |L|) iteratora, pada mi na pamet da zapravo ne treba ni cuvati listu pokazivaca vec nesto izmedju,
+ako dobijemo sekvencu "at" mozemo svaki put da se pomeramo u L za "at" ali da ne racunamo rangove sto nije previse skupo, zapravo rangove
+racunamo samo za novo dodata slova a,c,t,g. Odrzavanje liste iteratora mi deluje skoro isto skupo koliko pomeranje u L 
+za dati prefiks, i deluje mi jednostavnije za implementaciju ovo pomeranje.
+
+Malo sam oduzio, ali mislim da sam pokrio kljucne nedoumice koje sam imao.
+
+Pozdrav,
+Milos Mikovic 1050/2020.
+
+
+
+
+
+
+
+
+
+
+
+
