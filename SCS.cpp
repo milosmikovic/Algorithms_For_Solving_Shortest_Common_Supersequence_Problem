@@ -56,21 +56,18 @@ class SCS
         {
             printAlphabetAndSequences();
             fResults << "------------------" << std::endl;
-            fResults << "SCS_BS_Algorithm" << std::endl;
+            fResults << "SCS_BS_Greedy_Algorithm" << std::endl;
             time_t start, end;
             time(&start);
 
             setScsMinDepth();
             setScsMaxDepth();
 
-            std::size_t minimalDepth = (minDepth < bsGreedyMinDepth) ? minDepth : bsGreedyMinDepth;
-            fResults << "MIN DEPTH: " << minimalDepth << std::endl;
-
             shortestCommonSupersequenceLen = maxDepth;
 
             Shortest_Common_SupersequenceBS();
 
-            fResults << "-Beam Search solution-" << std::endl;
+            fResults << "-Beam Search greedy algorithm solution-" << std::endl;
             fResults << "SCS : " + shortestCommonSupersequence << std::endl;
             fResults << "SCS length : " << shortestCommonSupersequenceLen << std::endl;
 
@@ -320,8 +317,6 @@ class SCS
 
         void Shortest_Common_SupersequenceBS()
         {
-
-            bool printIndicator = false;
             
             std::vector<std::string> *sls1 = new std::vector<std::string>();
             for(auto &c : alphabet)
@@ -333,18 +328,10 @@ class SCS
 
             bool isSuperSequenceFound = false;
 
-            // set depth to 1 because we start from level 1 of the search tree
-            std::size_t depth = 1;
-
-            // start taking beta sequances when depth >= minDepth, sometimes the minimum depth can be
-            // too big, which drastically affects the performance, that's why we limit the depth with a parameter
-            std::size_t minimalDepth = (minDepth < bsGreedyMinDepth) ? minDepth : bsGreedyMinDepth;
 
             while(!isSuperSequenceFound)
             {
-
-                ++depth;
-
+                
                 for(auto &s : *sls1)
                 {
                     for(auto &c : alphabet)
@@ -352,21 +339,9 @@ class SCS
                         sls2->emplace_back(s + c);
                     }
                 }
-
-                // 1. odaberem beta sekvenci, za svaku proverim da li je supersequence, ako ne nadjem idem dalje ako nadjem stajem
-                // optimizacija da ne vracam vector stringova pa da za svaki proveravam da li je supersequence nego
-                // da posaljem vector parova pa ako je vrednost nekog para == broju sekvenci u setOfString onda imam resenje...
-
-                if(depth >= minimalDepth)
-                {
-                    sls2 = takeBetaSequancesGreedyApproach(sls2, isSuperSequenceFound, printIndicator);
-                    printIndicator = true;
-                }
-
-                sls1->clear();
-                std::vector<std::string> *tmpSls = sls1;
-                sls1 = sls2; 
-                sls2 = tmpSls;        
+                
+                sls1 = takeBetaSequancesGreedyApproach(sls2, isSuperSequenceFound);
+                sls2 = new std::vector<std::string>();    
             }
 
             delete sls1;
@@ -374,75 +349,111 @@ class SCS
         }
         
         std::vector<std::string>* takeBetaSequancesGreedyApproach(std::vector<std::string> *sls,
-                                                                  bool &isSuperSequenceFound,
-                                                                  bool &printIndicator)
+                                                                  bool &isSuperSequenceFound
+                                                                  )
         {
-            std::vector<std::pair<std::size_t, std::string>> slsCnt;
-            
-            for(auto &s : *sls)
+
+            if(sls->size() <= beamSize)
             {
-                slsCnt.emplace_back(std::pair<std::size_t, std::string>(countSubsequences(s), s));
+                std::vector<std::string> *newSls = new std::vector<std::string>(*sls);
+                delete sls;
+                return newSls;
             }
-
-            // deleting sls because we dont need it anymore
-            delete sls;
-
-            // shuffle elements before sorting to avoid same sort order every time, and avoid algorithm loop bug when most of 
-            // sequences have same count of subsequences ...
-            auto rng = std::default_random_engine();
-            rng.seed(std::chrono::system_clock::now().time_since_epoch().count());
-            std::shuffle(slsCnt.begin(), slsCnt.end(), rng);
-
-            std::sort(slsCnt.begin(),slsCnt.end(),sortRev1);
-
-            if(printIndicator)
+            else
             {
-                fResults << "---SLS---" << std::endl;
-                for(auto &s : slsCnt)
+                std::vector<std::pair<std::size_t, std::string>> slsCnt;
+                
+                for(auto &s : *sls)
                 {
-                    fResults << s.first << " " << s.second << std::endl;
+                    slsCnt.emplace_back(std::pair<std::size_t, std::string>(countLettersInSubsequences(s), s));
                 }
-            }
 
-            const std::pair<std::size_t, std::string> potentialSuperSequence = slsCnt[0];
-            if(potentialSuperSequence.first == setOfStringsSize)
-            {
-                isSuperSequenceFound = true;
-                shortestCommonSupersequence = potentialSuperSequence.second;
-                shortestCommonSupersequenceLen = potentialSuperSequence.second.length();
-            }
+                // deleting sls because we dont need it anymore
+                delete sls;
 
-            std::vector<std::string> *newSls = new std::vector<std::string>();
-            for(int i = 0;i < beamSize;++i)
-            {
-                newSls->emplace_back(slsCnt[i].second);
-            }
+                // shuffle elements before sorting to avoid same sort order every time, and avoid algorithm loop bug when most of 
+                // sequences have same count of subsequences ...
+                auto rng = std::default_random_engine();
+                rng.seed(std::chrono::system_clock::now().time_since_epoch().count());
+                std::shuffle(slsCnt.begin(), slsCnt.end(), rng);
 
-            fResults << "---SLS_NEW---" << std::endl;
-            for(auto &s : *newSls)
-            {
-                fResults << s << std::endl;
-            }
+                std::sort(slsCnt.begin(),slsCnt.end(),sortRev1);
 
-            return newSls;
+
+                // fResults << "---SLS---" << std::endl;
+                // for(auto &s : slsCnt)
+                // {
+                //     fResults << s.first << " " << s.second << std::endl;
+                // }
+                
+
+                const std::pair<std::size_t, std::string> potentialSuperSequence = slsCnt[0];
+                if(isCommonSupersequence(potentialSuperSequence.second))
+                {
+                    isSuperSequenceFound = true;
+                    shortestCommonSupersequence = potentialSuperSequence.second;
+                    shortestCommonSupersequenceLen = potentialSuperSequence.second.length();
+                }
+
+                std::vector<std::string> *newSls = new std::vector<std::string>();
+                for(int i = 0;i < beamSize;++i)
+                {
+                    newSls->emplace_back(slsCnt[i].second);
+                }
+
+                // fResults << "---SLS_NEW---" << std::endl;
+                // for(auto &s : *newSls)
+                // {
+                //     fResults << s << std::endl;
+                // }
+
+                return newSls;
+            }
 
         }
 
         // count how many subsequences scs have in setOfString
-        std::size_t countSubsequences(const std::string &scs)
+        std::size_t countLettersInSubsequences(const std::string &scs)
         {
-            std::size_t ct = 0;
+            std::size_t cnt = 0;
 
             for(auto &s : setOfStrings)
             {
-                if(isSubsequence(s,scs))
+                cnt += countLettersInSubsequence(scs,s);
+            }
+            
+            return cnt;
+        }
+
+        std::size_t countLettersInSubsequence(const std::string &scs, const std::string &s)
+        {
+            std::size_t cnt = 0;
+
+            std::string::const_iterator sPos = s.cbegin();
+            std::string::const_iterator sEnd = s.cend();
+
+            std::string::const_iterator scsPos = scs.begin();
+            std::string::const_iterator scsEnd = scs.cend();
+
+            while(scsPos != scsEnd)
+            {
+                if(sPos == sEnd)
                 {
-                    ++ct;
+                    break;
+                }
+                else if(*scsPos == *sPos)
+                {
+                    ++scsPos;
+                    ++sPos;
+                    ++cnt;
+                }
+                else
+                {
+                    ++scsPos;
                 }
             }
 
-            return ct;
-
+            return cnt;
         }
 
         // is s subsequence of scs
@@ -493,7 +504,7 @@ class SCS
 
             while(!end)
             {
-                fResults << "BEGIN:PHASE OF CHOOSING THE BEST CHARACTER" << std::endl;
+                // fResults << "BEGIN:PHASE OF CHOOSING THE BEST CHARACTER" << std::endl;
 
                 // vector of pairs <solution, weight>
                 std::vector<std::pair<std::string, std::size_t>> vecSls;
@@ -550,10 +561,10 @@ class SCS
                 // weight sorting
                 std::sort(vecSls.begin(), vecSls.end(), sortRev3);
                 
-                for(auto s : vecSls)
-                {
-                    fResults << s.first << "-" << s.second << std::endl;
-                }
+                // for(auto s : vecSls)
+                // {
+                //     fResults << s.first << "-" << s.second << std::endl;
+                // }
 
                 //weight of the best solution
                 std::size_t bestWeigth = vecSls[0].second;
@@ -588,8 +599,8 @@ class SCS
                     solution += bestChar;
 
 
-                    fResults << "Best letter to remove:" << bestChar << std::endl;
-                    fResults << "END:PHASE OF CHOOSING THE BEST CHARACTER" << std::endl;
+                    // fResults << "Best letter to remove:" << bestChar << std::endl;
+                    // fResults << "END:PHASE OF CHOOSING THE BEST CHARACTER" << std::endl;
 
                     // from each sequence that starts with the best selected character in setOfStrings we
                     // remove that character from the beginning of that sequence
@@ -599,12 +610,12 @@ class SCS
                         {
                             s.erase(s.begin());
                         }
-                        fResults << s << std::endl;
+                        // fResults << s << std::endl;
                     }
 
                 }
 
-                fResults << "Temp Solution:" << solution << std::endl;
+                // fResults << "Temp Solution:" << solution << std::endl;
             }
 
             if(isCommonSupersequence(solution))
@@ -712,7 +723,7 @@ class SCS
         {
             // BEGIN : algorithm initialization
             /* 
-                solutions are pairs where first is solution string, second is pair where second.first is rank of solution and second.second is vector os positions is setOfStrings
+                solutions are pairs where first is solution string, second is pair where second.first is rank of solution and second.second is vector of positions is setOfStrings
             */
             std::vector<std::pair<std::string, std::pair<size_t, std::vector<std::size_t>>>> *sls1 
                                                 = new std::vector<std::pair<std::string, std::pair<size_t, std::vector<std::size_t>>>>();
@@ -838,7 +849,7 @@ class SCS
                                                              bool &isSuperSequenceFound)
         {
             // if the number of partial solutions is less than the beam size, it means that we take all the solutions, but we have to calculate new positions for partial solutions
-            if(sls->size() < beamSize)
+            if(sls->size() <= beamSize)
             {
                 for(auto &s : *sls)
                 {
@@ -1050,9 +1061,7 @@ class SCS
         std::size_t setOfStringsSize;
 
         // Beam size paramether of Beam Search algorithm
-        const std::size_t beamSize = 300;
-
-        const std::size_t bsGreedyMinDepth = 3;
+        const std::size_t beamSize = 400;
 
         // LAWMM lookAhead parameter
         std::size_t lookAhead = 2;
@@ -1078,7 +1087,7 @@ int main(int argc, char **argv)
     // running different algorithms
     // alg.SCS_BFBT_Algorithm();
     // alg.SCS_BS_Greedy_Algorithm();
-    alg.LAWMMAlgorithm();
+    // alg.LAWMMAlgorithm();
     alg.SCS_LAWMM_Beam_Search_Algorithm();
 
     return EXIT_SUCCESS;
