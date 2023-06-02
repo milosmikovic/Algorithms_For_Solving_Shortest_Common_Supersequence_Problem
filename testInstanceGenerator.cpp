@@ -6,7 +6,7 @@
 #include <random>
 
 
-const double removeProb = 0.2;
+const double removeProb = 0.1;
 
 std::string generateFName()
 {
