@@ -52,11 +52,11 @@ class SCS
             fResults << "------------------" << std::endl;
         }
 
-        void SCS_BS_Greedy_Algorithm()
+        void SCS_MM_Beam_Search_Algorithm()
         {
             printAlphabetAndSequences();
             fResults << "------------------" << std::endl;
-            fResults << "SCS_BS_Greedy_Algorithm" << std::endl;
+            fResults << "SCS_MM_Beam_Search_Algorithm" << std::endl;
             time_t start, end;
             time(&start);
 
@@ -65,9 +65,9 @@ class SCS
 
             shortestCommonSupersequenceLen = maxDepth;
 
-            Shortest_Common_SupersequenceBS();
+            MM_Beam_Search();
 
-            fResults << "-Beam Search greedy algorithm solution-" << std::endl;
+            fResults << "-Optimal solution-" << std::endl;
             fResults << "SCS : " + shortestCommonSupersequence << std::endl;
             fResults << "SCS length : " << shortestCommonSupersequenceLen << std::endl;
 
@@ -315,7 +315,7 @@ class SCS
         }
 
 
-        void Shortest_Common_SupersequenceBS()
+        void MM_Beam_Search()
         {
             
             std::vector<std::pair<std::string, std::pair<size_t, std::vector<std::size_t>>>> *sls1 = 
@@ -1071,7 +1071,7 @@ class SCS
 
             std::sort(letterRanks.begin(), letterRanks.end(), sortRev2);
 
-            // std::sort(finalLaWeightedCombinations.begin(), finalLaWeightedCombinations.end(), sortRev3);
+            std::sort(finalLaWeightedCombinations.begin(), finalLaWeightedCombinations.end(), sortRev3);
 
             // fResults << "LAWMM ranks for all lawmm combinations" << std::endl;            
 
@@ -1155,10 +1155,10 @@ class SCS
         std::size_t setOfStringsSize;
 
         // Beam size paramether of Beam Search algorithm
-        const std::size_t beamSize = 10;
+        const std::size_t beamSize = 300;
 
         // LAWMM lookAhead parameter
-        std::size_t lookAhead = 2;
+        std::size_t lookAhead = 1;
 
         std::string inPath = "TestInstances";
         std::string outPath = "Results";
@@ -1180,7 +1180,7 @@ int main(int argc, char **argv)
 
     // running different algorithms
     // alg.SCS_BFBT_Algorithm();
-    alg.SCS_BS_Greedy_Algorithm();
+    alg.SCS_MM_Beam_Search_Algorithm();
     // alg.LAWMMAlgorithm();
     alg.SCS_LAWMM_Beam_Search_Algorithm();
 
