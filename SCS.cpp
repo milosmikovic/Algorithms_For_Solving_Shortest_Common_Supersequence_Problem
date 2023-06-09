@@ -618,7 +618,6 @@ class SCS
                                 }
                             lookAhead = 2
                             lookAheadCombinations = {aa,ab,ba,bb}
-
                             WMMForGivenSolution will return in order for "aa" -> ["a",3]
                                                                      for "ab" -> ["ab",4]
                                                                      for "ba" -> ["",0]
@@ -633,7 +632,6 @@ class SCS
                                 }    
                             lookAhead = 3   
                             lookAheadCombinations = {aaa,aab, ... , aca, acb, ...}
-
                             WMMForGivenSolution will return for "aca" and "acb" the following:
                                 for "aca" -> ["a",9]
                                 for "acb" -> ["a",9] 
@@ -747,7 +745,6 @@ class SCS
         {
 
         /* 
-
             For a given setOfStrings and a given sequence (sls), the function calculates the wmm weight for the selected sequence,
             and if it is not possible for the whole sequence, then for the part of the sequence that can be calculated
          
@@ -760,7 +757,6 @@ class SCS
                                 }
                 sls = "ab"
                 ret = {"ab",5}
-
             example2:
                 Alphabet : a, b, c
                 setOfStrings: {

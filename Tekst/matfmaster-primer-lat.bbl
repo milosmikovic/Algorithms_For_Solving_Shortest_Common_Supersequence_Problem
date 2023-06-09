@@ -1,0 +1,15 @@
+\begin{thebibliography}{1}
+
+\bibitem{ProbabilisticBS}
+Antonio J.~Fernandez Christian~Blum, Carlos~Cotta and Francisco Gallardo.
+\newblock {A Probabilistic Beam Search Approach to the Shortest Common
+  Supersequence Problem}.
+\newblock In {\em Lecture Notes in Computer Science}, 2007.
+
+\bibitem{SCSSProblemDef}
+Garey and Johnson.
+\newblock {Shortest common supersequence}.
+\newblock on-line at:
+  \url{https://www.csc.kth.se/~viggo/wwwcompendium/node165.html}.
+
+\end{thebibliography}
