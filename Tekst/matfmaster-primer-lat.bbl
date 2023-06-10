@@ -1,4 +1,4 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 
 \bibitem{ProbabilisticBS}
 Antonio J.~Fernandez Christian~Blum, Carlos~Cotta and Francisco Gallardo.
@@ -6,10 +6,75 @@ Antonio J.~Fernandez Christian~Blum, Carlos~Cotta and Francisco Gallardo.
   Supersequence Problem}.
 \newblock In {\em Lecture Notes in Computer Science}, 2007.
 
+\bibitem{SeqComparison}
+Joseph~Kruskal David~Sankoff.
+\newblock {\em Time Warps, String Edits, and Macromolecules: The Theory and
+  Practice of Sequence Comparison}.
+\newblock Center for the Study of Language and Inf, 1983.
+
 \bibitem{SCSSProblemDef}
 Garey and Johnson.
 \newblock {Shortest common supersequence}.
 \newblock on-line at:
   \url{https://www.csc.kth.se/~viggo/wwwcompendium/node165.html}.
+
+\bibitem{DataCompression}
+Storer JA.
+\newblock {\em Data compression: methods and theory}.
+\newblock Computer Science Press, 1988.
+
+\bibitem{SCSGenetic}
+Frerk~Schneider Jurgen~Branke, Martin~Middendorf.
+\newblock {Improved heuristics and a genetic algorithm for finding short
+  supersequences}, 1998.
+
+\bibitem{SCSSBetterSolution}
+Hon Wai~Leong Kang~Ning.
+\newblock {Towards a better solution to the shortest common supersequence
+  problem: the deposition and reduction algorithm}, 2006.
+
+\bibitem{NPComplete}
+Esko~Ukkonen Kari-Jouko~Raiha.
+\newblock {The shortest common supersequence problem over binary alphabet is
+  NP-complete}.
+\newblock In {\em Theoretical Computer Science}, 1981.
+\newblock Volume 16, Issue 2, Pages 187-198.
+
+\bibitem{Maier}
+David Maier.
+\newblock {The Complexity of Some Problems on Subsequences and Supersequences},
+  1978.
+
+\bibitem{AlphabetSCS}
+Gianluca Della Vedova Giancarlo~Mauri Paolo~Barone, Paola~Bonizzoni.
+\newblock {An Approximation Algorithm for the Shortest Common Supersequence
+  Problem: An Experimental Analysis}, 2001.
+
+\bibitem{SCSColony}
+Martin~Middendorf Rene~Michel.
+\newblock {An island model based ant system with lookahead for the shortest
+  supersequence problem}.
+\newblock 2006.
+
+\bibitem{MQOptimization}
+Timos~K. Sellis.
+\newblock {Multiple-query optimization}, 1988.
+\newblock ACM Transactions on Database Systems (TODS), 13(1):23-52.
+
+\bibitem{SCSDinamicProg}
+Ming~Li Tao~Jiang.
+\newblock {On the Approximation of Shortest Common Supersequences and Longest
+  Common Subsequences}, 1995.
+
+\bibitem{ITAlgorithms}
+Ronald L. Rivest Clifford~Stein Thomas H.~Cormen, Charles E.~Leiserson.
+\newblock {\em Introduction to Algorithms, Second edition}.
+\newblock MIT Press and McGraw-Hill, 2001.
+
+\bibitem{Tournament}
+Vadim~G. Timkovsky.
+\newblock {Some Approximations for Shortest Common Nonsubsequences and
+  Supersequences}.
+\newblock In {\em String Processing and Information Retrieval}, 2006.
 
 \end{thebibliography}

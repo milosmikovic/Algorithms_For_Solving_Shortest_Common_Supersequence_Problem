@@ -73,7 +73,7 @@
 }
 
 % Ključne reči na srpskom jeziku (u odabranom pismu)
-\kljucnereci{optimizacija, pretraga bima, analiza sekvenci}
+\kljucnereci{optimizacija, pretraga bima, analiza bioloških sekvenci}
 
 \begin{document}
 % ==============================================================================
@@ -103,12 +103,14 @@
 Problem najkraće zajedničke nadniske (\textit{eng.} Shortest Common Supersequence Problem)
 jedan je od dobro poznatih NP-teških problema optimizacije u oblasti analize reči \cite{ProbabilisticBS}.
 Ukratko, PNZN\footnote{U nastavku teksta PNZN ćemo koristiti kao skraćenicu za problem najkraće zajedničke nadniske}
-se može opisati kao problem pronalaženja najkraće sekvence $\mathcal{S}$ sačinjene
+se može opisati kao problem pronalaženja najkraće reči $\omega$ sačinjene
 od simbola zadate konačne Azbuke $\Sigma$, tako da su sve sekvence iz unapred zadatog konačnog skupa
-$\mathcal{L}$ sadržane u sekvenci $\mathcal{S}$. Kada se kaže da su sve reči iz skupa $\mathcal{L}$
-sadržane, misli se na to da se svaka reč iz skupa $\mathcal{L}$ može dobiti uklanjanjem simbola iz reči $\mathcal{S}$ ali 
-u zadatom redosledu \cite{SCSSProblemDef}. Opisi u kojim se sve oblastima koristi SCSS...dasdasdasdasdasdas
-dasdsadsad sadas sad sadsa dasdsadsadsadsadsadas sa dsad asd sad asd asd as dasdasdasd sadasds
+$\mathcal{L}$ sadržane u sekvenci $\omega$. Kada se kaže da su sve reči iz skupa $\mathcal{L}$
+sadržane, misli se na to da se svaka reč iz skupa $\mathcal{L}$ može dobiti uklanjanjem simbola iz reči $\omega$ ali 
+u zadatom redosledu \cite{SCSSProblemDef}. PNZN ima primene u mnogim oblastima informatike uključujući kompresiju podataka
+\cite{DataCompression}, optimizaciju upita \cite{MQOptimization}, analizu i poređenje teksta i bioloških sekvenci \cite{ITAlgorithms} \cite{SeqComparison}.
+Kao rezultat velike primene u mnogim oblastima, postoji veliki broj istraživanja na temu ovog problema u pokušaju da se dođe
+do što boljeg i prihvatljivijeg rešenja.
 
 \section{Problem najkraće zajedničke nadniske}
 U ovom poglavlju formalno ćemo definisati PNZN, ali pre toga uvešćemo potrebnu notaciju koja će biti korišćena u nastavku
@@ -124,6 +126,7 @@ definišemo kao $\{\omega_{1},\omega_{2},...,\omega_{n}\}|_{\alpha}=\{\omega_{1}
 Neka važi da $\omega_{1},\omega_{2}\in\Sigma^*$, za reč $\omega_{1}$ kažemo da je
 supersekvenca reči $\omega_{2}$ u oznaci $\omega_{1}\succ\omega_{2}$ ako važi sledeća rekurzivna definicija \cite{ProbabilisticBS}:
 \\
+\\
 \begin{equation}
 \begin{aligned}
 \omega_{1}\succ\varepsilon &\triangleq \textrm{Tačno}\\
@@ -136,7 +139,35 @@ supersekvenca reči $\omega_{2}$ u oznaci $\omega_{1}\succ\omega_{2}$ ako važi 
 
 Zapravo, $\omega_{1}\succ\omega_{2}$ označava da se svi simboli iz $\omega_{2}$ nalaze u $\omega_{1}$ u datom redosledu,
 ali ne nužno uzastopno. Na primer, za datu azbuku $\Sigma=\{a,c,t,g\}$, važi $agcatg \succ act$.
-Sada možemo formalno definisati PNZN.
+Sada možemo formalno definisati PNZN. Instanca PNZN može se definisati kao $\mathcal{I} =(\Sigma,\mathcal{L})$, gde 
+$\Sigma$  predstavlja konačnu azbuku, a $\mathcal{L}$ predstavlja skup od $m$ reči $\{\omega_{1},\omega_{2},...,\omega_{m}\}$,
+$\omega_{i}\in\Sigma^*$. Potrebno je pronaći reč $\omega$ najmanje dužine tako da važi da je $\omega$ supersekvenca svake reči iz
+skupa $\mathcal{L}$ ($\omega\succ\omega_{i}, \forall\omega_{i}\in\mathcal{L} \textrm{ i } |\omega| \textrm{ je minimalna}$).
+Na primer za instancu PNZN $\mathcal{I}=(\{a,c,t,g\},\{act,cta,aca\})$, najmanja zajednička supersekvenca
+instance $\mathcal{I}$ je $acta$.  
+
+\section{Pregled dosadašnjih istraživanja}
+Problem najkraće zajedničke nadniske prvi je uveo Dejvid Mejer (\textit{eng.} David Maier) 1978. godine u svom radu 
+"The Complexity of Some Problems on Subsequences and Supersequences" \cite{Maier}. Dokazano je da je PNZN NP-kompletan 
+problem nad svakom azbukom $\Sigma$ za koju važi da $|\Sigma|\geqslant2$ \cite{NPComplete}. Korišćenjem dinamičkog
+programiranja (\textit{eng.} dynamic programming) PNZN nad dve reči dužine $n$ rešen je algoritmom vremenske 
+složenosti $\mathcal{O}(n^{2})$ i prostorne složenosti $\mathcal{O}(n^{2})$. Algortiam zasnovan na dinamičkom programiranju
+može biti unapređen, pa tako za $k$ reči dužine maksimalno $n$, PNZN može biti rešen u $\mathcal{O}(n^{k})$ prostornoj i 
+vremenskoj složenosti \cite{SCSDinamicProg}. Jasno je da ovakav algoritam nije praktičan za velike vrednosti $k$. S obzirom na to da ne postoji 
+algoritam polinomijalne složenosti koji rešava PNZN, pribegava se optimizacionim metodama u rešavanju ovog problema.
+Ono što je karakteristično za optimizacioni pristup rešavanju problema jeste to da se formira algoritam koji rešava
+postojeći problem tako što daje rešenje koje je prihvatljivo pod određenim uslovima. Takvo rešenje ne mora nužno biti
+optimalno rešenje problem. Na ovaj način, korišćenjem određene optimizacione tehnike, dobija se algoritam koji se izvršava
+brzo u realnim uslovima i daje prihvatljivo dobra rešenja.
+
+Vremenom je predloženo mnogo heurističkih i metaheurističkih algoritama za rešavanje PNZN.
+Neke od poznatijih heurističkih funkcija koje su korišćene u rešavanju PNZN su Alphabet \cite{AlphabetSCS}, Majority Merge 
+i Weighted Majority Merge \cite{ProbabilisticBS}, Tournament i Greedy \cite{Tournament}, Reduce-Expand \cite{AlphabetSCS}.
+Pored navedenih funkcija, korišćeni su i metaheuristički algoritmi, genetski algoritam (\textit{eng.} genetic algorithm) \cite{SCSGenetic} i 
+optimizacija kolonijom (\textit{eng.} colony optimization) \cite{SCSColony}, koji predstavljaju složenije optimizacione tehnike i imaju
+tendenciju ka dužem vremenu izvršavanja ne većim instancama problema \cite{SCSSBetterSolution}.
+
+Uvedi Beam search kao heuristiku koja ce biti koriscena u ovom radu.
 
 % % Primeri citiranja\mathsf{Y} 
 % Ovo je rečenica u kojoj se javlja citat \cite{PetrovicMikic2015}.
