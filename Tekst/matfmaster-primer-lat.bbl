@@ -23,6 +23,12 @@ Storer JA.
 \newblock {\em Data compression: methods and theory}.
 \newblock Computer Science Press, 1988.
 
+\bibitem{SCSBS}
+Marc Huber Gunther~Raidl Jonas~Mayerhofer, Markus~Kirchweger.
+\newblock {A Beam Search for the Shortest Common Supersequence Problem Guided
+  by an Approximate Expected Length Calculation}.
+\newblock 2022.
+
 \bibitem{SCSGenetic}
 Frerk~Schneider Jurgen~Branke, Martin~Middendorf.
 \newblock {Improved heuristics and a genetic algorithm for finding short
@@ -49,6 +55,11 @@ David Maier.
 Gianluca Della Vedova Giancarlo~Mauri Paolo~Barone, Paola~Bonizzoni.
 \newblock {An Approximation Algorithm for the Shortest Common Supersequence
   Problem: An Experimental Analysis}, 2001.
+
+\bibitem{BSIntroduction}
+Matt Payne.
+\newblock {What is Beam Search? Explaining The Beam Search Algorithm}.
+\newblock on-line at: \url{https://www.width.ai/post/what-is-beam-search}.
 
 \bibitem{SCSColony}
 Martin~Middendorf Rene~Michel.

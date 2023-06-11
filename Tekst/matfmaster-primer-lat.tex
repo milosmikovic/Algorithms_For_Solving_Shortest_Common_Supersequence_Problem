@@ -16,6 +16,12 @@
 \usepackage{latexsym}
 \usepackage{amssymb}
 \usepackage{amsmath}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\makeatletter
+\renewcommand{\ALG@name}{Algoritam}
+\makeatother
 %
 % Podrazumevano pismo je ćirilica.
 %   Ako koristite pdflatex, a ne xetex, sav latinički tekst na srpskom jeziku
@@ -110,7 +116,9 @@ sadržane, misli se na to da se svaka reč iz skupa $\mathcal{L}$ može dobiti u
 u zadatom redosledu \cite{SCSSProblemDef}. PNZN ima primene u mnogim oblastima informatike uključujući kompresiju podataka
 \cite{DataCompression}, optimizaciju upita \cite{MQOptimization}, analizu i poređenje teksta i bioloških sekvenci \cite{ITAlgorithms} \cite{SeqComparison}.
 Kao rezultat velike primene u mnogim oblastima, postoji veliki broj istraživanja na temu ovog problema u pokušaju da se dođe
-do što boljeg i prihvatljivijeg rešenja.
+do što boljeg i prihvatljivijeg rešenja. Trenutno najbolji algoritmi za rešavanje PNZN počivaju na metaheurističkoj metodi
+pretraga bima (\textit{eng.} beam search) koja će biti predstavljena u ovom radu. U nastavku uvodnog poglavlja biće formalno
+definisan problem najkraće zajedničke nadniske i biće dat pregled dosadašnjih istraživanja na temu ovog problema.
 
 \section{Problem najkraće zajedničke nadniske}
 U ovom poglavlju formalno ćemo definisati PNZN, ali pre toga uvešćemo potrebnu notaciju koja će biti korišćena u nastavku
@@ -161,13 +169,19 @@ optimalno rešenje problem. Na ovaj način, korišćenjem određene optimizacion
 brzo u realnim uslovima i daje prihvatljivo dobra rešenja.
 
 Vremenom je predloženo mnogo heurističkih i metaheurističkih algoritama za rešavanje PNZN.
-Neke od poznatijih heurističkih funkcija koje su korišćene u rešavanju PNZN su Alphabet \cite{AlphabetSCS}, Majority Merge 
-i Weighted Majority Merge \cite{ProbabilisticBS}, Tournament i Greedy \cite{Tournament}, Reduce-Expand \cite{AlphabetSCS}.
-Pored navedenih funkcija, korišćeni su i metaheuristički algoritmi, genetski algoritam (\textit{eng.} genetic algorithm) \cite{SCSGenetic} i 
+Neke od poznatijih heurističkih funkcija koje su korišćene u rešavanju PNZN su Alfabet (\textit{eng.} Alphabet) \cite{AlphabetSCS}, Većinsko Spajanje (\textit{eng.} Majority Merge) 
+i Težinsko Većinsko Spajanje (\textit{eng.} Weighted Majority Merge) \cite{ProbabilisticBS}, Turnirska (\textit{eng.} Tournament) i Pohlepna (\textit{eng.} Greedy) \cite{Tournament},
+Redukuj-Proširi (\textit{eng.} Reduce-Expand) \cite{AlphabetSCS}. Pored navedenih funkcija, korišćeni su i metaheuristički algoritmi, genetski algoritam (\textit{eng.} genetic algorithm) \cite{SCSGenetic} i 
 optimizacija kolonijom (\textit{eng.} colony optimization) \cite{SCSColony}, koji predstavljaju složenije optimizacione tehnike i imaju
 tendenciju ka dužem vremenu izvršavanja ne većim instancama problema \cite{SCSSBetterSolution}.
 
-Uvedi Beam search kao heuristiku koja ce biti koriscena u ovom radu.
+Jedna od trenutno najboljih metaheuristika za rešavanje PNZN jeste pretraga bima (\textit{eng.} beam search). Ukratko, pretraga
+bima predstavlja nepotpunu pretragu stabla, koja na svakom nivou proširuje graf stanja tako što napreduje sa čvorovima koji najviše
+obećavaju \cite{SCSBS}. Upravo zbog toga što se dobro pokazala u rešavanju PNZN i sličnih problema poput problema najduže zajedničke podniske
+(\textit{eng.} longest common subsequence) pretraga bima će biti korišćena u ovom radu i biće detaljnije opisana u daljem tekstu.
+S obzirom na to da pretraga bima podrazumeva postojanje heurističke funkcije koja će oceniti kvalitet čvorova na određenom nivou,
+u ovom radu izabrane su dve takve funkcije, Majority Merge i Weighted Majority Merge koje su se dobro pokazale u prethodnim istraživanjima
+i one će detaljnije biti opisane u nastavku teksta.
 
 % % Primeri citiranja\mathsf{Y} 
 % Ovo je rečenica u kojoj se javlja citat \cite{PetrovicMikic2015}.
@@ -237,8 +251,8 @@ Uvedi Beam search kao heuristiku koja ce biti koriscena u ovom radu.
 % \pangrami
 
 % ------------------------------------------------------------------------------
-\chapter{Razrada}
-\label{chp:razrada}
+\chapter{Opis korišćenih optimizacionih metoda}
+\label{chp:opisMetoda}
 
 % ------------------------------------------------------------------------------
 
@@ -247,6 +261,60 @@ Uvedi Beam search kao heuristiku koja ce biti koriscena u ovom radu.
 % \pangrami
 
 % ------------------------------------------------------------------------------
+U ovom poglavlju biće dat kratak pregled optimizacionih metoda koje su korišćene za rešavanje problema najkraće
+zajedničke nadniske. Te medote su:
+\begin{enumerate}
+  \item Metaheuristika Pretraga Bima
+  \item Heuristička funkcija Većinsko Spajanje
+  \item Heuristička funkcija Težinsko Većinsko Spajanje
+\end{enumerate}
+U nastavku teksta biće opisane pomenute metode, ali samo kao nezavisne celine, algoritam koji kombinuje
+rad ovih metoda biće predstavljen u narednom poglavlju.
+
+\section{Metaheuristika Pretraga Bima}
+Sada ćemo predstaviti generalnu ideju Pretrage Bima na kojoj ćemo kasnije izgraditi algoritam za PNZN.
+Pretraga Bima predstavlja metaheuristiku koja je uvedena 1976. godine u oblasti prepoznavanja govora
+(\textit{eng.} speech recognition). Korišćena je u završnim slojevima mnogih modela za
+obradu prirodnog jezika (\textit{eng.} natural language processing models) u donošenju odluke da se izabere najbolji
+izlaz date ciljne promenjive \cite{BSIntroduction}. Pored navedenih primena pretraga bima se intenzivno koristi u sledećeim
+oblastima: kombinatorna optimizacija (\textit{eng.} combinatorial optimization), problemi planiranja (\textit{eng.} scheduling problems),
+problemi rutiranja vozila (\textit{eng.} vehicle routing problems), podešavanje hiperparametara u oblasti mašinskog učenja
+(\textit{eng.} Machine Learning Hyperparameter Tuning), problemi zadovoljenja ograničenja (\textit{eng.} Constraint Satisfaction Problems). 
+
+Pretraga Bima predstavlja vrstu pretrage grafa u širinu u cilju da
+se pronađe najbolji put od korenog čvora do ciljanog čvora u grafu. Kako bi se složenost izračunavanja držala u
+zadatim granicama, Pretraga Bima evaluira dostignute čvorove na određenom nivou ali bira samo podskup od $\beta$
+čvorova koji najviše obećavaju i sa tim podskupom čvorova napreduje dalje u pretrazi. Izabrani podskup od $\beta$ čvorova
+zvaćemo bim (\textit{eng.} beam) i označavaćemo ga sa $\mathbb{B}$, a $\beta$ parametar ćemo zvati širina bima (\textit{eng.} beam width) \cite{SCSBS}.
+U kontekstu PNZN graf koji pretražujemo $\mathcal{G}=(\mathcal{V},\mathbb{E})$ predstavlja usmeren aciklički graf, a  
+pseudo kod algoritma prikazan je pod Algoritam \ref{alg:bs}.
+\\
+\begin{algorithm}
+  \caption{PretragaBimaPNZN($\Sigma$, $\mathcal{L}$, $\beta$)}
+  \label{alg:bs}
+  \begin{algorithmic}
+  % \Require $n \geq 0$
+  % \Ensure $y = x^n$
+  \State $\mathcal{B} \gets \{ \}$
+  \While{$True$}
+  \State $\mathcal{B} \gets \textrm{ProširiBim}(\Sigma)$
+  \State $\textrm{OceniBim}(\mathcal{B}, \mathcal{L})$
+  \State $\mathcal{B} \gets \textrm{RedukujBim}(\mathcal{B}, \beta)$
+  % \State \If{x}
+  % \ElsIf{$N$ is odd}
+  \If{$\exists\omega\in\mathcal{B} \textrm{ tako da SuperSekvenca}(\omega,\mathcal{L})==True$}
+      \State \Return $\omega$
+  \EndIf
+  \EndWhile
+  \end{algorithmic}
+  \end{algorithm}
+\\
+Algoritam prima tri ulazna parametra: azbuku $\Sigma$, ulazni skup reči $\mathcal{L}$ i širinu bima $\beta$.
+Na početku bim $\mathcal{B}$ predstavlja prazan skup. U svakom koraku algoritma bim se proširuje slovima iz azbuke,
+a zatim se elementi proširenog bima ocenjuje izabranom heurističkom funkcijom. Zatim se vrši odabir $\beta$ čvorova
+sa kojima se dalje nastavlja pretraga, i vrši se provera da li neki čvor u bimu predstavlja rešenje problema,
+ako takav čvor postoji algoritam vrća pronađeno rešenje.
+
 \chapter{Zaključak}
 % ------------------------------------------------------------------------------
 % \pangrami
