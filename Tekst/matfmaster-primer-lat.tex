@@ -272,6 +272,12 @@ U nastavku teksta biće opisane pomenute metode, ali samo kao nezavisne celine, 
 rad ovih metoda biće predstavljen u narednom poglavlju.
 
 \section{Metaheuristika Pretraga Bima}
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=1\textwidth]{graph.png}
+  \caption{Stavi sliku beam searcha} 
+  \label{fig:vremenska_serija}
+\end{figure}
 Sada ćemo predstaviti generalnu ideju Pretrage Bima na kojoj ćemo kasnije izgraditi algoritam za PNZN.
 Pretraga Bima predstavlja metaheuristiku koja je uvedena 1976. godine u oblasti prepoznavanja govora
 (\textit{eng.} speech recognition). Korišćena je u završnim slojevima mnogih modela za
@@ -292,11 +298,11 @@ pseudo kod algoritma prikazan je pod Algoritam \ref{alg:bs}.
 \begin{algorithm}
   \caption{PretragaBimaPNZN($\Sigma$, $\mathcal{L}$, $\beta$)}
   \label{alg:bs}
-  \begin{algorithmic}
+  \begin{algorithmic}[1]
   % \Require $n \geq 0$
   % \Ensure $y = x^n$
   \State $\mathcal{B} \gets \{ \}$
-  \While{$True$}
+  \While{$True$} \Comment{Može postojati uslov izlaska iz petlje pre pronađenog rešenja}
   \State $\mathcal{B} \gets \textrm{ProširiBim}(\Sigma)$
   \State $\textrm{OceniBim}(\mathcal{B}, \mathcal{L})$
   \State $\mathcal{B} \gets \textrm{RedukujBim}(\mathcal{B}, \beta)$
@@ -313,9 +319,65 @@ Algoritam prima tri ulazna parametra: azbuku $\Sigma$, ulazni skup reči $\mathc
 Na početku bim $\mathcal{B}$ predstavlja prazan skup. U svakom koraku algoritma bim se proširuje slovima iz azbuke,
 a zatim se elementi proširenog bima ocenjuje izabranom heurističkom funkcijom. Zatim se vrši odabir $\beta$ čvorova
 sa kojima se dalje nastavlja pretraga, i vrši se provera da li neki čvor u bimu predstavlja rešenje problema,
-ako takav čvor postoji algoritam vrća pronađeno rešenje.
+ako takav čvor postoji algoritam vraća pronađeno rešenje. Funkcija ProširiBim u prvom koraku popunjava bim slovima
+iz azbuke, a u svakom narednom koraku svako parcijalno rešenje redukovanog bima proširuje dodavajući na njega redom
+slova iz azbuke. Funkcija OceniBim predstavlja heurističku funkciju koja dodljuje određene vrednosti svakom elementu bima,
+a na osnovu ovih vrednosti funkcija RedukujBim bira $\beta$ parcijalnih rešenja koja imaju najveće vrednosti
+heurističke funkcije. Tokom redukcije bima vrednosti ocena parcijalnih rešenja mogu da se sortiraju tako da redukovani
+bim sadrži $\beta$ najbolje ocenjenih rešenja, ali mogu se koristiti i druge strategije odabira rešenja poput ruletske
+selekcije (\textit{eng.} roulette selection). Algoritam se može zaustaviti kada se pronađe prvo rešenje problema, ali
+mogu se postaviti i drugi uslovi zaustavljanja poput broja iteracija petlje (predstavlja dubinu unutar stabla pretrage)
+ili vremenska ograničenja.
 
-\chapter{Zaključak}
+\section{Heurističke funkcije Većinsko Spajanje i Težinsko Većinsko Spajanje}
+Većinsko Spajanje predstavlja jedan od najpopularnijih algoritama koji rešava PNZN. To je pohlepni algoritam
+koji inkrementalno konstruiše supersekvencu. Najpre se odredi slovo koje se najčešće nalazi na početku reči
+iz skupa $\mathcal{L}$, a zatim se izabrano slovo briše sa početka reči iz $\mathcal{L}$ koje ga sadrže \cite{ProbabilisticBS}.
+Pseudo kod algoritma prikazan je pod Algoritam \ref{alg:mm}.
+
+\begin{algorithm}
+  \caption{VećinskoSpajanje($\mathcal{L}=\{\omega_{1}, \omega_{2},..., \omega_{m}\}, \Sigma$)}
+  \label{alg:mm}
+  \begin{algorithmic}[1]
+  % \Require $n \geq 0$
+  % \Ensure $y = x^n$
+  \State $\mathcal{S} \gets \varepsilon$ \Comment{supersekvenca}
+  \While{$\sum_{\omega_{i}\in\mathcal{L}}|\omega_{i}| \neq 0$} 
+  \For{$\alpha \in \Sigma$}
+        \State $v(\alpha|\mathcal{S}) \gets \sum_{\omega_{i}\in\mathcal{L},\omega_{i}=\alpha\omega^{'}_{i}}1$
+  \EndFor
+  \State $\beta \gets argmax \{v(\alpha|\mathcal{S})\textrm{ }|\textrm{ }\alpha \in \Sigma \}$
+  \State $\mathcal{L} \gets \mathcal{L}|_{\beta}$
+  \State $\mathcal{S} \gets \mathcal{S}\beta$
+  \EndWhile
+  \State \Return $\mathcal{S}$
+  \end{algorithmic}
+  \end{algorithm}
+
+Mana Većinskog Spajanja je to što ne može da prepozna globalnu strukturu reči iz skupa $\mathcal{L}$.
+U principu Većinsko spajanje izostavlja činjenicu da reči mogu biti različitih dužina. To dalje 
+znači da će slova sa početka kraćih reči imati veću šansu da budu uklonjena iako algoritam i dalje treba
+da obradi preostale dugačke reči. Iz tog razloga bi skidanje slova sa početka kraćih reči trebalo da bude
+manje prioritetno. Drugim rečima bolje je da se prioritizira skidanje slova sa početka dužih reči.
+To se može postići dodavanjem težine svakom simbolu azbuke u odnosu na dužinu preostalih reči iz $\mathcal{L}$ 
+nakon uklanjanja tog simbola sa početka reči koje počinju tim simbolom. Dakle korak 4 u algoritmu VećinskoSpajanje
+možemo zameniti sa:
+\\
+\\
+\begin{equation}
+  v(\alpha|\mathcal{S}) \gets \sum_{\omega_{i}\in\mathcal{L},\omega_{i}=\alpha\omega^{'}_{i}}|\omega^{'}_{i}| 
+\end{equation}
+\\
+\\
+Ovako modifikovan algoritam naziva se Težinsko Većinsko Spajanje i postoje indikacije da na određenim instancama
+problema može da nadmaši algoritam Većinskog Spajana, pogotovo kada nema struktuiranosti unutar skupa $\mathcal{L}$
+ili kada je ta struktuiranost haotična \cite{ProbabilisticBS}.Predstavljena dva algoritma biće korišćena u nastavku
+rada kao heurističke funkcije koje će ocenjivati elemnte bima.
+
+Dodaj tekst za LAWMM...
+
+\chapter{Algoritmi za rešavanje problem najkraće zajedničke nadniske}
+dsadsadasd
 % ------------------------------------------------------------------------------
 % \pangrami
 
