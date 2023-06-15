@@ -82,6 +82,11 @@ Ronald L. Rivest Clifford~Stein Thomas H.~Cormen, Charles E.~Leiserson.
 \newblock {\em Introduction to Algorithms, Second edition}.
 \newblock MIT Press and McGraw-Hill, 2001.
 
+\bibitem{SCSNP}
+V.~G. Timkovskii.
+\newblock {Complexity of common subsequence and supersequence problems and
+  related problems}, 1989.
+
 \bibitem{Tournament}
 Vadim~G. Timkovsky.
 \newblock {Some Approximations for Shortest Common Nonsubsequences and

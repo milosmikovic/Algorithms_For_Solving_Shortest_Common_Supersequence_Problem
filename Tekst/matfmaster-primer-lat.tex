@@ -18,6 +18,30 @@
 \usepackage{amsmath}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
+\usepackage{listings}
+
+% Define a custom color
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+
+% Define a custom style
+\lstdefinestyle{myStyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    keepspaces=true,                 
+    numbers=left,       
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+}
+
+% Use \lstset to make myStyle the global default
+\lstset{style=myStyle}
 
 \makeatletter
 \renewcommand{\ALG@name}{Algoritam}
@@ -114,7 +138,8 @@ od simbola zadate konačne Azbuke $\Sigma$, tako da su sve sekvence iz unapred z
 $\mathcal{L}$ sadržane u sekvenci $\omega$. Kada se kaže da su sve reči iz skupa $\mathcal{L}$
 sadržane, misli se na to da se svaka reč iz skupa $\mathcal{L}$ može dobiti uklanjanjem simbola iz reči $\omega$ ali 
 u zadatom redosledu \cite{SCSSProblemDef}. PNZN ima primene u mnogim oblastima informatike uključujući kompresiju podataka
-\cite{DataCompression}, optimizaciju upita \cite{MQOptimization}, analizu i poređenje teksta i bioloških sekvenci \cite{ITAlgorithms} \cite{SeqComparison}.
+\cite{DataCompression}, optimizaciju upita \cite{MQOptimization}, analizu i poređenje teksta i bioloških sekvenci, \cite{ITAlgorithms} \cite{SeqComparison}
+kao i bioinformatiku \cite{ProbabilisticBS}.
 Kao rezultat velike primene u mnogim oblastima, postoji veliki broj istraživanja na temu ovog problema u pokušaju da se dođe
 do što boljeg i prihvatljivijeg rešenja. Trenutno najbolji algoritmi za rešavanje PNZN počivaju na metaheurističkoj metodi
 pretraga bima (\textit{eng.} beam search) koja će biti predstavljena u ovom radu. U nastavku uvodnog poglavlja biće formalno
@@ -152,12 +177,23 @@ $\Sigma$  predstavlja konačnu azbuku, a $\mathcal{L}$ predstavlja skup od $m$ r
 $\omega_{i}\in\Sigma^*$. Potrebno je pronaći reč $\omega$ najmanje dužine tako da važi da je $\omega$ supersekvenca svake reči iz
 skupa $\mathcal{L}$ ($\omega\succ\omega_{i}, \forall\omega_{i}\in\mathcal{L} \textrm{ i } |\omega| \textrm{ je minimalna}$).
 Na primer za instancu PNZN $\mathcal{I}=(\{a,c,t,g\},\{act,cta,aca\})$, najmanja zajednička supersekvenca
-instance $\mathcal{I}$ je $acta$.  
+instance $\mathcal{I}$ je $acta$.
+
+Može se pokazati da je PNZN NP-težak problem, čak i ako su jaka ograničenja postavljena na $\mathcal{L}$ ili $\Sigma$. 
+Dokazano je da je PNZN NP-kompletan problem nad svakom azbukom $\Sigma$ za koju važi da $|\Sigma|\geqslant2$ \cite{NPComplete}
+ili kada su sve reči $\omega \in \mathcal{L}$ dužine dva \cite{SCSNP}. U principu ovim rezultatima NP-težine se mora
+pristupiti sa oprezom, jer predstavljaju samo najgori scenario što često u praksi nije slučaj. U odnosu na to,
+realnija karakterizacija težine može se dobiti korišćenjem okvira parametrizovane složenosti (\textit{eng.} framework of parameterized
+complexity). Ukratko, ovo se postiže višedimenzionim pristupom problemu, shvatanjem njegove unutrašnje strukture i izolovanjem
+određenih parametara. Ako se težina (koja nije polinomijalna) može izolovati unutar ovih parametara, problem može biti
+efikasno rešen za fiksne vrednosti ovih parametara. Na primer može se uzeti
+maksimalna dužina $k$ nadniske kao parametar i ako je pritom veličina azbuke fiksna ili parametar takođe, problem postaje
+fiksno-parametarski pratljiv (\textit{eng.} fixed-parameter tractable) jer postoji maksimalno $|\Sigma|^{k}$ nadniski
+koje se mogu proveriti kao rešenje problema \cite{ProbabilisticBS}. Može se parametrizovati i broj reči u skupu $\mathcal{L}$.
 
 \section{Pregled dosadašnjih istraživanja}
 Problem najkraće zajedničke nadniske prvi je uveo Dejvid Mejer (\textit{eng.} David Maier) 1978. godine u svom radu 
-"The Complexity of Some Problems on Subsequences and Supersequences" \cite{Maier}. Dokazano je da je PNZN NP-kompletan 
-problem nad svakom azbukom $\Sigma$ za koju važi da $|\Sigma|\geqslant2$ \cite{NPComplete}. Korišćenjem dinamičkog
+"The Complexity of Some Problems on Subsequences and Supersequences" \cite{Maier}. Korišćenjem dinamičkog
 programiranja (\textit{eng.} dynamic programming) PNZN nad dve reči dužine $n$ rešen je algoritmom vremenske 
 složenosti $\mathcal{O}(n^{2})$ i prostorne složenosti $\mathcal{O}(n^{2})$. Algortiam zasnovan na dinamičkom programiranju
 može biti unapređen, pa tako za $k$ reči dužine maksimalno $n$, PNZN može biti rešen u $\mathcal{O}(n^{k})$ prostornoj i 
@@ -180,8 +216,9 @@ bima predstavlja nepotpunu pretragu stabla, koja na svakom nivou proširuje graf
 obećavaju \cite{SCSBS}. Upravo zbog toga što se dobro pokazala u rešavanju PNZN i sličnih problema poput problema najduže zajedničke podniske
 (\textit{eng.} longest common subsequence) pretraga bima će biti korišćena u ovom radu i biće detaljnije opisana u daljem tekstu.
 S obzirom na to da pretraga bima podrazumeva postojanje heurističke funkcije koja će oceniti kvalitet čvorova na određenom nivou,
-u ovom radu izabrane su dve takve funkcije, Majority Merge i Weighted Majority Merge koje su se dobro pokazale u prethodnim istraživanjima
-i one će detaljnije biti opisane u nastavku teksta.
+u ovom radu izabrane su dve takve funkcije, Većinsko Spajanje (\textit{eng.} Majority Merge) i Težinsko Većinsko Spajanje
+(\textit{eng.} Weighted Majority Merge) koje su se dobro pokazale u prethodnim istraživanjima i one će detaljnije biti 
+opisane u nastavku teksta.
 
 % % Primeri citiranja\mathsf{Y} 
 % Ovo je rečenica u kojoj se javlja citat \cite{PetrovicMikic2015}.
@@ -377,7 +414,61 @@ rada kao heurističke funkcije koje će ocenjivati elemnte bima.
 Dodaj tekst za LAWMM...
 
 \chapter{Algoritmi za rešavanje problem najkraće zajedničke nadniske}
-dsadsadasd
+U ovom poglavlju biće dat pregled sledeća dva algoritama koji su koršćeni za rešavanje problema najkraće zajedničke
+nadniske:
+
+
+\begin{enumerate}
+  \item Algoritam grananja sa odsecanjem (\textit{eng.} backtracking)
+  \item Pretraga Bima (\textit{eng.} Beam Search)
+\end{enumerate}
+U nastavku teksta biće opisana konstrukcija ova dva algoritma kao i njihove karakteristike.
+
+
+\section{Algoritam grananja sa odsecanjem}
+Algoritam grananja sa odsecanjem poboljšava tehniku grube sile tako što vrši provere tokom generisanja
+kandidata za rešenja i tako što se odbacuju parcijalno popunjeni kandidati za koje se unapred može utvrditi
+da se ne mogu proširiti do optimalnog rešenja problema. Dakle, grananje sa odsecanjem podrazumeva da se tokom
+obilaska u dubinu drveta, kojim se predstavlja prostor potencijalnih rešenja odsecaju oni delovi drveta za koje se unapred
+može utvrditi da ne sadrže ni jedno rešenje problema tj. da ne sadrže optimalno rešenje, pri čemu se odsecanje vrši
+i u čvorovima bliskim korenu koji mogu da sadrže i samo parcijalno popunjene kandidate za rešenja.
+Dakle, umesto da se čeka da se tokom pretrage stigne do lista (ili eventualno unutrašnjeg čvora koji predstavlja
+nekog kandidata za rešenje) i da se provera zadovoljenosti uslova ili optimalnosti vrši tek tada, prilikom granja sa
+odsecanjem provera se vrši u svakom koraku i vrši se provera parcijalno popunjenih rešenja.
+Efikasnost ovakvog algoritma uveliko zavisi od kvaliteta kriterijuma na osnovu kojih se vrši odsecanje. Iako obično
+složenost najgoreg slučaja ostaje eksponencijalna (kakva je po pravili kod algoritama grube sile), pažljivo odabrani
+kriterijumi odsecanja mogu odseći jako velike delove pretrage (koji su često takođe eksponencijalne veličine u odnosu
+na dimenzije ulaznog problema) i time značajno ubrzati proces pretrage.
+
+U kontekstu PNZN korišćen je rekurzivni algoritam prikazan pod Algoritam \ref{alg:brutef}.
+\begin{algorithm}
+  \caption{GrananjeSaOdsecanjem($\omega$)}
+  \label{alg:brutef}
+  \begin{algorithmic}[1]
+  % \Require $n \geq 0$
+  % \Ensure $y = x^n$
+  \State $d \gets |\omega|$
+  \If{$(d \geqslant (maxD + 1)) \lor (nd \leq d)$}
+      \State \Return
+  \EndIf
+
+  \If{$(d \geqslant minD ) \land  daLiJeNadniska(\omega)$}
+      \State $nn = \omega$ \Comment{nn - najbolja nadniska}
+      \State $nd = |\omega|$ \Comment{nn - najbolja nadniska}
+  \EndIf
+  \While{$\sum_{\omega_{i}\in\mathcal{L}}|\omega_{i}| \neq 0$} 
+  \For{$\alpha \in \Sigma$}
+        \State $v(\alpha|\mathcal{S}) \gets \sum_{\omega_{i}\in\mathcal{L},\omega_{i}=\alpha\omega^{'}_{i}}1$
+  \EndFor
+  \State $\beta \gets argmax \{v(\alpha|\mathcal{S})\textrm{ }|\textrm{ }\alpha \in \Sigma \}$
+  \State $\mathcal{L} \gets \mathcal{L}|_{\beta}$
+  \State $\mathcal{S} \gets \mathcal{S}\beta$
+  \EndWhile
+  \State \Return $\mathcal{S}$
+  \end{algorithmic}
+  \end{algorithm}
+
+% \lstinputlisting[caption=Sample Code Listing C++, label={lst:listing-cpp}, language=C++]{./code1.cpp}
 % ------------------------------------------------------------------------------
 % \pangrami
 

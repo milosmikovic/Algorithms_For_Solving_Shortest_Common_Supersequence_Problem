@@ -1,0 +1,61 @@
+This is BibTeX, Version 0.99d (TeX Live 2019/Debian)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: matfmaster-primer-lat.aux
+The style file: plain.bst
+Database file #1: matfmaster-primer.bib
+Too many commas in name 1 of "Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, Clifford Stein" for entry ITAlgorithms
+while executing---line 1049 of file plain.bst
+Too many commas in name 1 of "Paolo Barone, Paola Bonizzoni, Gianluca Della Vedova, Giancarlo Mauri" for entry AlphabetSCS
+while executing---line 1049 of file plain.bst
+Too many commas in name 1 of "Jonas Mayerhofer, Markus Kirchweger, Marc Huber, Gunther Raidl" for entry SCSBS
+while executing---line 1049 of file plain.bst
+Too many commas in name 1 of "Jonas Mayerhofer, Markus Kirchweger, Marc Huber, Gunther Raidl" for entry SCSBS
+while executing---line 1090 of file plain.bst
+Warning--empty booktitle in SCSBS
+Too many commas in name 1 of "Paolo Barone, Paola Bonizzoni, Gianluca Della Vedova, Giancarlo Mauri" for entry AlphabetSCS
+while executing---line 1090 of file plain.bst
+Warning--empty booktitle in SCSColony
+Too many commas in name 1 of "Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, Clifford Stein" for entry ITAlgorithms
+while executing---line 1090 of file plain.bst
+You've used 17 entries,
+            2118 wiz_defined-function locations,
+            589 strings with 6762 characters,
+and the built_in function-call counts, 3704 in all, are:
+= -- 320
+> -- 131
+< -- 0
++ -- 55
+- -- 38
+* -- 129
+:= -- 624
+add.period$ -- 46
+call.type$ -- 17
+change.case$ -- 67
+chr.to.int$ -- 0
+cite$ -- 19
+duplicate$ -- 167
+empty$ -- 401
+format.name$ -- 38
+if$ -- 800
+int.to.chr$ -- 0
+int.to.str$ -- 17
+missing$ -- 11
+newline$ -- 83
+num.names$ -- 34
+pop$ -- 152
+preamble$ -- 1
+purify$ -- 53
+quote$ -- 0
+skip$ -- 121
+stack$ -- 0
+substring$ -- 85
+swap$ -- 20
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 62
+warning$ -- 2
+while$ -- 34
+width$ -- 19
+write$ -- 158
+(There were 6 error messages)
