@@ -314,6 +314,7 @@ U nastavku teksta biće opisane pomenute metode, ali samo kao nezavisne celine, 
 rad ovih metoda biće predstavljen u narednom poglavlju.
 
 \section{Metaheuristika Pretraga Bima}
+\label{sec:pretragaBima}
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=1\textwidth]{Slike/bs2.png}
@@ -376,6 +377,7 @@ Algoritam se može zaustaviti kada se pronađe prvo rešenje problema, ali mogu 
 poput broja iteracija petlje (predstavlja dubinu unutar stabla pretrage) ili vremenska ograničenja.
 
 \section{Heurističke funkcije Većinsko Spajanje i Težinsko Većinsko Spajanje}
+\label{sec:MMiWMM}
 Većinsko Spajanje predstavlja jedan od najpopularnijih algoritama koji rešava PNZN. To je pohlepni algoritam
 koji inkrementalno konstruiše supersekvencu. Najpre se odredi slovo koje se najčešće nalazi na početku reči
 iz skupa $\mathcal{L}$, a zatim se izabrano slovo briše sa početka reči iz $\mathcal{L}$ koje ga sadrže \cite{ProbabilisticBS}.
@@ -578,6 +580,25 @@ da je $s$ sigurno podniska reči $\omega$.
     \State \Return $\textrm{Tačno}$
     \end{algorithmic}
     \end{algorithm}
+Iako algoritam grananja sa odsecanjem u najgorem slučaju ima eksponencijalnu složenost $O(|\Sigma|^{maxD})$
+kao i algoritam Iscrpne Pretrage (\textit{eng.} Brute Force), u praksi je prosečno vreme izvršavanja
+daleko kraće. Rezultati izvršavanja algoritma grananja sa odsecanjem biće prikazani u sledećem poglavlju.
+Ono što je bitno istaći jeste da ovaj algoritam garantuje pronalaženje optimalnog rešenja PNZN, što omogućava
+jednostavnu proveru uspešnosti algoritma Pretrage Bima (koji će biti predstavljen u sledećoj sekciji)
+na manjim instancam PNZN. S obzirom na eksponencijalnu prirodu ovog algoritma, ne moguće je koristiti ga
+za proveru kvaliteta rešenja Pretrage Bima na većim instancama problema, stoga će u te svrhe biti korišćene
+nešto sofisticiranije metode koje će biti objašnjene u nastavku.
+
+\section{Algoritam Pretraga Bima}
+Kao što je već rečeno u sekciji \ref{sec:pretragaBima} Pretraga Bima predstavlja metaheuristiku
+koja graf koji predstavlja prostor rešenja problema obilazi u širinu. Metaparametar $\beta$
+koji nazivamo širina bima kontroliše broj elemenata unutar Bima koji označavamo sa $\mathcal{B}$.
+Zapravo podešavanjem vrednosti parametra $\beta$ kontrolišemo broj čvorova unutar grafa sa kojima
+nastavljamo grananje, a time i ograničavamo složenost izračunavanja na svakom nivou. Odabir čvorova
+koji najviše obećavaju na svakom nivou usmerava pretragu ka pronalasku rešenja i odabir će
+se vršiti heurističkim funkcijama opisanim u sekciji \ref{sec:MMiWMM}. Nažalost ovaj algoritam
+ne garantuje pronalak optimalnog rešenja, ali za razumne vrednosti metaparametra $\beta$
+daje prihvatljivo vreme izvršavanja u realnim uslovima, pa čak i na velikim instancama PNZN.
 
 % \lstinputlisting[caption=Sample Code Listing C++, label={lst:listing-cpp}, language=C++]{./code1.cpp}
 % ------------------------------------------------------------------------------
