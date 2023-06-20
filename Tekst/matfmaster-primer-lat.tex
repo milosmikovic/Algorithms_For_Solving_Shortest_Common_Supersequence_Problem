@@ -478,7 +478,7 @@ U kontekstu PNZN korišćen je rekurzivni algoritam prikazan pod Algoritam \ref{
   \EndIf
 
   \For{$\alpha \in \Sigma$} \Comment{grananje po slovima azbuke}
-        \State $GrananjeSaOdsecanjem(\omega\alpha)$
+        \State $\textrm{GrananjeSaOdsecanjem}(\omega\alpha)$
   \EndFor
   \end{algorithmic}
   \end{algorithm}
@@ -547,7 +547,7 @@ da je $s$ sigurno podniska reči $\omega$.
   \label{alg:zajNad}
   \begin{algorithmic}[1]
   \For{$s \in \mathcal{L}$}
-    \If{$\neg Podniska(s,\omega)$}
+    \If{$\neg \textrm{Podniska}(s,\omega)$}
     \State \Return $\textrm{Netačno}$
     \EndIf
   \EndFor
@@ -555,6 +555,7 @@ da je $s$ sigurno podniska reči $\omega$.
   \State \Return $\textrm{Tačno}$
   \end{algorithmic}
   \end{algorithm}
+
   \begin{algorithm}
     \caption{$\textrm{Podniska}(s,\omega)$}
     \label{alg:podNiska}
@@ -621,45 +622,113 @@ se pronađe najbolji put od korenog čvora do ciljanog čvora u grafu. Kako bi s
 zadatim granicama, Pretraga Bima evaluira dostignute čvorove na određenom nivou ali bira samo podskup od $\beta$
 čvorova koji najviše obećavaju i sa tim podskupom čvorova napreduje dalje u pretrazi. Izabrani podskup od $\beta$ čvorova
 zvaćemo bim (\textit{eng.} beam) i označavaćemo ga sa $\mathbb{B}$, a $\beta$ parametar ćemo zvati širina bima (\textit{eng.} beam width) \cite{SCSBS}.
-U kontekstu PNZN graf koji pretražujemo $\mathcal{G}=(\mathcal{V},\mathbb{E})$ predstavlja usmeren aciklički graf, a  
-pseudo kod algoritma prikazan je pod Algoritam \ref{alg:bs}.
+U kontekstu PNZN graf koji pretražujemo $\mathcal{G}=(\mathcal{V},\mathbb{E})$ predstavlja usmeren aciklički graf, 
+a pseudo kod algoritma je prikazan pod Algoritam \ref{alg:bs}.
 \\
 \begin{algorithm}
-  \caption{PretragaBimaPNZN($\Sigma$, $\mathcal{L}$, $\beta$)}
+  \caption{PretragaBimaPNZN()}
   \label{alg:bs}
   \begin{algorithmic}[1]
   % \Require $n \geq 0$
   % \Ensure $y = x^n$
-  \State $\mathcal{B} \gets \{ \}$
-  \While{$\textrm{Tačno}$} \Comment{Može postojati uslov izlaska iz petlje pre pronađenog rešenja}
-  \State $\mathcal{B} \gets \textrm{ProširiBim}(\Sigma)$
-  \State $\textrm{OceniBim}(\mathcal{B}, \mathcal{L})$
-  \State $\mathcal{B} \gets \textrm{RedukujBim}(\mathcal{B}, \beta)$
-  % \State \If{x}
-  % \ElsIf{$N$ is odd}
-  \For{$\omega\in\mathcal{B}$}
-    \If{$\textrm{ZajedničkaNadniska}(\omega,\mathcal{L})$}
-    \State \Return $\omega$
-    \EndIf
+  \State $b1 \gets \{ \}$
+  \State $b2 \gets \{ \}$
+  \State $\textrm{pronađenaNadniska} \gets \textrm{Netačno}$
+  \State
+  \State $\textrm{težine} \gets \textbf{H}\textrm{([0,...,0])}$
+  \State
+  \For{$\alpha\in\Sigma$}
+    \State $\textrm{težinaSlova} \gets 0$
+    \For{$t\in\textrm{težine}$}
+      \If{$\alpha == \textrm{t.slovo}$}
+        \State $\textrm{težinaSlova} \gets \textrm{t.vrednost}$
+      \EndIf
+    \EndFor
+    \State $\textrm{element} \gets \{\alpha\textrm{, težinaSlova, [0,...,0]}\}$
+    \State $b1\textrm{.dodaj(element)}$
   \EndFor
+  \State
+  \State $b1 \gets \textbf{RedukujBim}(b1\textrm{, pronađenaNadniska})$
+  \State
+  \While{$\neg\textrm{pronađenaNadniska}$} 
+    \For{$s\in b1$}
+      \State $\textrm{težine} \gets \textrm{H(s.pozicije)}$
+      \State
+      \If{$\textrm{težine[0].vrednost == 0}$}
+        \State $\textrm{SkiniPreostalaSlova()}$
+        \State $\textrm{pronađenaNadniska} \gets \textrm{Tačno}$
+        \State \textbf{break}
+      \EndIf
+      \State
+      \For{$\alpha\in\Sigma$}
+        \State $\textrm{težinaSlova} \gets 0$
+        \For{$t\in\textrm{težine}$}
+          \If{$\alpha == \textrm{t.slovo}$}
+            \State $\textrm{težinaSlova} \gets \textrm{t.vrednost}$
+          \EndIf
+        \EndFor
+      \State $\textrm{element} \gets \{\textrm{(s.reč)}\alpha\textrm{, s.hvrednost + težinaSlova, s.pozicije}\}$
+      \State $b2\textrm{.dodaj(element)}$
+      \EndFor
+    \EndFor
+    \State
+    \State $b1\textrm{.obriši()}$
+    \State $b1 \gets \textbf{RedukujBim}(b2\textrm{, pronađenaNadniska})$
+    \State $b2\textrm{.obriši()}$
   \EndWhile
   \end{algorithmic}
   \end{algorithm}
 \\
-Algoritam prima tri ulazna parametra: azbuku $\Sigma$, ulazni skup reči $\mathcal{L}$ i širinu bima $\beta$.
-Na početku bim $\mathcal{B}$ predstavlja prazan skup. U svakom koraku algoritma bim se proširuje slovima iz azbuke,
-a zatim se elementi proširenog bima ocenjuje izabranom heurističkom funkcijom. Zatim se vrši odabir $\beta$ čvorova
-sa kojima se dalje nastavlja pretraga, i vrši se provera da li neki čvor u bimu predstavlja rešenje problema,
-ako takav čvor postoji algoritam vraća pronađeno rešenje. Funkcija ProširiBim u prvom koraku popunjava bim slovima
-iz azbuke, a u svakom narednom koraku svako parcijalno rešenje redukovanog bima proširuje dodavajući na njega redom
-slova iz azbuke. Funkcija OceniBim predstavlja heurističku funkciju koja dodeljuje određene vrednosti svakom elementu bima,
-a na osnovu ovih vrednosti funkcija RedukujBim bira $\beta$ parcijalnih rešenja koja imaju najveće vrednosti
-heurističke funkcije. Tokom redukcije bima vrednosti ocena parcijalnih rešenja mogu da se sortiraju tako da redukovani
-bim sadrži $\beta$ najbolje ocenjenih rešenja, ali mogu se koristiti i druge strategije odabira rešenja poput ruletske
-selekcije (\textit{eng.} roulette selection). Funkcija ZajedničkaNadniska vrši proveru da li reč $\omega$
-predstavlja zajedničku nadnisku reči iz skupa $\mathcal{L}$ i jedna njena implementacija će biti opisana u sledećem poglavlju.
-Algoritam se može zaustaviti kada se pronađe prvo rešenje problema, ali mogu se postaviti i drugi uslovi zaustavljanja
-poput broja iteracija petlje (predstavlja dubinu unutar stabla pretrage) ili vremenska ograničenja.
+dasdsa
+\\
+\begin{algorithm}
+  \caption{RedukujBim($\mathcal{B}$, pronađenaNadniska)}
+  \label{alg:redukujbim}
+  \begin{algorithmic}[1]
+    \If{$\textrm{s.veličina()} \leqslant \beta$}
+      \For{$e \in \mathcal{B}$}
+        \State $\textrm{AžurirajPozicije}(e)$
+          \If{$\textrm{ZajedničkaNadniska(e.reč)}$}
+            \State $nn \gets \textrm{s.reč}$ \Comment{nn - najbolja nadniska}
+            \State $nd \gets |nn|$ \Comment{nd - najbolja dužina}
+            \State $\textrm{pronađenaNadniska} \gets \textrm{Tačno}$
+          \EndIf
+      \EndFor
+      \State \Return $\mathcal{B}$
+    \EndIf
+    \State
+    \State $\textrm{Promešaj}(\mathcal{B})$
+    \State $\textrm{Sortiraj}(\mathcal{B})$
+    \State $\mathcal{B}p \gets \{ \}$
+    \State
+    \For{$i=0 \to \beta$}
+      \State $\textrm{AžurirajPozicije}(\mathcal{B}[i])$
+      \If{$\textrm{ZajedničkaNadniska}(\mathcal{B}[i].\textrm{reč})}$
+            \State $nn \gets \mathcal{B}[i].\textrm{reč}$
+            \State $nd \gets |nn|$ 
+            \State $\textrm{pronađenaNadniska} \gets \textrm{Tačno}$
+      \EndIf
+      \State $\mathcal{B}p\textrm{.dodaj}(\mathcal{B}[i])$
+    \EndFor
+    \State
+    \State \Return $\mathcal{B}p$
+  \end{algorithmic}
+  \end{algorithm}
+\\
+% Algoritam prima tri ulazna parametra: azbuku $\Sigma$, ulazni skup reči $\mathcal{L}$ i širinu bima $\beta$.
+% Na početku bim $\mathcal{B}$ predstavlja prazan skup. U svakom koraku algoritma bim se proširuje slovima iz azbuke,
+% a zatim se elementi proširenog bima ocenjuje izabranom heurističkom funkcijom. Zatim se vrši odabir $\beta$ čvorova
+% sa kojima se dalje nastavlja pretraga, i vrši se provera da li neki čvor u bimu predstavlja rešenje problema,
+% ako takav čvor postoji algoritam vraća pronađeno rešenje. Funkcija ProširiBim u prvom koraku popunjava bim slovima
+% iz azbuke, a u svakom narednom koraku svako parcijalno rešenje redukovanog bima proširuje dodavajući na njega redom
+% slova iz azbuke. Funkcija OceniBim predstavlja heurističku funkciju koja dodeljuje određene vrednosti svakom elementu bima,
+% a na osnovu ovih vrednosti funkcija RedukujBim bira $\beta$ parcijalnih rešenja koja imaju najveće vrednosti
+% heurističke funkcije. Tokom redukcije bima vrednosti ocena parcijalnih rešenja mogu da se sortiraju tako da redukovani
+% bim sadrži $\beta$ najbolje ocenjenih rešenja, ali mogu se koristiti i druge strategije odabira rešenja poput ruletske
+% selekcije (\textit{eng.} roulette selection). Funkcija ZajedničkaNadniska vrši proveru da li reč $\omega$
+% predstavlja zajedničku nadnisku reči iz skupa $\mathcal{L}$ i jedna njena implementacija će biti opisana u sledećem poglavlju.
+% Algoritam se može zaustaviti kada se pronađe prvo rešenje problema, ali mogu se postaviti i drugi uslovi zaustavljanja
+% poput broja iteracija petlje (predstavlja dubinu unutar stabla pretrage) ili vremenska ograničenja.
 
 \subsection{Heurističke funkcije Većinsko Spajanje i Težinsko Većinsko Spajanje}
 \label{sec:mmiwmm}

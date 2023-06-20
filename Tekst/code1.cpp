@@ -1,4 +1,9 @@
-void LAWMM_Beam_Search()
+setScsMaxDepth();
+            shortestCommonSupersequenceLen = maxDepth;
+
+            WMM_Beam_Search();
+
+void WMM_Beam_Search()
         {
             // BEGIN : algorithm initialization
             /* 
@@ -17,7 +22,7 @@ void LAWMM_Beam_Search()
                         std::string(1,alphabet[0]),
                         std::pair<size_t, std::vector<std::size_t>>(0,std::vector<std::size_t>(setOfStringsSize,0))
                         );
-            std::vector<std::pair<char, std::size_t>> lr = LAWMM(initialSolution);
+            std::vector<std::pair<char, std::size_t>> lr = WMM(initialSolution);
 
             for(auto &c : alphabet)
             {
@@ -48,7 +53,7 @@ void LAWMM_Beam_Search()
                 {
                     // calculation of ranks of partial solutions
                     // fResults << "Ranks for seq:" << s.first << std::endl; 
-                    std::vector<std::pair<char, std::size_t>> letterRanks = LAWMM(s);
+                    std::vector<std::pair<char, std::size_t>> letterRanks = WMM(s);
                     /*
                      if all the ranks of the letters are 0 then there is a solution, actually if the rank of the first
                      letter is 0 it means that the others are also because they are sorted

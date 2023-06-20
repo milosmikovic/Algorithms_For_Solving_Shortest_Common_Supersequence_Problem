@@ -1,9 +1,0 @@
-\babel@toc {serbian}{}
-\contentsline {chapter}{\chapternumberline {1}Uvod}{1}{chapter.1}%
-\contentsline {section}{\numberline {1.1}Problem najkraće zajedničke nadniske}{1}{section.1.1}%
-\contentsline {section}{\numberline {1.2}Pregled dosadašnjih istraživanja}{3}{section.1.2}%
-\contentsline {chapter}{\chapternumberline {2}Algoritmi za rešavanje problem najkraće zajedničke nadniske}{5}{chapter.2}%
-\contentsline {section}{\numberline {2.1}Algoritam grananja sa odsecanjem}{5}{section.2.1}%
-\contentsline {section}{\numberline {2.2}Pretraga Bima}{9}{section.2.2}%
-\contentsline {subsection}{Heurističke funkcije Većinsko Spajanje i Težinsko Većinsko Spajanje}{11}{section*.2}%
-\contentsline {chapter}{Bibliografija}{13}{chapter*.3}%
