@@ -19,6 +19,8 @@
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage{listings}
+\usepackage{bm}
+
 
 
 % Define a custom color
@@ -160,7 +162,8 @@ definišemo kao $\{\omega_{1},\omega_{2},...,\omega_{n}\}|_{\alpha}=\{\omega_{1}
 Sa $\omega[a:b]$\footnote{Slično kao indeksiranje nizova u programskom jeziku Python} označavaćemo reč koja se dobija od
 reči $\omega$ počevši od pozicije $a$ do pozicije $b$ u reči $\omega$. Ako se izostavi vrednost pozicije $a$, podrazumeva se
 da je početna pozicija 0, slično ako se izostavi vrednost pozicije $b$ podrazumeva se vrednost $m-1$ ako $|\omega|=m$.
-Na primer $\omega[:]$ predstavlja samu reč $\omega$.
+Na primer $\omega[:]$ predstavlja samu reč $\omega$. Pristupanje slovu na poziciji $i$ reči $\omega$ 
+označavaćemo sa $\omega[i]$.
 
 Neka važi da $\omega_{1},\omega_{2}\in\Sigma^*$, za reč $\omega_{1}$ kažemo da je
 supersekvenca reči $\omega_{2}$ u oznaci $\omega_{1}\succ\omega_{2}$ ako važi sledeća rekurzivna definicija \cite{ProbabilisticBS}:
@@ -437,6 +440,7 @@ U nastavku teksta biće opisana konstrukcija ova dva algoritma kao i njihove kar
 
 
 \section{Algoritam grananja sa odsecanjem}
+\label{sec:algGrananjaSaOdsecanjem}
 Algoritam grananja sa odsecanjem poboljšava tehniku grube sile tako što vrši provere tokom generisanja
 kandidata za rešenja i tako što se odbacuju parcijalno popunjeni kandidati za koje se unapred može utvrditi
 da se ne mogu proširiti do optimalnog rešenja problema. Dakle, grananje sa odsecanjem podrazumeva da se tokom
@@ -453,38 +457,38 @@ na dimenzije ulaznog problema) i time značajno ubrzati proces pretrage.
 
 U kontekstu PNZN korišćen je rekurzivni algoritam prikazan pod Algoritam \ref{alg:brutef}.
 \begin{algorithm}
-  \caption{GrananjeSaOdsecanjem($\omega$)}
+  \caption{\textbf{GrananjeSaOdsecanjem($\bm{\omega}$)}}
   \label{alg:brutef}
   \begin{algorithmic}[1]
   % \Require $n \geq 0$
   % \Ensure $y = x^n$
-  \State $d \gets |\omega|$ \Comment{d - dužina trenutne reči}
+  \State $d \gets |\omega|$ \Comment{$d$ - dužina trenutne reči}
   \If{$(d > maxD) \lor (d \geq nd)$}
       \State \Return
   \EndIf
 
-  \If{$(d \geqslant minD ) \land  \textrm{ZajedničkaNadniska}(\omega)$}
-      \State $iDaljeZajedničkaNadniska \gets \textrm{Tačno}$
+  \If{$(d \geqslant minD ) \land  \textbf{ZajedničkaNadniska}(\omega)$}
+      \State $iDaljeNadniska \gets Ta\textrm{č}no$
       \State $pozicija \gets 0$
-      \While{$iDaljeZajedničkaNadniska$} \Comment{optimizacija}
-        \If{$\textrm{ZajedničkaNadniska}(\omega[pozicija + 1:])$}
+      \While{$iDaljeNadniska$} \Comment{optimizacija}
+        \If{$\textbf{ZajedničkaNadniska}(\omega[pozicija + 1:])$}
           \State $pozicija \gets pozicija + 1$
         \Else
-          \State $iDaljeZajedničkaNadniska = \textrm{Netačno}$
+          \State $iDaljeNadniska = Neta\textrm{č}no$
         \EndIf
       \EndWhile
-      \State $nn \gets \omega[pozicija:]$ \Comment{nn - najbolja nadniska}
-      \State $nd \gets |nn|$ \Comment{nd - najbolja dužina}
+      \State $nn \gets \omega[pozicija:]$ \Comment{$nn$ - najbolja nadniska}
+      \State $nd \gets |nn|$ \Comment{$nd$ - najbolja dužina}
   \EndIf
 
   \For{$\alpha \in \Sigma$} \Comment{grananje po slovima azbuke}
-        \State $\textrm{GrananjeSaOdsecanjem}(\omega\alpha)$
+        \State $\textbf{GrananjeSaOdsecanjem}(\omega\alpha)$
   \EndFor
   \end{algorithmic}
   \end{algorithm}
 Algoritam podrazumeva postojanje dve globalne promenjive $minD$ i $maxD$ čije se vrednosti postavljaju pre
-poziva algoritma i one označavaju redom minimalnu i maksimalnu dubinu, takođe se podrazumeva da je skup $\mathcal{L}$
-globalno dostupan u programu. Vrednost promenjive $minD$ postavlja
+poziva algoritma i one označavaju redom minimalnu i maksimalnu dubinu, takođe se podrazumeva da su skupovi $\mathcal{L}$
+i $\Sigma$ globalno dostupni u programu. Vrednost promenjive $minD$ postavlja
 se na dužinu najkraće reči u $\mathcal{L}$, a vrednost promenjive $maxD$ predstavlja proizvod veličine azbuke
 i najduže reči u skupu $\mathcal{L}$ kao što je prikazano u jednačinama \ref{eqn:minD} i \ref{eqn:maxD}
 \\
@@ -543,32 +547,32 @@ $\omega$ pa inkrementiramo njen indeks $\omega P$. Petlja se završava kada pro�
 da je $s$ sigurno podniska reči $\omega$.
 \\
 \begin{algorithm}
-  \caption{$\textrm{ZajedničkaNadniska}(\omega)$}
+  \caption{$\textbf{ZajedničkaNadniska}\bm{(\omega)}$}
   \label{alg:zajNad}
   \begin{algorithmic}[1]
   \For{$s \in \mathcal{L}$}
-    \If{$\neg \textrm{Podniska}(s,\omega)$}
-    \State \Return $\textrm{Netačno}$
+    \If{$\neg \textbf{Podniska}(s,\omega)$}
+    \State \Return $Neta\textrm{č}no$
     \EndIf
   \EndFor
   \State
-  \State \Return $\textrm{Tačno}$
+  \State \Return $Ta\textrm{č}no$
   \end{algorithmic}
   \end{algorithm}
 
   \begin{algorithm}
-    \caption{$\textrm{Podniska}(s,\omega)$}
+    \caption{$\textbf{Podniska}\bm{(s,\omega)}$}
     \label{alg:podNiska}
     \begin{algorithmic}[1]
-    \State $sP \gets 0$ \Comment{indeks na početak reči s}
-    \State $sK \gets |s|$ \Comment{indeks na kraj reči s}
+    \State $sP \gets 0$ \Comment{indeks na početak reči $s$}
+    \State $sK \gets |s|$ \Comment{indeks na kraj reči $s$}
     \State $\omega P \gets 0$ \Comment{indeks na početak reči $\omega$}
     \State $\omega K \gets |s|$ \Comment{indeks na kraj reči $\omega$}
 
     \State
     \While{$sP \neq sK$}
       \If{$\omega P == \omega K$}
-        \State \Return $\textrm{Netačno}$
+        \State \Return $Neta\textrm{č}no$
       \ElsIf{$s[sP] == \omega[\omega P]$}
         \State $sP \gets sP + 1$
         \State $\omega P \gets \omega P + 1$
@@ -577,7 +581,7 @@ da je $s$ sigurno podniska reči $\omega$.
       \EndIf
     \EndWhile
     \State
-    \State \Return $\textrm{Tačno}$
+    \State \Return $Ta\textrm{č}no$
     \end{algorithmic}
     \end{algorithm}
 Iako algoritam grananja sa odsecanjem u najgorem slučaju ima eksponencijalnu složenost $O(|\Sigma|^{maxD})$
@@ -624,94 +628,143 @@ zadatim granicama, Pretraga Bima evaluira dostignute čvorove na određenom nivo
 zvaćemo bim (\textit{eng.} beam) i označavaćemo ga sa $\mathbb{B}$, a $\beta$ parametar ćemo zvati širina bima (\textit{eng.} beam width) \cite{SCSBS}.
 U kontekstu PNZN graf koji pretražujemo $\mathcal{G}=(\mathcal{V},\mathbb{E})$ predstavlja usmeren aciklički graf, 
 a pseudo kod algoritma je prikazan pod Algoritam \ref{alg:bs}.
+
+Kao i u prethodno opisanom algoritmu podrazumeva se da je promenjiva $maxD$ globalno dostupna,
+kao i skupovi $\mathcal{L}$ i $\Sigma$. Svaki element skupa $\mathcal{B}$ predstavlja objekat koji
+sadrži parcijalnu reč, heurističku ocenu i pozicije.
+Parcijalna reč predstavlja put od korena do nekog čvora unutar stabla pretrage, 
+heuristička ocena predstavlja ocenu ove reči od strane heurističke funkcije, a pozicije predstavljaju
+niz koji oznčava pozicije do kojih se stiglo unutar skupa $\mathcal{L}$.
+Pri proširivanju skupa $\mathcal{B}$ slovima iz azbuke $\Sigma$, dobijaju se novi
+elementi čija je parcijalna reč proširena novododatim slovom. Od jednog elementa
+dobijamo maksimalno $|\Sigma|$ novih, što znači da u svakom koraku algoritma dobijamo
+maksimalno $\beta * |\Sigma|$ novih elemenata od kojih je potrebno izabrati $\beta$ 
+elemenata. Heurističke funkcije, koje će biti predstavljene u narednom podpoglavlju,
+za dati niz pozicija računaju ocene za svako slovo azbuke. Recimo ako je data azbuka 
+$\Sigma=\{a, c, t, g\}$ i skup $\mathcal{L}=\{actt,gcac,ctga\}$ 
+
+pohlepno vrše ocenu slova na taj način što 
+ocenjuju slova u zavisnosti od pozicija unutar skupa $\mathcal{L}$, zapravo bitna su
+početna slova reči 
+
+S obzirom na pohlepnu prirodu heurističkih funkcija koje su detaljno objašnjene
+u sledećem podpoglavlju, svaki element bima  u svakom koraku algortima vrši se ocena slova iz azbuke
+u zavisnosti od pozicija u skupu $\mathcal{L}$ do kojih je element bima stigao, zapravno
+parcijalna reč koju taj element sadrži.
+tako da se na parcijalno rešenje elementa bima 
+
+Algoritam \ref{alg:bs} inkrementalno gradi nadnisku,
+tako što u svakom koraku glavne petlje, za svaki element bima najpre izračunava
+vrednost heurističke funkcije $\textbf{H}$, i ovde je napravljeno malo odstupanje
+od klasičnog algoritma pretrage bima koji prvo proširuje bim a zatim vrši ocenu elemenata 
+heurističkom funkcijom. Zboj prirode predloženih funkcija
+
+Iz tog razloga je inicijalni korak pretrage bima obrađen izvan glavne petlje.
 \\
 \begin{algorithm}
-  \caption{PretragaBimaPNZN()}
+  \caption{\textbf{PretragaBimaPNZN()}}
   \label{alg:bs}
   \begin{algorithmic}[1]
   % \Require $n \geq 0$
   % \Ensure $y = x^n$
   \State $b1 \gets \{ \}$
   \State $b2 \gets \{ \}$
-  \State $\textrm{pronađenaNadniska} \gets \textrm{Netačno}$
+  \State $prona\textrm{đ}enaNadniska \gets Neta\textrm{č}no$
   \State
-  \State $\textrm{težine} \gets \textbf{H}\textrm{([0,...,0])}$
+  \State $te\textrm{ž}ine \gets \textbf{H}\textrm{([0,...,0])}$
   \State
   \For{$\alpha\in\Sigma$}
-    \State $\textrm{težinaSlova} \gets 0$
-    \For{$t\in\textrm{težine}$}
-      \If{$\alpha == \textrm{t.slovo}$}
-        \State $\textrm{težinaSlova} \gets \textrm{t.vrednost}$
+    \State $te\textrm{ž}inaSlova \gets 0$
+    \For{$t\in te\textrm{ž}ine$}
+      \If{$\alpha == t\textrm{.}slovo$}
+        \State $te\textrm{ž}inaSlova \gets t\textrm{.}vrednost$
       \EndIf
     \EndFor
-    \State $\textrm{element} \gets \{\alpha\textrm{, težinaSlova, [0,...,0]}\}$
-    \State $b1\textrm{.dodaj(element)}$
+    \State $element \gets \{\alpha\textrm{, }te\textrm{ž}inaSlova \textrm{, [0,...,0]}\}$
+    \State $b1\textrm{.}dodaj(element)$
   \EndFor
   \State
-  \State $b1 \gets \textbf{RedukujBim}(b1\textrm{, pronađenaNadniska})$
+  \State $b1 \gets \textbf{RedukujBim}(b1\textrm{, }prona\textrm{đ}enaNadniska)$
+  \State $dubina \gets 0$
   \State
-  \While{$\neg\textrm{pronađenaNadniska}$} 
+  \While{$\neg prona\textrm{đ}enaNadniska \land dubina < maxD$} 
     \For{$s\in b1$}
-      \State $\textrm{težine} \gets \textrm{H(s.pozicije)}$
+      \State $te\textrm{ž}ine \gets \textbf{H}(s.pozicije)$
       \State
-      \If{$\textrm{težine[0].vrednost == 0}$}
-        \State $\textrm{SkiniPreostalaSlova()}$
-        \State $\textrm{pronađenaNadniska} \gets \textrm{Tačno}$
+      \If{$te\textrm{ž}ine[0].vrednost == 0$}
+        \State $\textbf{SkiniPreostalaSlova}()$
+        \State $prona\textrm{đ}enaNadniska \gets Ta\textrm{č}no$
         \State \textbf{break}
       \EndIf
       \State
       \For{$\alpha\in\Sigma$}
-        \State $\textrm{težinaSlova} \gets 0$
-        \For{$t\in\textrm{težine}$}
-          \If{$\alpha == \textrm{t.slovo}$}
-            \State $\textrm{težinaSlova} \gets \textrm{t.vrednost}$
+        \State $te\textrm{ž}inaSlova \gets 0$
+        \For{$t\in te\textrm{ž}ine$}
+          \If{$\alpha == t.slovo$}
+            \State $te\textrm{ž}inaSlova \gets t.vrednost$
           \EndIf
         \EndFor
-      \State $\textrm{element} \gets \{\textrm{(s.reč)}\alpha\textrm{, s.hvrednost + težinaSlova, s.pozicije}\}$
-      \State $b2\textrm{.dodaj(element)}$
+      \State $element \gets \{(s.re\textrm{č})\alpha\textrm{, }s.hvrednost + te\textrm{ž}inaSlova\textrm{, }s.pozicije\}$
+      \State $b2\textrm{.}dodaj(element)$
       \EndFor
     \EndFor
     \State
-    \State $b1\textrm{.obriši()}$
-    \State $b1 \gets \textbf{RedukujBim}(b2\textrm{, pronađenaNadniska})$
-    \State $b2\textrm{.obriši()}$
+    \State $b1\textrm{.}obri\textrm{š}i()$
+    \State $b1 \gets \textbf{RedukujBim}(b2\textrm{, }prona\textrm{đ}enaNadniska)$
+    \State $b2\textrm{.}obri\textrm{š}i()$
+    \State $dubina \gets dubina + 1$
   \EndWhile
   \end{algorithmic}
   \end{algorithm}
 \\
-dasdsa
 \\
 \begin{algorithm}
-  \caption{RedukujBim($\mathcal{B}$, pronađenaNadniska)}
+  \caption{$\textbf{RedukujBim}\bm{(\mathcal{B}\textbf{, }prona\textbf{đ}enaNadniska)}$}
   \label{alg:redukujbim}
   \begin{algorithmic}[1]
-    \If{$\textrm{s.veličina()} \leqslant \beta$}
+    \If{$\mathcal{B}.veli\textrm{č}ina() \leqslant \beta$}
       \For{$e \in \mathcal{B}$}
-        \State $\textrm{AžurirajPozicije}(e)$
-          \If{$\textrm{ZajedničkaNadniska(e.reč)}$}
-            \State $nn \gets \textrm{s.reč}$ \Comment{nn - najbolja nadniska}
-            \State $nd \gets |nn|$ \Comment{nd - najbolja dužina}
-            \State $\textrm{pronađenaNadniska} \gets \textrm{Tačno}$
+        \State $\textbf{A\textrm{ž}urirajPozicije}(e)$
+          \If{$\textbf{ZajedničkaNadniska}(e.re\textrm{č})$}
+            \State $nn \gets s.re\textrm{č}$ \Comment{$nn$ - najbolja nadniska}
+            \State $nd \gets |nn|$ \Comment{$nd$ - najbolja dužina}
+            \State $prona\textrm{đ}enaNadniska \gets Ta\textrm{č}no$
           \EndIf
       \EndFor
       \State \Return $\mathcal{B}$
     \EndIf
     \State
-    \State $\textrm{Promešaj}(\mathcal{B})$
-    \State $\textrm{Sortiraj}(\mathcal{B})$
-    \State $\mathcal{B}p \gets \{ \}$
+    \State $\textbf{Promešaj}(\mathcal{B})$
+    \State $\textbf{Sortiraj}(\mathcal{B})$
+    \State $\mathcal{B}\textbf{p} \gets \{ \}$
     \State
     \For{$i=0 \to \beta$}
-      \State $\textrm{AžurirajPozicije}(\mathcal{B}[i])$
-      \If{$\textrm{ZajedničkaNadniska}(\mathcal{B}[i].\textrm{reč})}$
-            \State $nn \gets \mathcal{B}[i].\textrm{reč}$
+      \State $\textbf{A\textrm{ž}urirajPozicije}(\mathcal{B}[i])$
+      \If{$\textbf{ZajedničkaNadniska}(\mathcal{B}[i].re\textrm{č})}$
+            \State $nn \gets \mathcal{B}[i].re\textrm{č}$
             \State $nd \gets |nn|$ 
-            \State $\textrm{pronađenaNadniska} \gets \textrm{Tačno}$
+            \State $prona\textrm{đ}enaNadniska \gets Ta\textrm{č}no$
       \EndIf
-      \State $\mathcal{B}p\textrm{.dodaj}(\mathcal{B}[i])$
+      \State $\mathcal{B}\textbf{p}\textrm{.}dodaj(\mathcal{B}[i])$
     \EndFor
     \State
-    \State \Return $\mathcal{B}p$
+    \State $\mathcal{B}.obri\textrm{š}i()$
+    \State \Return $\mathcal{B}\textbf{p}$
+  \end{algorithmic}
+  \end{algorithm}
+\\
+\\
+\begin{algorithm}
+  \caption{$\textbf{AžurirajPozicije}\bm{(element)}$}
+  \label{alg:azurirajPozicije}
+  \begin{algorithmic}[1]
+    \State $poslednjeDodatoSlovo \gets element.re\textrm{č}[element.re\textrm{č}.du\textrm{ž}ina() - 1]$
+    \State
+    \For{$i=0 \to \mathcal{L}.veli\textrm{č}ina()$}
+      \If{$\mathcal{L}[i][element.pozicije[i]] == poslednjeDodatoSlovo$}
+            \State $element.pozicije[i] \gets element.pozicije[i] + 1$
+      \EndIf
+    \EndFor
   \end{algorithmic}
   \end{algorithm}
 \\
@@ -738,21 +791,27 @@ iz skupa $\mathcal{L}$, a zatim se izabrano slovo briše sa početka reči iz $\
 Pseudo kod algoritma prikazan je pod Algoritam \ref{alg:mm}.
 
 \begin{algorithm}
-  \caption{VećinskoSpajanje($\mathcal{L}=\{\omega_{1}, \omega_{2},..., \omega_{m}\}, \Sigma$)}
+  \caption{\textbf{VećinskoSpajanje($pozicije$)}}
   \label{alg:mm}
   \begin{algorithmic}[1]
   % \Require $n \geq 0$
   % \Ensure $y = x^n$
-  \State $\mathcal{S} \gets \varepsilon$ \Comment{supersekvenca}
-  \While{$\sum_{\omega_{i}\in\mathcal{L}}|\omega_{i}| \neq 0$} 
-  \For{$\alpha \in \Sigma$}
-        \State $v(\alpha|\mathcal{S}) \gets \sum_{\omega_{i}\in\mathcal{L},\omega_{i}=\alpha\omega^{'}_{i}}1$
+  \State $te\textrm{ž}ine \gets \{\alpha \in \Sigma\textrm{, }[0,...,0] \}$ \Comment{inicijalizacija težina}
+  \State
+  \For{$i=0 \to \mathcal{L}.veli\textrm{č}ina()$}
+    \If{$pozicije[i] \leq (\mathcal{L}[i].du\textrm{ž}ina() - 1)$}
+      \For{$t \in te\textrm{ž}ine$}
+        \If{$t.slovo == \mathcal{L}[i][pozicije[i]]$}
+          \State $t.vrednost \gets t.vrednost + 1$
+        \EndIf 
+      \EndFor
+    \EndIf 
   \EndFor
-  \State $\beta \gets argmax \{v(\alpha|\mathcal{S})\textrm{ }|\textrm{ }\alpha \in \Sigma \}$
-  \State $\mathcal{L} \gets \mathcal{L}|_{\beta}$
-  \State $\mathcal{S} \gets \mathcal{S}\beta$
-  \EndWhile
-  \State \Return $\mathcal{S}$
+  \State
+  \State $\textbf{Promešaj}(te\textrm{ž}ine)$
+  \State $\textbf{Sortiraj}(te\textrm{ž}ine)$
+  \State
+  \State \Return $te\textrm{ž}ine$
   \end{algorithmic}
   \end{algorithm}
 
