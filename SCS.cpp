@@ -441,7 +441,7 @@ class SCS
             
             // we mix the elements before sorting to avoid same sort order if all elemts have same ranks (we do shuffle in LAWMM so it's not necessary here)
             auto rng = std::default_random_engine();
-            rng.seed(std::chrono::system_clock::now().time_since_epoch().count());
+            rng.seed(/* std::chrono::system_clock::now().time_since_epoch().count() */ SEED );
             std::shuffle(sls->begin(), sls->end(), rng);
 
             // we sort the partial solutions in relation to the sum of the ranks
@@ -507,7 +507,7 @@ class SCS
             }
             // we mix the elements so that 'a' would not always be selected if say a,c,t all have the same value
             auto rng = std::default_random_engine();
-            rng.seed(std::chrono::system_clock::now().time_since_epoch().count());
+            rng.seed(/* std::chrono::system_clock::now().time_since_epoch().count() */SEED );
             std::shuffle(letterRanks.begin(), letterRanks.end(), rng);
 
             std::sort(letterRanks.begin(), letterRanks.end(), sortRev2);
@@ -1105,7 +1105,7 @@ class SCS
             
             // we mix the elements before sorting to avoid same sort order if all elemts have same ranks (we do shuffle in LAWMM so it's not necessary here)
             auto rng = std::default_random_engine();
-            rng.seed(std::chrono::system_clock::now().time_since_epoch().count());
+            rng.seed(/* std::chrono::system_clock::now().time_since_epoch().count() */ SEED );
             std::shuffle(sls->begin(), sls->end(), rng);
 
             // we sort the partial solutions in relation to the sum of the ranks
@@ -1211,7 +1211,7 @@ class SCS
 
             // we mix the elements so that 'a' would not always be selected if say a,c,t all have the same value
             auto rng = std::default_random_engine();
-            rng.seed(std::chrono::system_clock::now().time_since_epoch().count());
+            rng.seed(/* std::chrono::system_clock::now().time_since_epoch().count() */ SEED );
             std::shuffle(letterRanks.begin(), letterRanks.end(), rng);
 
             std::sort(letterRanks.begin(), letterRanks.end(), sortRev2);
@@ -1262,7 +1262,7 @@ class SCS
 
             // we mix the elements so that 'a' would not always be selected if say a,c,t all have the same value
             auto rng = std::default_random_engine();
-            rng.seed(std::chrono::system_clock::now().time_since_epoch().count());
+            rng.seed(/* std::chrono::system_clock::now().time_since_epoch().count() */ SEED );
             std::shuffle(letterRanks.begin(), letterRanks.end(), rng);
 
             std::sort(letterRanks.begin(), letterRanks.end(), sortRev2);
@@ -1346,6 +1346,8 @@ class SCS
         std::string outPath = "Results";
         std::ofstream fResults;
         std::ifstream fInput;
+
+        const std::size_t SEED = 333;
          
 };
 
@@ -1361,12 +1363,14 @@ int main(int argc, char **argv)
     SCS alg(argv[1]);
 
     // running different algorithms
-    // alg.SCS_BFBT_Algorithm();
-    alg.SCS_MM_Beam_Search_Algorithm();
+    alg.SCS_BFBT_Algorithm();
     // alg.LAWMMAlgorithm();
-    alg.SCS_LAWMM_Beam_Search_Algorithm();
 
-    alg.SCS_WMM_Beam_Search_Algorithm();
+    // alg.SCS_MM_Beam_Search_Algorithm();
+
+    // alg.SCS_LAWMM_Beam_Search_Algorithm();
+
+    // alg.SCS_WMM_Beam_Search_Algorithm();
 
     return EXIT_SUCCESS;
 

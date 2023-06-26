@@ -131,6 +131,7 @@
 
 % ------------------------------------------------------------------------------
 \chapter{Uvod}
+\label{chap:uvod}
 % ------------------------------------------------------------------------------
 % \pangrami
 Problem najkraće zajedničke nadniske (\textit{eng.} Shortest Common Supersequence Problem)
@@ -430,7 +431,7 @@ opisane u nastavku teksta.
 \chapter{Algoritmi za rešavanje problem najkraće zajedničke nadniske}
 U ovom poglavlju biće dat pregled sledeća dva algoritama koja su koršćena za rešavanje problema najkraće zajedničke
 nadniske:
-
+\label{chap:algoritmi}
 
 \begin{enumerate}
   \item Algoritam grananja sa odsecanjem (\textit{eng.} backtracking)
@@ -724,7 +725,6 @@ jedno trivijalno rešenje problema.
       %   \State $prona\textrm{đ}enaNadniska \gets Ta\textrm{č}no$
       %   \State \textbf{break}
       % \EndIf
-      \State
       \For{$\alpha\in\Sigma$}
         \State $te\textrm{ž}inaSlova \gets 0$
         \For{$t\in te\textrm{ž}ine$}
@@ -824,7 +824,7 @@ koji inkrementalno konstruiše nadnisku. Najpre se odredi slovo koje se najčeš
 iz skupa $\mathcal{L}$, a zatim se izabrano slovo briše sa početka reči iz $\mathcal{L}$ koje ga sadrže.
 Postupak se ponavlja dok skup $\mathcal{L}$ ne postane prazan, a dobijena nadniska
 predstavlja rešenje PNZN \cite{ProbabilisticBS}.
-U kontekstu opisanog algoritma pretrage bima, većinsko spajanje predstavlja heurističku funkciju
+U kontekstu opisanog algoritma pretrage bima, većinsko spajanje je koršćeno kao heuristička funkcija
 koja za dati niz pozicija u $\mathcal{L}$ vraća objekat koji sadrži slova azbuke i odgovarajuće
 težine u udnosu na to koliko reči od odgovarajućih pozicija počinje odgovarajućim slovom.
 Nakon izračunavanja težina, vrši se mešanje i sortiranje vrednosti. Mešanje nije neophodno,
@@ -877,6 +877,107 @@ problema može da nadmaši algoritam Većinskog Spajana, pogotovo kada nema stru
 ili kada je ta struktuiranost haotična \cite{ProbabilisticBS}. Predstavljene dve heurističke
 funkcije su korišćene u algoritmu pretrage bima.
 
+\chapter{Evaluacija algoritama}
+\label{chap:evaluacijaAlg}
+U ovom poglavlju biće prikazani rezultati izvršavanja predstavljenih algoritama
+kao i test podaci koji su korišćeni za testiranje i način na koji su test podaci generisani.
+Takođe će biti dat kratak pregled eksperimentalnog okruženja u kome se vršilo testiranje,
+hardverska i softverska specifikacija kao i specifičnosti implementacije.
+
+\section{Test podaci}
+\label{sec:testPodaci}
+Za uspešno testiranje rada predstavljenih algoritama pored instanci problema najkraće
+zajedničke nadniske
+$IP = \{\mathcal{I}_{1}(\Sigma_{1},\mathcal{L}_{1}),...,\mathcal{I}_{k}(\Sigma_{k},\mathcal{L}_{k})\}$
+neophodno je da postoji barem jedno optimalno rešenje $\mathcal{R}_{i}$ za svaku
+instancu problema $\mathcal{I}_{i}$. Takvo rešenje najčešće nije jedinstveno,
+a broj optimalnih rešenja varira od instance do instance problema i raste sa porastom
+broja reči u skupu $\mathcal{L}$. Ono što je bitno, jeste dužina takvog rešenja i to je
+jedini validan parametar optimalnosti. Algoritam pretrage bima ne garantuje pronalaženje
+optimalnog rešenja dok algoritam grananja sa odsecanjem garantuje. Naizgled on može poslužiti
+za testiranje algoritma pretrage bima, ali kao što će biti pokazano u sekciji ref
+vreme izvšavanja grananja sa odsecanjem eksponencijalno raste sa porastom parametra $maxD$
+pa vreme izvšavanja ovog algoritma čak i na manjim instancama PNZN postaje predugo.
+S obzirom na navedene činjenice i manjak test podataka u literaturi, osmišljen je
+algoritam koji generiše test instance. Pseudo kod algoritma je prikazan pod
+Algoritam \ref{alg:generatorTestInstanci}. Ideja je da se odabere reč koja će 
+predstavljati gornju granicu optimalnosti i da se na osnovu odabrane reči
+generišu instance problema.
+Generator test instanci ima četiri parametra: $putanja$ predstavlja putanju do
+tekstualnog fajla koji sadrži reč koja predstavlja gornju granicu, $n$ označava
+broj slova u azbuci $\Sigma$, $m$ označava broj reči u skupu $\mathcal{L}$,
+a parametar $\gamma$ predstavlja verovatnoću uklanjanja slova iz $gg$ pri generisanju
+reči. Najpre se učitava reč $gg$ sa odabrane lokacije i azbuka popunjava
+odabranim slovima. Zatim se popunjava skup $\mathcal{L}$.
+U svakoj iteraciji petlje se kreće od prazne reči $\omega$, prolazi se
+kroz slova $gg$ i bira se slučajan broj iz uniformne raspodele (u granicama [0,1]).
+Ako je odabrani slučajan broj veći od $\gamma$, reč $\omega$ se proširuje
+trenutnim slovom. Zapravo, reč $\omega$ predstavlja reč koja se dobija uklanjanjem slova iz 
+reči $gg$ sa verovatnoćom $\gamma$.
+Na ovaj način se generiše $m$ reči kojima se popunjava skup $\mathcal{L}$, a algoritam
+na kraju vraća jednu generisanu instancu problema $\mathcal{I}(\Sigma,\mathcal{L})$.
+\\
+\begin{algorithm}
+  \caption{\textbf{GeneratorTestInstanci}\bm{$(putanja,n,m,\gamma)$}}
+  \label{alg:generatorTestInstanci}
+  \begin{algorithmic}[1]
+  \State $gg \gets \textbf{Pročitaj}(putanja)$ \Comment{$gg$ - gornja granica}
+  \State $\Sigma \gets \{\}$
+  \State $\mathcal{L} \gets \{\}$
+  \State
+
+  \For{$i \to n$} 
+    \State $\alpha \gets \textbf{PročitajSlovo}()$
+    \State $\Sigma .dodaj(\alpha)$
+  \EndFor
+  \State
+  \For{$i \to m$} 
+    \State $\omega \gets \varepsilon$
+    \For{$s \in gg$}
+      \State $slu\textrm{č}ajanBroj \gets \textbf{GenerišiSlučajanBroj}()$
+      \If{$slu\textrm{č}ajanBroj > \gamma$}
+        \State $\omega .dodaj(s)$
+      \EndIf
+    \EndFor
+    \State
+    \State $\mathcal{L} .dodaj(\omega)$
+    \State
+  \EndFor
+  \State
+  \State $\mathcal{I} \gets (\Sigma,\mathcal{L})$
+  \State
+  \State \Return $\mathcal{I}$
+  \end{algorithmic}
+  \end{algorithm}
+\\
+Gornja granica optimalnosti garantuje jedno rešenje problema. Uz pažljivo odabran parametar
+$\gamma$ i dovoljno veliki parametar $m$ gornja granica će skoro uvek i predstavljati
+optimalno rešenje problema. U svakom slučaju gornja granica će u kontekstu testiranja
+predstavljenih algoritama biti sinonim za optimalno rešenje i poređenje rezultata će se
+vršiti u odnosu na njenu dužinu.
+
+Sada ćemo definisati skup instanci problema $IP$ koji je korišćen u sekciji ref.
+Postoje četiri bitna parametra na osnovu kojih generišemo instance PNZN:
+\begin{enumerate}
+  \item Veličina azbuke $\Sigma$ ($n=|\Sigma|$)
+  \item Broj reči u skupu $\mathcal{L}$ ($m=|\mathcal{L}|$)
+  \item Dužina gornje granice ($|gg|$)
+  \item Verovatnoća uklanjanja slova ($\gamma$)
+\end{enumerate}
+Veličina azbuke uzeta je iz opsega $n \in \{2,4,16 \}$, broj reči u skupu $\mathcal{L}$
+iz opsega $m \in \{10,20,40,80\}$. Dužina gornje granice definiše i potencijalnu gornju
+granicu za dužinu reči u skupu $\mathcal{L}$ i ona je uzeta iz opsega $|gg| \in \{50,100,500,2000\}$.
+Na kraju verovatnoća uklanjanja slova uzeta je iz opsega $\gamma \in \{0.1,0.2\}$.
+Instance problema podeljene su u dva skupa $IP_{\gamma=0.1}$ i $IP_{\gamma=0.2}$
+na osnovu verovatnoće uklanjanja slova. Oba skupa sadrže po 48 instanci problema
+koje su dobijene kao dekartov proizvod vrednosti prethodno opisanih parametara.
+Rezultati izvršavanja algoritama na uvedenim instancama PNZN 
+prikazani su u tabelama ref ref.
+
+\section{Eksperimentalno okruženje}
+\label{sec:ekspOkruženje}
+U ovoj sekciji će biti dat kratak pregled konfiguracije
+računara na kome se vršilo testiranje kao i specifičnosti implementacije algoritama.
 % \lstinputlisting[caption=Sample Code Listing C++, label={lst:listing-cpp}, language=C++]{./code1.cpp}
 % ------------------------------------------------------------------------------
 % \pangrami

@@ -7,6 +7,7 @@
 
 
 const double removeProb = 0.1;
+const std::size_t SEED = 555;
 
 std::string generateFName()
 {
@@ -74,7 +75,7 @@ void generateTestInstances(const std::size_t &t)
         std::size_t cnt = 0;
 
         std::random_device rd;
-        std::mt19937 generator(rd());
+        std::mt19937 generator(/* rd() */ SEED );
         std::uniform_int_distribution<int> distribution(0, alphabet.size() - 1);
 
         while(cnt < m)
@@ -125,7 +126,7 @@ void generateTestInstances(const std::size_t &t)
         std::getline(solutionStream,solution);
 
         std::random_device rd;
-        std::mt19937 generator(rd());
+        std::mt19937 generator(/* rd() */ SEED );
         std::uniform_real_distribution<double> distribution(0.0, 1.0);
         double randomNum;
         std::size_t cnt = 0;
