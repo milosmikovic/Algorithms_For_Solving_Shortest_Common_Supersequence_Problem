@@ -882,7 +882,7 @@ funkcije su korišćene u algoritmu pretrage bima.
 U ovom poglavlju biće prikazani rezultati izvršavanja predstavljenih algoritama
 kao i test podaci koji su korišćeni za testiranje i način na koji su test podaci generisani.
 Takođe će biti dat kratak pregled eksperimentalnog okruženja u kome se vršilo testiranje,
-hardverska i softverska specifikacija kao i specifičnosti implementacije.
+hardverska i softverska specifikacija računara kao i specifičnosti implementacije.
 
 \section{Test podaci}
 \label{sec:testPodaci}
@@ -895,9 +895,12 @@ a broj optimalnih rešenja varira od instance do instance problema i raste sa po
 broja reči u skupu $\mathcal{L}$. Ono što je bitno, jeste dužina takvog rešenja i to je
 jedini validan parametar optimalnosti. Algoritam pretrage bima ne garantuje pronalaženje
 optimalnog rešenja dok algoritam grananja sa odsecanjem garantuje. Naizgled on može poslužiti
-za testiranje algoritma pretrage bima, ali kao što će biti pokazano u sekciji ref
+za testiranje algoritma pretrage bima, ali
 vreme izvšavanja grananja sa odsecanjem eksponencijalno raste sa porastom parametra $maxD$
 pa vreme izvšavanja ovog algoritma čak i na manjim instancama PNZN postaje predugo.
+Na primer ako najduža reč u skupu $\mathcal{L}$ ima petnaest slova i pritom je
+data proizvoljna azbuka kardinalnosti $|\Sigma|=4$, u najgorem slučaju
+algoritam grananja sa odsecanjem treba da obradi $(4^{60}-1)/3$ čvorova.
 S obzirom na navedene činjenice i manjak test podataka u literaturi, osmišljen je
 algoritam koji generiše test instance. Pseudo kod algoritma je prikazan pod
 Algoritam \ref{alg:generatorTestInstanci}. Ideja je da se odabere reč koja će 
@@ -956,8 +959,8 @@ optimalno rešenje problema. U svakom slučaju gornja granica će u kontekstu te
 predstavljenih algoritama biti sinonim za optimalno rešenje i poređenje rezultata će se
 vršiti u odnosu na njenu dužinu.
 
-Sada ćemo definisati skup instanci problema $IP$ koji je korišćen u sekciji ref.
-Postoje četiri bitna parametra na osnovu kojih generišemo instance PNZN:
+Sada će biti definisan skup instanci problema $IP$ koji je korišćen za testiranje u sekciji ref.
+Postoje četiri bitna parametra koja su korišćena za generisanje instanci PNZN:
 \begin{enumerate}
   \item Veličina azbuke $\Sigma$ ($n=|\Sigma|$)
   \item Broj reči u skupu $\mathcal{L}$ ($m=|\mathcal{L}|$)
@@ -976,8 +979,62 @@ prikazani su u tabelama ref ref.
 
 \section{Eksperimentalno okruženje}
 \label{sec:ekspOkruženje}
-U ovoj sekciji će biti dat kratak pregled konfiguracije
-računara na kome se vršilo testiranje kao i specifičnosti implementacije algoritama.
+U ovoj sekciji će biti dat kratak pregled hardverske i softverske konfiguracije
+računara na kome se vršilo testiranje kao i specifičnosti implementacije
+predstavljenih algoritama.
+\subsection{Hardversko i softversko okruženje}
+\label{sec:hardSoft}
+Svi rezultati izvršavanja algoritama dobijeni su na računaru pod Linux operativnim sistemom
+sledećih sistemskih specifikacija:
+\begin{itemize}
+  \item Operativni sistem - Ubuntu 20.04.6 LTS
+  \item Kernel - Linux 5.15.0-46-generic
+  % \item Arhitektura - x86-64
+\end{itemize}
+Hardverske komponente računara na kome se vršilo testiranje su sledeće:
+\begin{itemize}
+  \item Procesor - AMD Ryzen 3 1300X, 3.5GHz
+  \item Arhitektura - x86-64
+  \item Broj jezgara - 4
+  \item Keš memorija - L1(384KiB), L2(2MiB), L3(8MiB)
+  \item Ram memorija - Kingston, 8GB DDR4
+  \item Grafička kartica - Asus Radeon RX 570 (4GB GDDR5)
+\end{itemize}
+Treba napomenuti još to da iako procesor ima četiri jezgra i četiri
+fizičke niti, algoritmi nisu implementirani tako da podržavaju paralelno izvršavanje.
+
+\subsection{Specifičnosti implementacije i pokretanje programa}
+\label{sec:specifinicnostiImplementacije}
+Svi predstavljeni algoritmi u radu implementirani su u programskom jeziku C++
+kako bi se postigla što veća efikasnost u evaluaciji. Korišćen je
+GCC 9.4.0 prevodilac i standard jezika C++20. Ceo programski kod je organizovan
+unutar klase, a svi prethodno navedeni algoritmi i pomoćne funkcije kao privatne
+funckije članice (\textit{eng.} member function) kako bi podrazumevano bile
+utisnute (\textit{eng.} inline) na mestima u programu na kojima se pozivaju i kako
+bi se time izbegli nepotrebni troškovi poziva. U cilju što veće optimizacije
+određenih delova programskog koda, iako u današnje vreme ne popularne,
+korišćene su i pokazivačke promenjive i odgovarajuća aritmetika.
+Programski kod je organizovan u dva cpp fajla i prevodi se korišćenjem
+pomoćnog alata Make. Prilikom prevođenja upaljen je najviši nivo
+optimizacije od strane GCC prevodioca postavljanjem parametra -O3.
+Prevođenje i pokretanje odgovarajućih programa vrši se na sledeći način:
+\begin{itemize}
+  \item make testInstanceGenerator - prevodi generator test instanci
+  \item make SCS - prevodi program koji pokreće opisane algoritme
+  \item ./testInstanceGenerator - pokreće generator test instanci koji nakon poziva 
+  očekuje putanju do tekstualnog fajla u kome se nalazi reč koja predstavlja gornju granicu,
+  broj reči m, i željena slova azbuke (parametar $\gamma$ se postavlja u kodu pre prevođenja),
+  izlaz je numerisan tekstualni fajl koji predstavlja jednu instancu PNZN  
+  \item ./SCS (broj test instance) - pokreće program koji izvršava algoritme,
+  kao ulazni argument očekuje redni broj test instance, izlaz je numerisan tekstualni fajl
+  koji sadrži rezultat izvršavanja
+\end{itemize}
+Pre prikaza eksperimentalnih rezultata izvršavanja algoritama,
+potrebno je još prodiskutovati širinu bima, odnosno metaparametar $\beta$.
+Vrednosti širine bima uzete su iz opsega $\beta \in \{50,100,200\}$.
+
+\section{Eksperimentalni rezultati}
+\label{sec:ekspRezultati}
 % \lstinputlisting[caption=Sample Code Listing C++, label={lst:listing-cpp}, language=C++]{./code1.cpp}
 % ------------------------------------------------------------------------------
 % \pangrami
