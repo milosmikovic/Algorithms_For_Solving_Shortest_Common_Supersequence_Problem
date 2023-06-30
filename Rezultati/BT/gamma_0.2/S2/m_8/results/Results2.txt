@@ -1,0 +1,23 @@
+******************
+Alphabet : a b 
+Sequences:
+ababbabbaabbaaaaab
+baaabbababaaabbaaaab
+baaabbbbbabbaaabaaab
+baabbabbabbaaabbaab
+baabbbabbabbaaabbaaab
+baabbbbabbaabbaaaab
+baabbbbbabaaabbaaaaab
+baabbbbbabbbaab
+******************
+------------------
+SCS_BFBT_Algorithm
+MIN DEPTH: 21
+MAX DEPTH: 42
+---List of solutions---
+baaabbbabbabbaaabbaaaaab
+-Optimal solution-
+SCS : baaabbbabbabbaaabbaaaaab
+SCS length : 24
+Time taken by program is : 6.000000 sec 
+------------------

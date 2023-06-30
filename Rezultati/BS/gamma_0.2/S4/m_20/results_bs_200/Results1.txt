@@ -1,0 +1,62 @@
+******************
+Alphabet : a c t g 
+Sequences:
+caaggtatgcattcacagatttgctgactcatcttc
+caaggtctgagccattcacagagttgtgtgatcattctttct
+caaggtctgagcctaagaagtttgcactatctttct
+caaggtctgatgatccacagagttgtgagtatcattctttct
+caaggtctgatgccattccaaagtgtggtgctattcttt
+caaggttgatgccattcacgagttgtgtgctcattctc
+caagtctgatgccattccaagagtgtgagctgactcattctttct
+caggtctgagccatccacagaagttgtgagctgccatctct
+taaggtctgagccattcacagaagttgtgctgactcatttt
+taaggttgatccattccacagaagtgtgagctgactcattttct
+taaggttgatgccattccacaaatgtgactgaccttctttct
+tagtctgatccattcacgtgtgagctgctcattctttt
+tcaagctgagccatccacgagtgtgagctgactcattctttt
+tcaagctgtccattccacaagttgtgagtgactctttttct
+tcaagtctatgccttcaagagttgtgagctgactcatttct
+tcaggtctgatcacagagtttagctgaccattcttct
+tcagtctatcatccaagttggagcttcattctttc
+tcagtctgtgccattcacagaagtgagctgactttcttct
+tcagtgatgccatccacagaggtgagctgccattcttt
+tcgtctgagcattcacagaagtgtgagcgactcattctttct
+******************
+------------------
+SCS_MM_Beam_Search_Algorithm
+-Optimal solution-
+SCS : tcaaggtctgatgccattccacagaagttgtgagctgactcattctttct
+SCS length : 50
+Time taken by program is : 0.000000 sec 
+------------------
+******************
+Alphabet : a c t g 
+Sequences:
+caaggtatgcattcacagatttgctgactcatcttc
+caaggtctgagccattcacagagttgtgtgatcattctttct
+caaggtctgagcctaagaagtttgcactatctttct
+caaggtctgatgatccacagagttgtgagtatcattctttct
+caaggtctgatgccattccaaagtgtggtgctattcttt
+caaggttgatgccattcacgagttgtgtgctcattctc
+caagtctgatgccattccaagagtgtgagctgactcattctttct
+caggtctgagccatccacagaagttgtgagctgccatctct
+taaggtctgagccattcacagaagttgtgctgactcatttt
+taaggttgatccattccacagaagtgtgagctgactcattttct
+taaggttgatgccattccacaaatgtgactgaccttctttct
+tagtctgatccattcacgtgtgagctgctcattctttt
+tcaagctgagccatccacgagtgtgagctgactcattctttt
+tcaagctgtccattccacaagttgtgagtgactctttttct
+tcaagtctatgccttcaagagttgtgagctgactcatttct
+tcaggtctgatcacagagtttagctgaccattcttct
+tcagtctatcatccaagttggagcttcattctttc
+tcagtctgtgccattcacagaagtgagctgactttcttct
+tcagtgatgccatccacagaggtgagctgccattcttt
+tcgtctgagcattcacagaagtgtgagcgactcattctttct
+******************
+------------------
+SCS_WMM_Beam_Search_Algorithm
+-WMM Beam Search solution-
+SCS : tcaaggtctgatgccattccacagaagttgtgagctgactcattctttct
+SCS length : 50
+Time taken by program is : 0.00000 sec 
+------------------
