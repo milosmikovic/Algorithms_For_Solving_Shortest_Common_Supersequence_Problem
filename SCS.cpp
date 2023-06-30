@@ -1337,7 +1337,7 @@ class SCS
         std::size_t setOfStringsSize;
 
         // Beam size paramether of Beam Search algorithm
-        const std::size_t beamSize = 300;
+        const std::size_t beamSize = 50;
 
         // LAWMM lookAhead parameter
         std::size_t lookAhead = 1;

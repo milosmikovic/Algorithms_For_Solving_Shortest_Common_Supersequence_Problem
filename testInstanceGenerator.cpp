@@ -6,7 +6,7 @@
 #include <random>
 
 
-const double removeProb = 0.1;
+const double removeProb = 0.4;
 const std::size_t SEED = 555;
 
 std::string generateFName()
@@ -51,10 +51,10 @@ void generateTestInstances(const std::size_t &t)
 {
 
     std::string fName = generateFName();
-    std::ofstream os(fName);
 
     if(t == 1)
     {
+        std::ofstream os(fName);
         std::size_t n,m;
         std::cout << "N(length of sequences) M(number of sequences):";
         std::cin >> n >> m;
@@ -103,6 +103,7 @@ void generateTestInstances(const std::size_t &t)
     }
     else if(t == 2)
     {
+        std::ofstream os(fName);
         std::cout << "Insert path to file with solution:";
         std::string path;
         std::getline(std::cin,path);
@@ -152,6 +153,37 @@ void generateTestInstances(const std::size_t &t)
         }
 
     }
+    else if(t == 3)
+    {
+        std::ofstream os("solution3.txt");
+
+        std::cout << "Insert length of sequence:";
+        std::string numS;
+        std::getline(std::cin,numS);
+        int num = std::stoi(numS);
+
+        std::cout << "Insert alphabet:";
+        char c;
+        std::vector<char> alphabet;
+
+        while(std::cin >> c)
+        {
+            alphabet.emplace_back(c);
+        }
+
+        std::random_device rd;
+        std::mt19937 generator(/* rd() */ SEED );
+        std::uniform_int_distribution<int> distribution(0, alphabet.size() - 1);
+
+        std::string solution("");
+        for(int i = 0;i < num;++i)
+        {
+            int rElem = distribution(generator);
+            char c = alphabet[rElem];
+            solution += std::string(1,c);
+        }
+        os << solution;
+    }
     else
     {
         std::cout << "Test instance generator error!" << std::endl;
@@ -163,15 +195,15 @@ int main(int argc, char **argv)
 
     if(argc != 2)
     {
-        std::cout << "Run: ./testInstanceGenerator T(gen mode 1 or 2)" << std::endl;
+        std::cout << "Run: ./testInstanceGenerator T(gen mode 1, 2 or 3)" << std::endl;
         return EXIT_SUCCESS;
     }
 
     std::size_t t = std::atoi(argv[1]);
 
-    if(t != 1 && t != 2)
+    if(t != 1 && t != 2 && t != 3)
     {
-        std::cout << "Run: ./testInstanceGenerator T(gen mode 1 or 2)" << std::endl;
+        std::cout << "Run: ./testInstanceGenerator T(gen mode 1, 2 or 3)" << std::endl;
         return EXIT_SUCCESS;
     }
 
