@@ -1,0 +1,48 @@
+******************
+Alphabet : a b 
+Sequences:
+aaabababbaaabaaab
+aaababbabaababaabb
+aaabbabababbaaaa
+aababbabaaaaaba
+aababbabbabbabb
+aabbabaaaabbabb
+aabbabbaaaaaaaabb
+aabbabbbabbaaaaa
+aabbbaaabbaaabaabb
+aabbbbaaabbaaabaa
+aabbbbbaaaaab
+abbababaab
+abbbabaaaabb
+baaababaabbaaabaa
+baaabbabbabaaaabbb
+baaabbbabbaaabaaabaab
+baaabbbabbabbaaaabb
+baaabbbbaaaaba
+baaabbbbbbaabbaaaabaabb
+baababbabbaaaaaab
+baabbabbabaaaaaabaabb
+baabbbaaabaabaab
+baabbbabaaabaaabaabb
+baabbbbbaabaabaabb
+baabbbbbabaaaaaab
+bababaabaaabaab
+bababbaaabaaaaaab
+bababbaabaaababb
+bababbabbabaaaa
+babbabaaabaaaaaab
+babbbabbbabbaaaab
+babbbbbabaaaaaaa
+******************
+------------------
+SCS_BFBT_Algorithm
+MIN DEPTH: 23
+MAX DEPTH: 46
+---List of solutions---
+aabaaababbabbabaabbaaaabaabb
+baaababababbabaabbaaaabaabb
+-Optimal solution-
+SCS : baaababababbabaabbaaaabaabb
+SCS length : 27
+Time taken by program is : 53.000000 sec 
+------------------

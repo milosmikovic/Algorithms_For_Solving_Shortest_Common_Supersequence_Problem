@@ -1,0 +1,62 @@
+******************
+Alphabet : a c t g 
+Sequences:
+aaggtctagcattcagagttgtgatattctttct
+aaggtctgagcttcacaaagttgtgctgctcattt
+aaggttccattccagaatgagcgactatttt
+agttctcacagttgctcc
+caaggatcataattgctgcatctc
+caagtcatgccattccaggtgtgagctatttttc
+caagtccttcagagttggctgactattt
+cagcgagctaagtttgcacatcttct
+caggcgatcattccaagtgtgggctatctt
+caggttgatgatcccagatgagtacattcttct
+cgctgacttcacagaatgagcgactcattctttc
+cgtctgacatccgagtgtgagctgcttct
+taagttgatgttccacagtgactaccttttct
+tactgaccattccgtgtgagctctcatttt
+tagcttccattccaattggtaccttttc
+tagtggcccacgaggtgagcttctt
+tcaggtcgataagagtttagcgaccattt
+tccgagcatcacgagtggagtatcattctt
+tcgtctacaccaagtgagttcatttttc
+tgtctgtgcattacagaatgagctgactttt
+******************
+------------------
+SCS_MM_Beam_Search_Algorithm
+-Optimal solution-
+SCS : tcaaggtctgatgccattccacagaagttgtgagctgactcattctttct
+SCS length : 50
+Time taken by program is : 0.000000 sec 
+------------------
+******************
+Alphabet : a c t g 
+Sequences:
+aaggtctagcattcagagttgtgatattctttct
+aaggtctgagcttcacaaagttgtgctgctcattt
+aaggttccattccagaatgagcgactatttt
+agttctcacagttgctcc
+caaggatcataattgctgcatctc
+caagtcatgccattccaggtgtgagctatttttc
+caagtccttcagagttggctgactattt
+cagcgagctaagtttgcacatcttct
+caggcgatcattccaagtgtgggctatctt
+caggttgatgatcccagatgagtacattcttct
+cgctgacttcacagaatgagcgactcattctttc
+cgtctgacatccgagtgtgagctgcttct
+taagttgatgttccacagtgactaccttttct
+tactgaccattccgtgtgagctctcatttt
+tagcttccattccaattggtaccttttc
+tagtggcccacgaggtgagcttctt
+tcaggtcgataagagtttagcgaccattt
+tccgagcatcacgagtggagtatcattctt
+tcgtctacaccaagtgagttcatttttc
+tgtctgtgcattacagaatgagctgactttt
+******************
+------------------
+SCS_WMM_Beam_Search_Algorithm
+-WMM Beam Search solution-
+SCS : tcaaggtctgatgccattccacagaagttgtgagctgactcattctttct
+SCS length : 50
+Time taken by program is : 0.00000 sec 
+------------------

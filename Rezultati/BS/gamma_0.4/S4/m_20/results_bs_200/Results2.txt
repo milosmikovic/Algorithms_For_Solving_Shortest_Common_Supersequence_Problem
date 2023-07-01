@@ -1,0 +1,62 @@
+******************
+Alphabet : a c t g 
+Sequences:
+aaggtctagcattcagagttgtgatattctttctactctgctctagaaatagggttgccgtacta
+aaggtctgagcttcacaaagttgtgctgctcatttacccttgactagagaaagtatgcgtattgacg
+aaggtgtgaccacagaggtgggactctcttctcccatgacaggatagcggtattgcaaattgag
+aaggttccattccagaatgagcgactattttacctgacataggatggtattgctaaactgg
+agttctcacagttgctccgccctccagaatacgggagccgtaacta
+caaggtctggttcaagagtggagtactcatttttagccattgacaaagcggtattccgatctgag
+caagtcatgccattccaggtgtgagctatttttcagatctaatagaacgattcaaacttgac
+caagttgatgcttagatgtgactgatcatcttaccatctgctagaatcgggtatgcgtaact
+cagcgagctaagtttgcacatcttctgcctgaaagaaaatagggttgcgtaaactctgac
+caggttatgacacgagtttgtatcatctttcagccactacataagatacggtttgcgaacctgacg
+cggtctgaccatccaagtttctgcattttaccttgactcagaaaataggggattcgaaattgcg
+cgtctgacatccgagtgtgagctgcttctgcccaacatgaagttgccaacctc
+cgtctgagccaccagaatgtgagactcatctcagccttgaccatagaaatacgggtttgctacttcg
+ggtctagaccaaggcgtatcttctgcatcgatcatgaaatagggtatgcgtatgcg
+tagctgaatacagaagtggctgaccattttagcctcttgaaaacgggcct
+tagcttccattccaattggtaccttttcagcgatctggaatgcggattcgaaactcta
+tagtggcccacgaggtgagcttcttgccacgacctagagagcggtatctaatcga
+tcaagtcgatatccagaatgtactgatcattcttttagcattccaaagcggttccgtacac
+tcaggtcgataagagtttagcgaccatttgccattgacttgagaataggttcgaactctgcg
+tcagtgatgcattccacagttgtgacattctttcagctctcagagatcgtgcgaactcgacg
+******************
+------------------
+SCS_MM_Beam_Search_Algorithm
+-Optimal solution-
+SCS : tcaaggtctgatgccattccacagaagttgtgagctgactcattctttctagcccatctgactcatagagaaatagcgggtattgccgtaaactctgacg
+SCS length : 100
+Time taken by program is : 0.000000 sec 
+------------------
+******************
+Alphabet : a c t g 
+Sequences:
+aaggtctagcattcagagttgtgatattctttctactctgctctagaaatagggttgccgtacta
+aaggtctgagcttcacaaagttgtgctgctcatttacccttgactagagaaagtatgcgtattgacg
+aaggtgtgaccacagaggtgggactctcttctcccatgacaggatagcggtattgcaaattgag
+aaggttccattccagaatgagcgactattttacctgacataggatggtattgctaaactgg
+agttctcacagttgctccgccctccagaatacgggagccgtaacta
+caaggtctggttcaagagtggagtactcatttttagccattgacaaagcggtattccgatctgag
+caagtcatgccattccaggtgtgagctatttttcagatctaatagaacgattcaaacttgac
+caagttgatgcttagatgtgactgatcatcttaccatctgctagaatcgggtatgcgtaact
+cagcgagctaagtttgcacatcttctgcctgaaagaaaatagggttgcgtaaactctgac
+caggttatgacacgagtttgtatcatctttcagccactacataagatacggtttgcgaacctgacg
+cggtctgaccatccaagtttctgcattttaccttgactcagaaaataggggattcgaaattgcg
+cgtctgacatccgagtgtgagctgcttctgcccaacatgaagttgccaacctc
+cgtctgagccaccagaatgtgagactcatctcagccttgaccatagaaatacgggtttgctacttcg
+ggtctagaccaaggcgtatcttctgcatcgatcatgaaatagggtatgcgtatgcg
+tagctgaatacagaagtggctgaccattttagcctcttgaaaacgggcct
+tagcttccattccaattggtaccttttcagcgatctggaatgcggattcgaaactcta
+tagtggcccacgaggtgagcttcttgccacgacctagagagcggtatctaatcga
+tcaagtcgatatccagaatgtactgatcattcttttagcattccaaagcggttccgtacac
+tcaggtcgataagagtttagcgaccatttgccattgacttgagaataggttcgaactctgcg
+tcagtgatgcattccacagttgtgacattctttcagctctcagagatcgtgcgaactcgacg
+******************
+------------------
+SCS_WMM_Beam_Search_Algorithm
+-WMM Beam Search solution-
+SCS : tcaaggtctgatgccattccacagaagtgtgtagctgactcattctttctagcccatctgactcatagaagaatagcgggtattgccgtaaactctgacg
+SCS length : 100
+Time taken by program is : 0.00000 sec 
+------------------

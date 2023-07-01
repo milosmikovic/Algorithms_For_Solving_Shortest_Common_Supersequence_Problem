@@ -1,0 +1,102 @@
+******************
+Alphabet : a b c d e f g h i j k l m n o p 
+Sequences:
+acppjkffbjjfeamcakmanhodhidljll
+acppjokpbhfdeamammionodhigjfkjgl
+acppkhjcpfbjjhamcmkinjodidjlfkjlgl
+acppkhjocpfjjhdeacamkkmiohjohigdjkl
+acppkocffjfemcamkkioanhjigdlkjll
+cpjkfjhdeamkjoglfg
+eacpkhckpffbjjhfdmmkmioanhidjlkjlg
+eacpkhfjjhamcmkkmohjodhidjkl
+eacpkjockpfjjdmakmioahjodigdlfkl
+eacppckfbjdckinhjogdjfkg
+eacppkhjopjjfdamamkmoanjdhigdjkjll
+eaphocpfjdamkkinhdhdlfkjgl
+eappkjckpbhdemamkkiojdigdlfkjlg
+ecpkhocpffbjhdemcakmioahjdhdljgl
+ecpphockfbjjhfcamkmionohidlfjl
+ecppkjockpbjhfeamckmanjdgdjlfkjgl
+ephjocfjjhdeamcakmanhodhigdjlfkjlg
+epkhjocfbjhemamkmioanhjohjjgl
+epkhjocpffbfeamcakmioaodhigdlfjg
+eppkhjocffbjfeacmkkihjohdjlkj
+lacpkhjokbjfdemmkkmioahjdhidjk
+lacpkjockpjjhfdeamioahjdhglkjlgl
+lahjocffbjjfemkmioanhjhigdjljl
+laphjkffbjjheackkonjdhgjkjlg
+laphjocbjdeamcamkmnhjodhgdjlkj
+lcpjopfhfdemcmmioangjlfkl
+lcpkjockpffjhdeamcakkmoanjdigdlkjgl
+leacpkhockbjheamcakmiahjodigdjlfkjll
+leapkhpbjdeacmkkmjjl
+leapphjcffbjhfamcmkmianhodigjfkjlgl
+leappkhpbjdamamkkianhodhgdjll
+lecpjockpfbjjhfdeamkkmioahdijfkjlg
+lecpkjockffbjjheamcmkkmianhohgjlkgl
+lecppkjockjhcamkkioanjoddlfkjll
+lehjkpffjhfdmmkahodidjlfjlgl
+lehocpfbjfdemamkmoanjdigdjlfkl
+lepkhjcfbhfdcmkoanjigdjlkjlg
+leppkjkffdcamkmiajodhdflg
+lpkhjokpfbjjdeamcakmanhjodhijll
+ppkhjcpbhfcammhoidlfklgl
+******************
+------------------
+SCS_MM_Beam_Search_Algorithm
+-Optimal solution-
+SCS : leacppkhjockpffbjjhfdeamcamkkmioanhjodhigdjlfkjlgl
+SCS length : 50
+Time taken by program is : 0.000000 sec 
+------------------
+******************
+Alphabet : a b c d e f g h i j k l m n o p 
+Sequences:
+acppjkffbjjfeamcakmanhodhidljll
+acppjokpbhfdeamammionodhigjfkjgl
+acppkhjcpfbjjhamcmkinjodidjlfkjlgl
+acppkhjocpfjjhdeacamkkmiohjohigdjkl
+acppkocffjfemcamkkioanhjigdlkjll
+cpjkfjhdeamkjoglfg
+eacpkhckpffbjjhfdmmkmioanhidjlkjlg
+eacpkhfjjhamcmkkmohjodhidjkl
+eacpkjockpfjjdmakmioahjodigdlfkl
+eacppckfbjdckinhjogdjfkg
+eacppkhjopjjfdamamkmoanjdhigdjkjll
+eaphocpfjdamkkinhdhdlfkjgl
+eappkjckpbhdemamkkiojdigdlfkjlg
+ecpkhocpffbjhdemcakmioahjdhdljgl
+ecpphockfbjjhfcamkmionohidlfjl
+ecppkjockpbjhfeamckmanjdgdjlfkjgl
+ephjocfjjhdeamcakmanhodhigdjlfkjlg
+epkhjocfbjhemamkmioanhjohjjgl
+epkhjocpffbfeamcakmioaodhigdlfjg
+eppkhjocffbjfeacmkkihjohdjlkj
+lacpkhjokbjfdemmkkmioahjdhidjk
+lacpkjockpjjhfdeamioahjdhglkjlgl
+lahjocffbjjfemkmioanhjhigdjljl
+laphjkffbjjheackkonjdhgjkjlg
+laphjocbjdeamcamkmnhjodhgdjlkj
+lcpjopfhfdemcmmioangjlfkl
+lcpkjockpffjhdeamcakkmoanjdigdlkjgl
+leacpkhockbjheamcakmiahjodigdjlfkjll
+leapkhpbjdeacmkkmjjl
+leapphjcffbjhfamcmkmianhodigjfkjlgl
+leappkhpbjdamamkkianhodhgdjll
+lecpjockpfbjjhfdeamkkmioahdijfkjlg
+lecpkjockffbjjheamcmkkmianhohgjlkgl
+lecppkjockjhcamkkioanjoddlfkjll
+lehjkpffjhfdmmkahodidjlfjlgl
+lehocpfbjfdemamkmoanjdigdjlfkl
+lepkhjcfbhfdcmkoanjigdjlkjlg
+leppkjkffdcamkmiajodhdflg
+lpkhjokpfbjjdeamcakmanhjodhijll
+ppkhjcpbhfcammhoidlfklgl
+******************
+------------------
+SCS_WMM_Beam_Search_Algorithm
+-WMM Beam Search solution-
+SCS : leacppkhjockpffbjjhfdeamcamkkmioanhjodhigdjlfkjlgl
+SCS length : 50
+Time taken by program is : 0.00000 sec 
+------------------

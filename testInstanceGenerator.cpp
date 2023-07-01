@@ -155,7 +155,7 @@ void generateTestInstances(const std::size_t &t)
     }
     else if(t == 3)
     {
-        std::ofstream os("solution3.txt");
+        std::ofstream os("solution1.txt");
 
         std::cout << "Insert length of sequence:";
         std::string numS;

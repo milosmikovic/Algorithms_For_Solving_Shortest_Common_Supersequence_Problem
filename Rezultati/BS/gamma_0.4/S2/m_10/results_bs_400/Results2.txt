@@ -1,0 +1,42 @@
+******************
+Alphabet : a b 
+Sequences:
+aaabbaabbaaabbaaabbbbbbabababbbbbaabababaababaaababbaaaaabbbaa
+aababababaabbbbbaaaababbabbaabbaaabaaaababbbbbbabbaaaababbaa
+aabbbababaabbaababbbbbbababbabbbabaababbabababaaababbbbbbaabbaaba
+aabbbabbababbaaaaaabbbbbbabbabaabbbaaaabbbaabababaaabbabbabbabbbaab
+aabbbbaaabbaaabaabbababaababbbbaaabbaaababbabbbbabbbabaaaabbb
+abbabbaaabaababbbbbababbabbabbaaaaaaabbaabbbbaaaaaaba
+abbbabaaaabbbbabaabaaabaaabaabaabbbabaabbaaaba
+baabbbababaababbbbababaaaabbbbaaabbbaabbbabaababbbbabaaababbab
+bababbaaabbaaaabbbbbaaabbbbaababababbbaabbabbabbabaaaababa
+babbbbaaaaababbbbababbabbbaaaabaaabababababbbababaababa
+******************
+------------------
+SCS_MM_Beam_Search_Algorithm
+-Optimal solution-
+SCS : baabbbabbabaabbaaababbbabbababaabbabbabababababbbaababababaababbbabababaababbaabababbabbbaab
+SCS length : 92
+Time taken by program is : 0.000000 sec 
+------------------
+******************
+Alphabet : a b 
+Sequences:
+aaabbaabbaaabbaaabbbbbbabababbbbbaabababaababaaababbaaaaabbbaa
+aababababaabbbbbaaaababbabbaabbaaabaaaababbbbbbabbaaaababbaa
+aabbbababaabbaababbbbbbababbabbbabaababbabababaaababbbbbbaabbaaba
+aabbbabbababbaaaaaabbbbbbabbabaabbbaaaabbbaabababaaabbabbabbabbbaab
+aabbbbaaabbaaabaabbababaababbbbaaabbaaababbabbbbabbbabaaaabbb
+abbabbaaabaababbbbbababbabbabbaaaaaaabbaabbbbaaaaaaba
+abbbabaaaabbbbabaabaaabaaabaabaabbbabaabbaaaba
+baabbbababaababbbbababaaaabbbbaaabbbaabbbabaababbbbabaaababbab
+bababbaaabbaaaabbbbbaaabbbbaababababbbaabbabbabbabaaaababa
+babbbbaaaaababbbbababbabbbaaaabaaabababababbbababaababa
+******************
+------------------
+SCS_WMM_Beam_Search_Algorithm
+-WMM Beam Search solution-
+SCS : baabbbabbabaabbaababbabaabbabababababbababaababbabaababbabaababbabaababbabbaabbaababbaab
+SCS length : 88
+Time taken by program is : 0.00000 sec 
+------------------

@@ -1,0 +1,47 @@
+******************
+Alphabet : a c t g 
+Sequences:
+aaggtt
+aagtat
+aatctatg
+agttatg
+caggtctgt
+cagtcgatg
+cagtttg
+taagcgat
+taaggta
+taaggtgtg
+taagtctat
+taagtctgat
+taagttgag
+tagctat
+tagt
+tagtctat
+tagtctga
+tagttgat
+tatctg
+tcaaggcgtg
+tcaaggtcatg
+tcaaggtctg
+tcaagtgg
+tcaagttgatg
+tcaatt
+tcagag
+tcaggcgg
+tcagtgat
+tcagtgatg
+tcagtt
+tcatcag
+tgtcttg
+******************
+------------------
+SCS_BFBT_Algorithm
+MIN DEPTH: 11
+MAX DEPTH: 44
+---List of solutions---
+tcaaggtctgatg
+-Optimal solution-
+SCS : tcaaggtctgatg
+SCS length : 13
+Time taken by program is : 17.000000 sec 
+------------------

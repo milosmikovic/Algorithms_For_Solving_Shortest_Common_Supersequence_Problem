@@ -1337,7 +1337,7 @@ class SCS
         std::size_t setOfStringsSize;
 
         // Beam size paramether of Beam Search algorithm
-        const std::size_t beamSize = 50;
+        const std::size_t beamSize = 400;
 
         // LAWMM lookAhead parameter
         std::size_t lookAhead = 1;
@@ -1364,14 +1364,14 @@ int main(int argc, char **argv)
     SCS alg(argv[1]);
 
     // running different algorithms
-    alg.SCS_BFBT_Algorithm();
+    // alg.SCS_BFBT_Algorithm();
     // alg.LAWMMAlgorithm();
 
-    // alg.SCS_MM_Beam_Search_Algorithm();
+    alg.SCS_MM_Beam_Search_Algorithm();
 
     // alg.SCS_LAWMM_Beam_Search_Algorithm();
 
-    // alg.SCS_WMM_Beam_Search_Algorithm();
+    alg.SCS_WMM_Beam_Search_Algorithm();
 
     return EXIT_SUCCESS;
 
