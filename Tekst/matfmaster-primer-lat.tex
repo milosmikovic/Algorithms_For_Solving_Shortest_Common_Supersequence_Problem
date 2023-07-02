@@ -107,10 +107,27 @@
 % Apstrakt na srpskom jeziku (u odabranom pismu)
 \apstr{%
 % \pangrami
+Problem najkraće zajedničke nadniske predstavlja jedan od dobro poznatih i ispitivanih
+NP-teških problema optimizacije. Zbog njegove široke primene u mnogim oblastima informatike,
+na njegovom što efikasnijem rešenju radi se poslednje četiri decenije.
+Vremenom je predloženo mnoštvo algoritama koji kombinuju različite optimizacione
+tehnike i pristupe. U ovom radu predstavljena su dva algoritma koji rešavaju
+ovaj problem. Algoritam grananja sa odsecanjem uvek pronalazi optimalno rešenje
+problema ali je njegovo vreme izvršavanja u najgorem slučaju eksponencijalno.
+Drugi predstavljeni algoritam počiva na metaheurističkoj tehnici
+pretraga bima (\textit{eng.} beam search) u kombinaciji sa dve pohlepne
+heurističke funkcije većinsko spajanje (\textit{eng.} majority merge)
+i težinsko većinsko spajanje (\textit{eng.} weighted majority merge).
+U radu je detaljno opisan problem i konstrukcija pomenutih algoritama i heurističkih funkcija.
+Opisan je način na koji su generisane test instance problema i dat je prikaz
+rezultata na različitim instancama problema. Ukratko su opisane već korišćene tehnike
+za rešavanje ovog problema i date ideje za pravce daljeg usavršavanja predstavljenog algoritma
+ili formiranje novog.
 }
 
 % Ključne reči na srpskom jeziku (u odabranom pismu)
-\kljucnereci{optimizacija, pretraga bima, analiza bioloških sekvenci}
+\kljucnereci{optimizacija, pretraga bima, analiza bioloških sekvenci, zajednička nadniska,
+težinsko spajanje, većinsko težinsko spajanje}
 
 \begin{document}
 % ==============================================================================
@@ -1624,9 +1641,36 @@ nadniska ne bi mogla da se inkrementalno gradi zbog pomenutog problema,
 već bi se heuristička ocena svake parcijalne reči računala
 u svakom koraku pretrage bima. Postoje indikacije da ovako
 konsturisan algoritam može da nadmaši predstavljeni algoritam, ali
-bi vreme izvršavanja bilo daleko veće.
-
-
+bi vreme izvršavanja bilo daleko veće. Predstavljeni algoritam
+se takođe može modifikovati tako da umesto da u svakom koraku bira $\beta$
+elemenata sa najvećom heurističkom ocenom, taj izbor izvrši ruletskom selekcijom
+(\textit{eng.} Roulette Selection) ili nekom drugom vrstom selekcije.
+Pritom se u svakoj iteraciji može $k$ $(k<\beta)$ najbolje ocenjenih elemenata
+direktno prebaciti u novi bim.
+Predstavljeni su i algoritmi koji ne grade inkrementalno nadsniku počevši 
+od prazne reči $\varepsilon$ već najpre formiraju skup nadniski
+koje pokušavaju da redukuju što je više moguće. Takav algoritam je predložen
+u radu iz 2006. godine ''The deposition and reduction algorithm'' \cite{SCSSBetterSolution}.
+Opisani pohlepni algoritam pretrage bima bi mogao da se proširi tehnikama redukcije dobijene
+nadniske u cilju dobijanja kvalitetnijih rešenja i to može biti predmet daljeg
+istraživanja. 
+Predstavljene pohlepne heurističke funkcije mogu se zameniti
+sa funkcijama koje ocenjuju verovatnoću da slučajno izabrana reč iz uniformne 
+raspodele  određene dužine predstavlja nadnisku.
+Takve heurističke funkcije počivaju na osnovnim zakonima verovatnoće i pretpostavljaju
+da su sve reči u $\mathcal{L}$ međusobno nezavisne \cite{SCSBS}.
+Trenutno najkvalitetnija takva funkcija je AEL koja aproksimira
+očekivanu dužinu slučajno izabrane nadniske.
+Kombinovanje ovakvih heurističkih funkcija sa pohlepnim bi možda dovelo
+do boljih i kvalitetnijih rešenja.
+U svakom slučaju sve navedene tehnike treba ispitati i napraviti širu sliku
+o tome koje od njih su međusobno kompatibilne i u kojoj meri.
+Što se tiće generatora test instanci koji je predložen u ovom radu,
+dalja ispitivanja bi mogla biti na temu ulaznih parametara $\beta$, $n=|\Sigma|$ i $m$.
+Zapravo, mogao bi se ispitivati njihov međusoban odnos
+kako bi stepen sigurnosti da je $gg$ optimalno rešenje bio maksimizovan,
+ili se predstavljena slučajna tehnika izbora može zameniti nekom kompleksnijom
+i sigurnijom. 
 
 % \lstinputlisting[caption=Sample Code Listing C++, label={lst:listing-cpp}, language=C++]{./code1.cpp}
 % ------------------------------------------------------------------------------
@@ -1647,21 +1691,19 @@ bi vreme izvršavanja bilo daleko veće.
 % ------------------------------------------------------------------------------
 % Biografija kandidata
 \begin{biografija}
-  \textbf{Vuk Stefanović Karadžić} (\emph{Tršić,
-    26. oktobar/6. novembar 1787. — Beč, 7. februar 1864.}) bio je
-  srpski filolog, reformator srpskog jezika, sakupljač narodnih
-  umotvorina i pisac prvog rečnika srpskog jezika.  Vuk je
-  najznačajnija ličnost srpske književnosti prve polovine XIX
-  veka. Stekao je i nekoliko počasnih mastera.  Učestvovao je u
-  Prvom srpskom ustanku kao pisar i činovnik u Negotinskoj krajini, a
-  nakon sloma ustanka preselio se u Beč, 1813. godine. Tu je upoznao
-  Jerneja Kopitara, cenzora slovenskih knjiga, na čiji je podsticaj
-  krenuo u prikupljanje srpskih narodnih pesama, reformu ćirilice i
-  borbu za uvođenje narodnog jezika u srpsku književnost. Vukovim
-  reformama u srpski jezik je uveden fonetski pravopis, a srpski jezik
-  je potisnuo slavenosrpski jezik koji je u to vreme bio jezik
-  obrazovanih ljudi. Tako se kao najvažnije godine Vukove reforme
-  ističu 1818., 1836., 1839., 1847. i 1852.
+  \textbf{Miloš Miković} je rođen u Beogradu 15. aprila 1997. godine.
+  Išao je u osnovnu školu „Branko Radičević” u Batajnici, završio je odličnim uspehom
+  i bio nagrađen Vukovom diplomom. Nakon završene osnovne škole
+  upisao je prirodno-matematički smer Devete beogradske gimnazije „Mihailo Petrović Alas”.
+  Paralelno sa gimnazijom pohađao je mnogobrojne sportove.
+  Najinteresantnija oblast u srednjoj školi mu je bila programiranje, tako da
+  odlučuje da upiše smer Informatike na Matematičkom fakultetu u Beogradu.
+  Na drugoj godini studija konkuriše i dobija studentsku stipendiju.
+  Osnovne studije završava u roku od četiri godine i upisuje master studije na istom smeru.
+  U međuvremenu se zapošljava kao game developer u firmi „International Game Technology”
+  u Beogradu.
+  
+
 \end{biografija}
 % ------------------------------------------------------------------------------
 
