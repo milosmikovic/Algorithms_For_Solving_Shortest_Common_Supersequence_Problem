@@ -6,7 +6,7 @@
 #include <random>
 
 
-const double removeProb = 0.4;
+const double removeProb = 0.2;
 const std::size_t SEED = 555;
 
 std::string generateFName()
@@ -127,7 +127,7 @@ void generateTestInstances(const std::size_t &t)
         std::getline(solutionStream,solution);
 
         std::random_device rd;
-        std::mt19937 generator(/* rd() */ SEED );
+        std::mt19937 generator( rd()  /* SEED */ );
         std::uniform_real_distribution<double> distribution(0.0, 1.0);
         double randomNum;
         std::size_t cnt = 0;
@@ -155,7 +155,7 @@ void generateTestInstances(const std::size_t &t)
     }
     else if(t == 3)
     {
-        std::ofstream os("solution1.txt");
+        std::ofstream os("solution6.txt");
 
         std::cout << "Insert length of sequence:";
         std::string numS;
@@ -172,7 +172,7 @@ void generateTestInstances(const std::size_t &t)
         }
 
         std::random_device rd;
-        std::mt19937 generator(/* rd() */ SEED );
+        std::mt19937 generator( rd() /* SEED */ );
         std::uniform_int_distribution<int> distribution(0, alphabet.size() - 1);
 
         std::string solution("");

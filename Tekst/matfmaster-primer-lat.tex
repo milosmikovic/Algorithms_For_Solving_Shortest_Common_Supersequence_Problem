@@ -1077,6 +1077,9 @@ dužinu nadniske koju je algoritam granja sa odsecanjem pronasao ($GSO$),
 vreme izvršavanja algoritma ($t$),
 minimalnu dubinu pretrage ($minD$),
 maksimalnu dubinu pretrage ($maxD$).
+U tabelama \ref{tbl:bs1}, \ref{tbl:bs2}, \ref{tbl:bs3} predstavljeni su rezultati
+izvršavanja algoritma pretrage bima na test instancama
+$IP_{\gamma=0.1}$, $IP_{\gamma=0.2}$, $IP_{\gamma=0.4}$.
 % \begin{enumerate}
 %   \item Veličinu ulazne azbuke $\Sigma$ ($n=|\Sigma|$)
 %   \item Broj reči u skupu $\mathcal{L}$ ($m=|\mathcal{L}|$)
@@ -1514,6 +1517,117 @@ maksimalnu dubinu pretrage ($maxD$).
        \caption{Rezultati pretrage bima na test instancama $IP_{\gamma=0.4}$}
        \label{tbl:bs3}
       \end{table}
+Kolona $VS$ predstavlja
+dužinu nadniske koju je pronašao algoritam pretrage bima koristeći
+heurističku funkciju većinsko spajanje, a $TVS$ koristeći
+heurističku funkciju težinsko većinsko spajanje.
+Rezultati su podeljeni u tri sekciji u zavisnosti od
+vredsnoti širine bima $\beta=\{100,200,400\}$.
+Na svim test podacima korišćene su sledeće azbuke:
+\begin{itemize}
+  \item $\Sigma_{2}=\{a,b\}$
+  \item $\Sigma_{4}=\{a,c,t,g\}$
+  \item $\Sigma_{16}=\{a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p\}$
+\end{itemize}
+
+\chapter{Diskusija eksperimentalnih rezultata}
+\label{chap:diskusijaRez}
+Najpre je potrebno
+analizirati generisane test instance problema kako bi se stvorila šira slika
+pre evaluacije algoritama. Ključni parametar
+je verovatnoća uklanjanja slova $\gamma$. 
+Za fiksiranu dužinu nadniske $gg$, vrednosti ovog parametra
+kontrolišu dužinu generisanih reči u $\mathcal{L}$.
+Ako je $\gamma=k$ to znači da će generisane reči u proseku
+biti $k$ puta kraće od gornje granice $gg$.
+Praćenjem vrednosti iz tabele \ref{tbl:gso}, jasno se vidi
+razlika parametara $mindD$ i $maxD$ za različite vrednost $\gamma$,
+što pokazuje da su za veće vrednosti ovog parametra reči u $\mathcal{L}$ kraće,
+ali su pritom međusobno različitije. Odnosno za manje vrednosti
+ovog parametra dobija se skup reči koje su međusobno sličnije i duže.
+Takođe ako se posmatra optimalna dužina nadniske koja je dobijena algoritmom
+granja sa odsecanjem
+može se primetiti da $gg$ najčešće jeste 
+optimalno rešenje problema za manje vrednosti $\gamma$, dok je za veće 
+vrednosti ključan parametar $m$. Za male vrednosti parametra
+$m$ primećuje se da $gg$ nije optimalno rešenje,
+ali porastom vrednosti $m$ raste i verovatnoća da gornja granica predstavlja
+rešenje koje je optimalno ili jako blizu optimalnog.
+Drugim rečima, iako su za veće vrednosti $\gamma$ reči kraće i heterogenije,
+generisanjem većeg broja reči dobijamo jasniju sliku u evaluaciji.
+Instance PNZN generisane za veće vrednosti $\gamma$ predstavljaju
+teže isntance problema zbog veće heterogenosti reči u $\mathcal{L}$, i to
+se može videti iz tabele \ref{tbl:gso}. Na primer za instancu problema
+$\{n=4,m=32,|gg|=14\}$ vreme izvrsavanja $t_{\gamma=0.2}=64s$, a $t_{\gamma=0.4}=65s$
+je skoro identično iako su granice dubine dosta manje za $\gamma=0.4$.
+Naravno, težina problema raste do vrednosti $\gamma=0.5$, a zatim proporijonalno opada.
+
+Rezultati algoritma grananja sa odsecanjem predstavljaju optimalne rezultate
+na test instancama, a vreme izvršavanja očekivano eksponencijalno raste u odnosu na
+veličinu azbuke. Može se reći da je za ovaj algoritam najbitnije da što pre pronađe barem jednu
+nadnisku, a zatim odsecanjem smanji prostor pretrage.
+Na test instancama $IP_{\gamma=0.1}$ i $IP_{\gamma=0.2}$ algoritam pretrage bima
+skoro uvek pronalazi nadnisku dužine $|gg|$. S obzirom na veću homogenost reči
+u ovim test instancama, može se pretpostaviti da su pronađene nadniske
+optimalne ili jako blizu optimalnih, a pogotovo za veće vrednosti parametra $m$.
+S obzirom na izbor pohlepnih heurističkih funkcija koje su korišćene,
+dobri rezultati na ovim test instancama su očekivani.
+Heuristička funkcija većinsko spajanje daje najbolje rezultate
+kada većina reči u $\mathcal{L}$ ima slične segmente uzastopnih slova.
+Slično je i kod heuristike težinsko većinsko spajanje, stim što se u ovom
+slučaju teži balansiranju dužina reči.
+Na test instancama $IP_{\gamma=0.2}$ primećuju se nešto lošiji rezultati
+na binarnoj azbuci za manje vrednosti parametra $m$. To je iz razloga
+što azbuku čine samo dva slova, pa iako je verovatnoća uklanjanja relativno mala,
+sobzirom da je azbuka mala i da je broj reči mali, uklanjanjem
+slova vise se narušava poredak u rečima što nije slučaj na većim azbukama.
+Test instance $IP_{\gamma=0.4}$ predstavljaju teže isntance PNZN.
+Rezultati su očekivano lošiji zbog velike heterogenosti reči. Pronađene nadniske nad binarnom azbukom
+su uvek kraće od dužine $gg$, što je očekivano uzevši u obzir to da su i generisane
+reči na ovim instancama problema u proseku $40\%$ kraće od $gg$ pa i optimalno rešenje
+mora biti kraće. Ovo važi i za veće azbuke ali u manjem intenzitetu,
+odnosno optimalno rešenje na većim azbukama je bliže $gg$.
+Nad binarnom azbukom se talpđe prinećuje da porastom $m$ raste i dužina pronađenih nadniski
+i približava se dužini gornje granice što potvrđuje prethodno donesene zaključke
+o test instancama problema.
+
+\chapter{Zaključak i pravci daljeg rada}
+\label{chap:zakljucak}
+Problem najkraće zajedničke nadniske predstavlja izazovan i težak optimizacioni problem.
+Na njegovom što efikasnijem rešavanju radi se već četiri decenije.
+Treba istaći njegovu široku primenu u bioinformatici gde predstavlja
+ključan problem u analizi bioloških sekvenci \cite{SCSSBetterSolution}.
+Recimo da se posmatra određena sekvenca nukleotida i da
+je urađeno $k$ zapisa te sekvence nekim mernim aparatom.
+S obzirom da aparat greši, te sekvence će se razlikovati u određenim
+delovima, a opisani problem predstavlja PNZN. S obzirom na
+veliku primenu njegovo efikasno rešavanje donelo bi korist u mnogim oblastima informatike.
+U ovom radu predstavljena je kombinacija trenutno najbolje predložene metaheuristike
+pretraga bima sa pohlepnim heurstičkim funkcijama većinsko spajanje i težinsko
+većinsko spajanje. Predstavljeni algoritam je efikasan jer inkrementalno gradi rezultijuću nadnisku,
+u cilju minimalnog vremena izvršavanja. Predložena heuristička funkcija težinsko većinsko
+spajanje se može proširiti gledanjem unapred (\textit{eng.} look-ahead). To znači da se u svakoj
+iteraciji algoritma pretrage bima za svako parcijalno rešenje bira najbolje ocenjeno slovo
+u $k$ prolaza težinskog većinskog spajanja.
+Jedini uslov je to što bi se u kombinaciji sa pretragom bima, težine slova
+morale rangirati ako želimo da inkrementalno gradimo nadniske, odnosno ne bi mogle
+da se koriste težine koje su dobijene direktno od heurističke funkcije,
+jer postoje delovi pretrage u kojima lošija rešenja počinju da dominiraju.
+Predloženi algoritam nije predstavljen zbog lošijih rezultata, a sličan
+algoritam rangiranja težina opisan je u radu
+iz 2007. godine ''A Probabilistic Beam Search Approach to the
+Shortest Common Supersequence Problem'' \cite{ProbabilisticBS}.
+Ono što može biti predmet daljeg rada jeste pokušaj da se koristi gledanje
+unapred, ali da se težine slova ne rangiraju (rangiranjem težina gubi se
+na kvalitetu dobijenih težina). U tom slučaju
+nadniska ne bi mogla da se inkrementalno gradi zbog pomenutog problema,
+već bi se heuristička ocena svake parcijalne reči računala
+u svakom koraku pretrage bima. Postoje indikacije da ovako
+konsturisan algoritam može da nadmaši predstavljeni algoritam, ali
+bi vreme izvršavanja bilo daleko veće.
+
+
+
 % \lstinputlisting[caption=Sample Code Listing C++, label={lst:listing-cpp}, language=C++]{./code1.cpp}
 % ------------------------------------------------------------------------------
 % \pangrami
