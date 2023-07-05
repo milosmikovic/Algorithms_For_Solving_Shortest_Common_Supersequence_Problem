@@ -252,8 +252,8 @@ bima predstavlja nepotpunu pretragu stabla, koja na svakom nivou proširuje graf
 obećavaju \cite{SCSBS}. Upravo zbog toga što se dobro pokazala u rešavanju PNZN i sličnih problema poput problema najduže zajedničke podniske
 (\textit{eng.} longest common subsequence) pretraga bima će biti korišćena u ovom radu i biće detaljnije opisana u daljem tekstu.
 S obzirom na to da pretraga bima podrazumeva postojanje heurističke funkcije koja će oceniti kvalitet čvorova na određenom nivou,
-u ovom radu izabrane su dve takve funkcije, Većinsko Spajanje (\textit{eng.} Majority Merge) i Težinsko Većinsko Spajanje
-(\textit{eng.} Weighted Majority Merge) koje su se dobro pokazale u prethodnim istraživanjima i one će detaljnije biti 
+u ovom radu izabrane su dve takve funkcije, većinsko spajanje (\textit{eng.} majority merge) i težinsko većinsko spajanje
+(\textit{eng.} weighted majority merge) koje su se dobro pokazale u prethodnim istraživanjima i one će detaljnije biti 
 opisane u nastavku teksta.
 
 % % Primeri citiranja\mathsf{Y} 
@@ -461,7 +461,7 @@ nadniske:
 
 \begin{enumerate}
   \item Algoritam grananja sa odsecanjem (\textit{eng.} backtracking)
-  \item Pretraga Bima (\textit{eng.} Beam Search)
+  \item Pretraga bima (\textit{eng.} beam search)
 \end{enumerate}
 U nastavku teksta biće opisana konstrukcija ova dva algoritma kao i njihove karakteristike.
 
@@ -473,7 +473,7 @@ kandidata za rešenja i tako što se odbacuju parcijalno popunjeni kandidati za 
 da se ne mogu proširiti do optimalnog rešenja problema. Dakle, grananje sa odsecanjem podrazumeva da se tokom
 obilaska u dubinu drveta, kojim se predstavlja prostor potencijalnih rešenja odsecaju oni delovi drveta za koje se unapred
 može utvrditi da ne sadrže ni jedno rešenje problema tj. da ne sadrže optimalno rešenje, pri čemu se odsecanje vrši
-i u čvorovima bliskim korenu koji mogu da sadrže i samo parcijalno popunjene kandidate za rešenja.
+i u čvorovima bliskim korenu koji mogu da sadrže i samo parcijalno popunjene kandidate za rešenja \cite{PetljaBackTracking}.
 Dakle, umesto da se čeka da se tokom pretrage stigne do lista (ili eventualno unutrašnjeg čvora koji predstavlja
 nekog kandidata za rešenje) i da se provera zadovoljenosti uslova ili optimalnosti vrši tek tada, prilikom granja sa
 odsecanjem provera se vrši u svakom koraku i vrši se provera parcijalno popunjenih rešenja.
@@ -612,14 +612,14 @@ da je $s$ sigurno podniska reči $\omega$.
     \end{algorithmic}
     \end{algorithm}
 Iako algoritam grananja sa odsecanjem u najgorem slučaju ima eksponencijalnu složenost $O(|\Sigma|^{maxD})$
-kao i algoritam Iscrpne Pretrage (\textit{eng.} Brute Force), u praksi je prosečno vreme izvršavanja
+kao i algoritam iscrpne pretrage (\textit{eng.} brute force), u praksi je prosečno vreme izvršavanja
 daleko kraće. Rezultati izvršavanja algoritma grananja sa odsecanjem biće prikazani u sledećem poglavlju.
 Ono što je bitno istaći jeste da ovaj algoritam garantuje pronalaženje optimalnog rešenja PNZN.
 % što omogućava
 % jednostavnu proveru uspešnosti algoritma Pretrage Bima (koji će biti predstavljen u sledećoj sekciji)
 % na manjim instancam PNZN.
 S obzirom na eksponencijalnu prirodu ovog algoritma, ne moguće je koristiti ga
-za proveru kvaliteta rešenja Pretrage Bima na većim instancama problema, stoga će u te svrhe biti korišćene
+za proveru kvaliteta rešenja pretrage bima na većim instancama problema, stoga će u te svrhe biti korišćene
 nešto sofisticiranije metode koje će biti objašnjene u sekciji \ref{sec:testPodaci}.
 
 % \section{Algoritam Pretraga Bima}
@@ -633,7 +633,7 @@ nešto sofisticiranije metode koje će biti objašnjene u sekciji \ref{sec:testP
 % ne garantuje pronalak optimalnog rešenja, ali za razumne vrednosti metaparametra $\beta$
 % daje prihvatljivo vreme izvršavanja u realnim uslovima, pa čak i na velikim instancama PNZN.
 
-\section{Pretraga Bima}
+\section{Pretraga bima}
 \label{sec:pretragaBima}
 \begin{figure}[!ht]
   \centering
@@ -642,17 +642,17 @@ nešto sofisticiranije metode koje će biti objašnjene u sekciji \ref{sec:testP
   \label{fig:pretragaBima}
 \end{figure}
 % Sada ćemo predstaviti generalnu ideju Pretrage Bima na kojoj ćemo kasnije izgraditi algoritam za PNZN.
-Pretraga Bima predstavlja metaheuristiku koja je uvedena 1976. godine u oblasti prepoznavanja govora
+Pretraga bima predstavlja metaheuristiku koja je uvedena 1976. godine u oblasti prepoznavanja govora
 (\textit{eng.} speech recognition). Korišćena je u završnim slojevima mnogih modela za
 obradu prirodnog jezika (\textit{eng.} natural language processing models) u donošenju odluke da se izabere najbolji
 izlaz date ciljne promenjive \cite{BSIntroduction}. Pored navedenih primena pretraga bima se intenzivno koristi u sledećeim
 oblastima: kombinatorna optimizacija (\textit{eng.} combinatorial optimization), problemi planiranja (\textit{eng.} scheduling problems),
 problemi rutiranja vozila (\textit{eng.} vehicle routing problems), podešavanje hiperparametara u oblasti mašinskog učenja
-(\textit{eng.} Machine Learning Hyperparameter Tuning), problemi zadovoljenja ograničenja (\textit{eng.} Constraint Satisfaction Problems). 
+(\textit{eng.} machine learning hyperparameter tuning), problemi zadovoljenja ograničenja (\textit{eng.} constraint satisfaction problems). 
 
-Pretraga Bima predstavlja vrstu pretrage grafa u širinu u cilju da
+Pretraga bima predstavlja vrstu pretrage grafa u širinu u cilju da
 se pronađe najbolji put od korenog čvora do ciljanog čvora u grafu. Kako bi se složenost izračunavanja držala u
-zadatim granicama, Pretraga Bima evaluira dostignute čvorove na određenom nivou ali bira samo podskup od $\beta$
+zadatim granicama, pretraga bima evaluira dostignute čvorove na određenom nivou ali bira samo podskup od $\beta$
 čvorova koji najviše obećavaju i sa tim podskupom čvorova napreduje dalje u pretrazi. Izabrani podskup od $\beta$ čvorova
 zvaćemo bim (\textit{eng.} beam) i označavaćemo ga sa $\mathcal{B}$, a $\beta$ parametar ćemo zvati širina bima (\textit{eng.} beam width) \cite{SCSBS}.
 U kontekstu PNZN graf koji pretražujemo $\mathcal{G}=(\mathcal{V},\mathbb{E})$ predstavlja usmeren aciklički graf, 
@@ -810,6 +810,7 @@ jedno trivijalno rešenje problema.
   \end{algorithmic}
   \end{algorithm}
 \\
+\\
 Iako algoritam pretrage bima ne garantuje pronalaženje optimalnog rešenja, ovako konstruisan algoritam
 ima polinomijalno vreme izvršavanja $O(\beta*maxD)$ što ga u praksi čini daleko efikasnijim od
 prethodno opisanog algoritma granja sa odsecanjem. Iz tog razloga će ovaj algoritam biti testiran na
@@ -845,9 +846,9 @@ zbog eksponencijalne složenosti.
 % Algoritam se može zaustaviti kada se pronađe prvo rešenje problema, ali mogu se postaviti i drugi uslovi zaustavljanja
 % poput broja iteracija petlje (predstavlja dubinu unutar stabla pretrage) ili vremenska ograničenja.
 
-\subsection{Heurističke funkcije Većinsko Spajanje i Težinsko Većinsko Spajanje}
+\subsection{Heurističke funkcije većinsko spajanje i težinsko većinsko spajanje}
 \label{sec:mmiwmm}
-Većinsko Spajanje predstavlja jedan od najpopularnijih algoritama koji rešava PNZN. To je pohlepni algoritam
+Većinsko spajanje predstavlja jedan od najpopularnijih algoritama koji rešava PNZN. To je pohlepni algoritam
 koji inkrementalno konstruiše nadnisku. Najpre se odredi slovo koje se najčešće nalazi na početku reči
 iz skupa $\mathcal{L}$, a zatim se izabrano slovo briše sa početka reči iz $\mathcal{L}$ koje ga sadrže.
 Postupak se ponavlja dok skup $\mathcal{L}$ ne postane prazan, a dobijena nadniska
@@ -884,8 +885,8 @@ ali kao što je već rečeno eliminiše se konstantan azbučni poredak.
   \end{algorithm}
 
 Pseudo kod algoritma prikazan je pod Algoritam \ref{alg:mm}.
-Mana Većinskog Spajanja je to što ne može da prepozna globalnu strukturu reči iz skupa $\mathcal{L}$.
-U principu Većinsko spajanje izostavlja činjenicu da reči mogu biti različitih dužina. To dalje 
+Mana većinskog spajanja je to što ne može da prepozna globalnu strukturu reči iz skupa $\mathcal{L}$.
+U principu većinsko spajanje izostavlja činjenicu da reči mogu biti različitih dužina. To dalje 
 znači da će slova sa početka kraćih reči imati veću šansu da budu uklonjena iako algoritam i dalje treba
 da obradi preostale dugačke reči. Iz tog razloga bi skidanje slova sa početka kraćih reči trebalo da bude
 manje prioritetno. Drugim rečima bolje je da se prioritizira skidanje slova sa početka dužih reči.
@@ -900,8 +901,8 @@ možemo zameniti sa:
 \end{equation}
 \\
 \\
-Ovako modifikovan algoritam naziva se Težinsko Većinsko Spajanje i postoje indikacije da na određenim instancama
-problema može da nadmaši algoritam Većinskog Spajana, pogotovo kada nema struktuiranosti unutar skupa $\mathcal{L}$
+Ovako modifikovan algoritam naziva se težinsko većinsko spajanje i postoje indikacije da na određenim instancama
+problema može da nadmaši algoritam većinskog spajana, pogotovo kada nema struktuiranosti unutar skupa $\mathcal{L}$
 ili kada je ta struktuiranost haotična \cite{ProbabilisticBS}. Predstavljene dve heurističke
 funkcije su korišćene u algoritmu pretrage bima.
 
@@ -1604,7 +1605,7 @@ su uvek kraće od dužine $gg$, što je očekivano uzevši u obzir to da su i ge
 reči na ovim instancama problema u proseku $40\%$ kraće od $gg$ pa i optimalno rešenje
 mora biti kraće. Ovo važi i za veće azbuke ali u manjem intenzitetu,
 odnosno optimalno rešenje na većim azbukama je bliže $gg$.
-Nad binarnom azbukom se talpđe prinećuje da porastom $m$ raste i dužina pronađenih nadniski
+Nad binarnom azbukom se takođe primećuje da porastom $m$ raste i dužina pronađenih nadniski
 i približava se dužini gornje granice što potvrđuje prethodno donesene zaključke
 o test instancama problema.
 

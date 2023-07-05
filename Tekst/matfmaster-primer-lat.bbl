@@ -82,6 +82,12 @@ Ronald L. Rivest Clifford~Stein Thomas H.~Cormen, Charles E.~Leiserson.
 \newblock {\em Introduction to Algorithms, Second edition}.
 \newblock MIT Press and McGraw-Hill, 2001.
 
+\bibitem{PetljaBackTracking}
+Petlja tim.
+\newblock {Bektreking i gruba sila}.
+\newblock on-line at:
+  \url{https://petlja.org/biblioteka/r/Zbirka2/04%20bektreking_i_gruba_sila}.
+
 \bibitem{SCSNP}
 V.~G. Timkovskii.
 \newblock {Complexity of common subsequence and supersequence problems and
