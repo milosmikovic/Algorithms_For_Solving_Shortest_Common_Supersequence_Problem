@@ -220,6 +220,13 @@ Pozdrav,
 Milos Mikovic 1050/2020.
 
 
+Pitanja : 
+1. Nazivi procedura ne trebaju bold? Sta je sa algoritmima, sta ako pozivamo alg iz nekog algoritma?
+2. Italic ili ne (eng.)
+3. Prilagoditi font koda italic? GrananjeSaOdsecanjem(ε), na sta se tacno misli samo ovde ili
+svaki naziv algoritma da bude italic?
+4. G = (V, E) ne moze \mathcal jer E ispisuje kao epsilon...
+
 
 
 
