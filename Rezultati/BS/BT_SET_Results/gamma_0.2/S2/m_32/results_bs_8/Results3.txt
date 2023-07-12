@@ -1,0 +1,86 @@
+******************
+Alphabet : a b 
+Sequences:
+aaababbabbaaaaaaabab
+aaabbbbbabbaaabbaaababb
+aabbbabbaaaaaaaababb
+baaaababbaaabbaabaab
+baaabbabbaaabbaaaabaabb
+baaabbabbabaaababaabb
+baaabbabbabbaabbaaaabaabb
+baaabbabbbbaaabbaaaaaab
+baaabbbababaabbaaaaabaabb
+baaabbbababbaaabbaaaabaab
+baaabbbabbaaabaaaabaabb
+baaabbbabbabaabbaaaaab
+baaabbbabbabbaaaaaaaaab
+baaabbbabbabbaaabbaaabaabb
+baaabbbabbabbaabaaaaaabb
+baaabbbabbbaabaaaaabaab
+baaabbbbabaaabbaaaabaabb
+baaabbbbbabbaaabaaabaabb
+baaabbbbbabbaabbaaaaabaabb
+baababbabbaaabbaaaaabaa
+baababbabbabbaaaababb
+baabbababbaabbaaabaab
+baabbabbbaabbaaaabaa
+baabbbabaaaabbaaaaaabb
+baabbbabaaabbaabaabb
+baabbbababbabbaaaabaabb
+baabbbabbabbaabbaaaaba
+baabbbabbbbaaabaaaabaabb
+baabbbbbaabbaaaaab
+baabbbbbabaaabbaaaaabaab
+bababbabaaabaaaabaab
+babbbabbabbaabaaabaabb
+******************
+------------------
+SCS_MM_Beam_Search_Algorithm
+-Optimal solution-
+SCS : baaabbbabbabbaaabbaaaaabaabb
+SCS length : 28
+Time taken by program is : 0.000000 sec 
+------------------
+******************
+Alphabet : a b 
+Sequences:
+aaababbabbaaaaaaabab
+aaabbbbbabbaaabbaaababb
+aabbbabbaaaaaaaababb
+baaaababbaaabbaabaab
+baaabbabbaaabbaaaabaabb
+baaabbabbabaaababaabb
+baaabbabbabbaabbaaaabaabb
+baaabbabbbbaaabbaaaaaab
+baaabbbababaabbaaaaabaabb
+baaabbbababbaaabbaaaabaab
+baaabbbabbaaabaaaabaabb
+baaabbbabbabaabbaaaaab
+baaabbbabbabbaaaaaaaaab
+baaabbbabbabbaaabbaaabaabb
+baaabbbabbabbaabaaaaaabb
+baaabbbabbbaabaaaaabaab
+baaabbbbabaaabbaaaabaabb
+baaabbbbbabbaaabaaabaabb
+baaabbbbbabbaabbaaaaabaabb
+baababbabbaaabbaaaaabaa
+baababbabbabbaaaababb
+baabbababbaabbaaabaab
+baabbabbbaabbaaaabaa
+baabbbabaaaabbaaaaaabb
+baabbbabaaabbaabaabb
+baabbbababbabbaaaabaabb
+baabbbabbabbaabbaaaaba
+baabbbabbbbaaabaaaabaabb
+baabbbbbaabbaaaaab
+baabbbbbabaaabbaaaaabaab
+bababbabaaabaaaabaab
+babbbabbabbaabaaabaabb
+******************
+------------------
+SCS_WMM_Beam_Search_Algorithm
+-WMM Beam Search solution-
+SCS : baaabbbabbabbaaabbaaaaabaabb
+SCS length : 28
+Time taken by program is : 0.00000 sec 
+------------------

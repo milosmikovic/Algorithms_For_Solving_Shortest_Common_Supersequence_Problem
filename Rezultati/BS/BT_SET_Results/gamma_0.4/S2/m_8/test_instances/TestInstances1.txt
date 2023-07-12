@@ -1,0 +1,9 @@
+ab
+aabbbbaaabba
+aaabbbbbaabbaa
+aabababbaa
+babbbabbaaa
+baaabbbbabbaba
+baabbbabab
+baabbababaabba
+bababbaaabaa

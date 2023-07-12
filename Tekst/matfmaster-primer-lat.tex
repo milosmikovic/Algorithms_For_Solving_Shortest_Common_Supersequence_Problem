@@ -460,7 +460,7 @@ nadniske:
 \label{chap:algoritmi}
 
 \begin{enumerate}
-  \item algoritam grananja sa odsecanjem (\textit{eng.} backtracking),
+  \item algoritam grananja sa odsecanjem (\textit{eng.} backtracking);
   \item pretraga bima (\textit{eng.} beam search).
 \end{enumerate}
 U nastavku teksta biće opisana konstrukcija ova dva algoritma kao i njihove karakteristike.
@@ -893,7 +893,7 @@ znači da će slova sa početka kraćih reči imati veću šansu da budu uklonje
 da obradi preostale dugačke reči. Iz tog razloga bi skidanje slova sa početka kraćih reči trebalo da bude
 manje prioritetno. Drugim rečima bolje je da se prioritizira skidanje slova sa početka dužih reči.
 To se može postići dodavanjem težine svakom slovu azbuke u odnosu na dužinu preostalih reči iz $\mathcal{L}$ 
-nakon uklanjanja tog simbola sa početka reči koje počinju tim simbolom. Dakle, korak 7 u algoritmu \textit{VećinskoSpajanje()}
+nakon uklanjanja tog simbola sa početka reči koje počinju tim simbolom. Dakle, korak 7 u algoritmu \textit{VećinskoSpajanje(pozicije)}
 možemo zameniti sa:
 \\
 \\
@@ -917,11 +917,12 @@ hardverska i softverska specifikacija računara kao i specifičnosti implementac
 
 \section{Test podaci}
 \label{sec:testPodaci}
-Za uspešno testiranje rada predstavljenih algoritama pored instanci problema najkraće
-zajedničke nadniske
-$IP = \{\mathcal{I}_{1}(\Sigma_{1},\mathcal{L}_{1}),...,\mathcal{I}_{k}(\Sigma_{k},\mathcal{L}_{k})\}$
-neophodno je da postoji barem jedno optimalno rešenje $\mathcal{R}_{i}$ za svaku
-instancu problema $\mathcal{I}_{i}$. Takvo rešenje najčešće nije jedinstveno,
+% Za uspešno testiranje rada predstavljenih algoritama pored instanci problema najkraće
+% zajedničke nadniske
+% $IP = \{\mathcal{I}_{1}(\Sigma_{1},\mathcal{L}_{1}),...,\mathcal{I}_{k}(\Sigma_{k},\mathcal{L}_{k})\}$
+% neophodno je da postoji barem jedno optimalno rešenje $\mathcal{R}_{i}$ za svaku
+% instancu problema $\mathcal{I}_{i}$. 
+Optimalno rešenje najčešće nije jedinstveno,
 a broj optimalnih rešenja varira od instance do instance problema i raste sa porastom
 broja reči u skupu $\mathcal{L}$. Ono što je bitno, jeste dužina takvog rešenja i to je
 jedini validan parametar optimalnosti. Algoritam pretrage bima ne garantuje pronalaženje
@@ -933,15 +934,20 @@ Na primer ako najduža reč u skupu $\mathcal{L}$ ima dvadeset slova i pritom je
 data proizvoljna azbuka kardinalnosti $|\Sigma|=4$, u najgorem slučaju
 algoritam grananja sa odsecanjem treba da obradi $(4^{80}-1)/3$ čvorova.
 S obzirom na navedene činjenice i manjak test podataka u literaturi, osmišljen je
-algoritam koji generiše test instance. Pseudokod algoritma je prikazan pod
-Algoritam \ref{alg:generatorTestInstanci}. Ideja je da se odabere reč koja će 
+algoritam koji generiše test instance. Pseudokod algoritma je prikazan u
+Algoritmu \ref{alg:generatorTestInstanci}. Ideja je da se odabere reč koja će 
 predstavljati gornju granicu optimalnosti i da se na osnovu odabrane reči
 generišu instance problema.
-Generator test instanci ima četiri parametra: $putanja$ predstavlja putanju do
-tekstualnog fajla koji sadrži reč koja predstavlja gornju granicu, $n$ označava
-broj slova u azbuci $\Sigma$, $m$ označava broj reči u skupu $\mathcal{L}$,
-a parametar $\gamma$ predstavlja verovatnoću uklanjanja slova iz $gg$ pri generisanju
-reči. Najpre se učitava reč $gg$ sa odabrane lokacije i azbuka popunjava
+Generator test instanci ima četiri parametra:
+\begin{enumerate}
+  \item $putanja$ — predstavlja putanju do
+  tekstualne datoteke koja sadrži reč $gg$ koja predstavlja gornju granicu;
+  \item $ka$ — kardinalnost azbuke ($|\Sigma|$);
+  \item $m$ — označava broj reči u skupu $\mathcal{L}$;
+  \item $\gamma$ — predstavlja verovatnoću uklanjanja slova iz $gg$ pri generisanju
+  reči.
+\end{enumerate}
+Najpre se učitava reč $gg$ sa odabrane lokacije i azbuka popunjava
 odabranim slovima. Zatim se popunjava skup $\mathcal{L}$.
 U svakoj iteraciji petlje se kreće od prazne reči $\omega$, prolazi se
 kroz slova $gg$ i bira se slučajan broj iz uniformne raspodele (u granicama [0,1]).
@@ -950,9 +956,27 @@ trenutnim slovom. Zapravo, reč $\omega$ predstavlja reč koja se dobija uklanja
 reči $gg$ sa verovatnoćom $\gamma$.
 Na ovaj način se generiše $m$ reči kojima se popunjava skup $\mathcal{L}$, a algoritam
 na kraju vraća jednu generisanu instancu problema $\mathcal{I}(\Sigma,\mathcal{L})$.
-\\
+Preostalo je još objasniti na koji način se generiše reč koja predstavlja gornju granicu.
+Reč $gg$ dobija se slučajnim odabirom slova iz azbuke. U svakoj iteraciji 
+izgradnje bira se slučajan broj $sb$ iz uniformne
+raspodele (u granicama [0,$|\Sigma|-1$]) i parcijalnoj reči dodaje 
+odgovarajuće slovo azbuke $\Sigma[sb]$.
+Gornja granica optimalnosti garantuje jedno rešenje problema. Uz pažljivo odabran parametar
+$\gamma$ i dovoljno veliki parametar $m$ gornja granica će skoro uvek i predstavljati
+optimalno rešenje problema. U svakom slučaju gornja granica će u kontekstu testiranja
+predstavljenih algoritama biti sinonim za optimalno rešenje i poređenje rezultata će se
+vršiti u odnosu na njenu dužinu.
+
+Na primer, neka je data azbuka $\Sigma=\{a,b\}$. Najpre se generiše reč $gg$ željene
+dužine slučajnim odabirom slova iz azbuke i smešta u tekstualnu datoteku 
+na željenu lokaciju. Neka je $gg=abba$ i neka su otali parametri redom
+$putanja$ do generisane reči $gg$, $ka=2$, $m=4$, $\gamma=0.2$.
+Zatim se poziva opisani algoritam \ref{alg:generatorTestInstanci} sa uvedenim
+parametrima koji generiše $m$ reči sa verovatnoćom uklanjanja $\gamma$. Neka je dobijen skup
+$\mathcal{L}=\{abb,bba,abba,aba\}$. Povratna vrednost generatora je instanca PNZN
+$\mathcal{I}=\{\{a,b\}, \{abb,bba,abba,aba\}\}$.
 \begin{algorithm}
-  \caption{\textrm{GeneratorTestInstanci}$(putanja,n,m,\gamma)$}
+  \caption{\textrm{GeneratorTestInstanci}$(putanja,ka,m,\gamma)$}
   \label{alg:generatorTestInstanci}
   \begin{algorithmic}[1]
   \State $gg \gets \textrm{Pročitaj}(putanja)$ \Comment{$gg$ - gornja granica}
@@ -960,7 +984,7 @@ na kraju vraća jednu generisanu instancu problema $\mathcal{I}(\Sigma,\mathcal{
   \State $\mathcal{L} \gets \{\}$
   \State
 
-  \For{$i \to n$} 
+  \For{$i \to ka$} 
     \State $\alpha \gets \textrm{PročitajSlovo}()$
     \State $\Sigma .dodaj(\alpha)$
   \EndFor
@@ -983,79 +1007,70 @@ na kraju vraća jednu generisanu instancu problema $\mathcal{I}(\Sigma,\mathcal{
   \State \Return $\mathcal{I}$
   \end{algorithmic}
   \end{algorithm}
-\\
-Preostalo je još objasniti na koji način se generiše reč koja predstavlja gornju granicu.
-Reč $gg$ dobija se slučajnim odabirom slova iz azbuke. U svakoj iteraciji 
-izgradnje bira se slučajan broj $sb$ iz uniformne
-raspodele (u granicama [0,$|\Sigma|-1$]) i parcijalnoj reči dodaje 
-odgovarajuće slovo azbuke $\Sigma[sb]$.
-Gornja granica optimalnosti garantuje jedno rešenje problema. Uz pažljivo odabran parametar
-$\gamma$ i dovoljno veliki parametar $m$ gornja granica će skoro uvek i predstavljati
-optimalno rešenje problema. U svakom slučaju gornja granica će u kontekstu testiranja
-predstavljenih algoritama biti sinonim za optimalno rešenje i poređenje rezultata će se
-vršiti u odnosu na njenu dužinu.
 
 Sada će biti definisan skup instanci problema $IP$ koji je korišćen za testiranje u sekciji \ref{sec:ekspRezultati}.
 Postoje četiri bitna parametra koja su korišćena za generisanje instanci PNZN:
 \begin{enumerate}
-  \item Veličina azbuke $\Sigma$ ($n=|\Sigma|$)
-  \item Broj reči u skupu $\mathcal{L}$ ($m=|\mathcal{L}|$)
-  \item Dužina gornje granice ($|gg|$)
-  \item Verovatnoća uklanjanja slova ($\gamma$)
+  \item kardinalnost azbuke $\Sigma$ ($ka=|\Sigma|$);
+  \item broj reči u skupu $\mathcal{L}$ ($m=|\mathcal{L}|$);
+  \item dužina gornje granice ($|gg|$);
+  \item verovatnoća uklanjanja slova ($\gamma$).
 \end{enumerate}
-Veličina azbuke uzeta je iz opsega $n \in \{2,4,16 \}$, broj reči u skupu $\mathcal{L}$
+Kardinalnost azbuke uzeta je iz opsega $ka \in \{2,4,16 \}$, broj reči u skupu $\mathcal{L}$
 iz opsega $m \in \{10,20,40,80\}$. Dužina gornje granice definiše i potencijalnu gornju
 granicu za dužinu reči u skupu $\mathcal{L}$ i ona je uzeta iz opsega $|gg| \in \{50,100,500,2000\}$.
 Na kraju verovatnoća uklanjanja slova uzeta je iz opsega $\gamma \in \{0.1,0.2,0.4\}$.
 Instance problema podeljene su u tri skupa $IP_{\gamma=0.1}$, $IP_{\gamma=0.2}$ i $IP_{\gamma=0.4}$
 na osnovu verovatnoće uklanjanja slova. Sva tri skupa sadrže po 48 instanci problema
-koje su dobijene kao dekartov proizvod vrednosti prethodno opisanih parametara.
+koje su dobijene kao Dekartov proizvod vrednosti prethodno opisanih parametara.
 Vrednosti za širinu bima uzete su iz opsega $\beta \in \{100,200,400\}$.
+Na skupovima instanci $IP$ testiran je samo algoritam pretrage bima.
 Algoritam grananja sa odsecanjem testiran je na manjem skupu instanci
-$IPG$ gde $n \in \{2,4\}$, $m \in \{8,16,32\}$. Gornja granica za azbuku dužine dva
+$IPG$ gde $ka \in \{2,4\}$, $m \in \{8,16,32\}$. Gornja granica za azbuku dužine dva
 uzeta je iz opsega $|gg|_{|\Sigma|=2} \in \{20,24,28\}$, a za azbuku dužine četiri
 $|gg|_{|\Sigma|=4} \in \{12,13,14\}$ kako bi se vreme izvršavanja držalo u razumnim
-granicama. Instance problema podeljene su u dva skupa $IPG_{\gamma=0.2}$ i $IPG_{\gamma=0.4}$
+granicama. Kako je na skupu $IPG$ testiran i algoritam pretrage bima,
+vrednosti za širinu bima uzete su iz manjeg opsega $\beta \in \{4,8,16\}$.
+Instance problema podeljene su u dva skupa $IPG_{\gamma=0.2}$ i $IPG_{\gamma=0.4}$
 na osnovu verovatnoće uklanjanja slova i svaki skup sadrži po 18 instanci problema.
 % $IPG$, sa verovatnoćom uklanjanja $\gamma=0.2$, $n \in \{2,4\}$, $m \in \{8,16,32\}$
 % i $|gg| \in \{20,24,28\}$.
 
 \section{Eksperimentalno okruženje}
 \label{sec:ekspOkruženje}
-U ovoj sekciji će biti dat kratak pregled hardverske i softverske konfiguracije
-računara na kome se vršilo testiranje kao i specifičnosti implementacije
-predstavljenih algoritama.
-\subsection{Hardversko i softversko okruženje}
-\label{sec:hardSoft}
+% U ovoj sekciji će biti dat kratak pregled hardverske i softverske konfiguracije
+% računara na kome se vršilo testiranje kao i specifičnosti implementacije
+% predstavljenih algoritama.
+% \subsection{Hardversko i softversko okruženje}
+% \label{sec:hardSoft}
 Svi rezultati izvršavanja algoritama dobijeni su na računaru pod Linux operativnim sistemom
 sledećih sistemskih specifikacija:
 \begin{itemize}
-  \item Operativni sistem - Ubuntu 20.04.6 LTS
-  \item Kernel - Linux 5.15.0-46-generic
+  \item Operativni sistem — Ubuntu 20.04.6 LTS
+  \item Kernel — Linux 5.15.0-46-generic
   % \item Arhitektura - x86-64
 \end{itemize}
 Hardverske komponente računara na kome se vršilo testiranje su sledeće:
 \begin{itemize}
-  \item Procesor - AMD Ryzen 3 1300X, 3.5GHz
-  \item Arhitektura - x86-64
-  \item Broj jezgara - 4
-  \item Keš memorija - L1(384KiB), L2(2MiB), L3(8MiB)
-  \item Ram memorija - Kingston, 8GB DDR4
-  \item Grafička kartica - Asus Radeon RX 570 (4GB GDDR5)
+  \item Procesor — AMD Ryzen 3 1300X, 3.5GHz
+  \item Arhitektura — x86-64
+  \item Broj jezgara — 4
+  \item Keš memorija — L1(384KiB), L2(2MiB), L3(8MiB)
+  \item Ram memorija — Kingston, 8GB DDR4
+  \item Grafička kartica — Asus Radeon RX 570 (4GB GDDR5)
 \end{itemize}
 Treba napomenuti još to da iako procesor ima četiri jezgra i četiri
 fizičke niti, algoritmi nisu implementirani tako da podržavaju paralelno izvršavanje.
-
-\subsection{Specifičnosti implementacije i pokretanje programa}
-\label{sec:specifinicnostiImplementacije}
+% \subsection{Specifičnosti implementacije i pokretanje programa}
+% \label{sec:specifinicnostiImplementacije}
 Svi predstavljeni algoritmi u radu implementirani su u programskom jeziku C++
 kako bi se postigla što veća efikasnost u evaluaciji. Korišćen je
 GCC 9.4.0 prevodilac i standard jezika C++20. Ceo programski kod je organizovan
-unutar klase, a svi prethodno navedeni algoritmi i pomoćne funkcije kao privatne
-funckije članice (\textit{eng.} member function) kako bi podrazumevano bile
+unutar klasa, a svi prethodno navedeni algoritmi i pomoćne funkcije kao privatne
+funkcije članice (\textit{eng.} member function) kako bi podrazumevano bile
 utisnute (\textit{eng.} inline) na mestima u programu na kojima se pozivaju i kako
 bi se time izbegli nepotrebni troškovi poziva. U cilju što veće optimizacije
-određenih delova programskog koda, iako u današnje vreme ne popularne,
+određenih delova programskog koda, iako u današnje vreme nisu popularne,
 korišćene su i pokazivačke promenjive i odgovarajuća aritmetika. 
 Implementacija svih struktura podataka poput skupova, vektora, uređenih parova
 uzeta je iz standardne biblioteke C++ jezika (\textit{eng.} Standard C++ Library), kao i svi
@@ -1065,20 +1080,20 @@ vrednost semena (\textit{eng.} seed), kako bi generisanje test instanci
 i evaluacija algoritama mogla da se reprodukuje u definisanim uslovima.
 Sve generisane test instance i odgovarajući rezultati nalaze se u numerisanim tekstualnim fajlovima.
 Programski kod je organizovan u dva cpp fajla i prevodi se korišćenjem
-pomoćnog alata Make. Prilikom prevođenja upaljen je najviši nivo
-optimizacije od strane GCC prevodioca postavljanjem parametra -O3.
+pomoćnog alata Make. Prilikom prevođenja odabran je najviši nivo
+optimizacije od strane GCC prevodioca postavljanjem parametra O3.
 Prevođenje i pokretanje odgovarajućih programa vrši se
 iz Linux terminala na sledeći način:
 \begin{itemize}
-  \item make testInstanceGenerator - prevodi generator test instanci
-  \item make SCS - prevodi program koji pokreće opisane algoritme
-  \item ./testInstanceGenerator (režim rada) - pokreće generator test instanci koji nakon poziva 
+  \item \textit{make testInstanceGenerator} — prevodi generator test instanci
+  \item \textit{make SCS} — prevodi program koji pokreće opisane algoritme
+  \item \textit{./testInstanceGenerator (režim rada)} — pokreće generator test instanci koji nakon poziva 
   očekuje putanju do tekstualnog fajla u kome se nalazi reč koja predstavlja gornju granicu,
   broj reči m, i željena slova azbuke (parametar $\gamma$ se postavlja u kodu pre prevođenja),
   izlaz je numerisan tekstualni fajl koji predstavlja jednu instancu PNZN (postoji više 
   režima rada generatora, na primer prethodno opisani podrazumeva ulazni argument 2, dok je za generisanje
   reči $gg$ potrebno navesti ulazni argument 3)
-  \item ./SCS (broj test instance) - pokreće program koji izvršava algoritme,
+  \item \textit{./SCS (broj test instance)} — pokreće program koji izvršava algoritme,
   kao ulazni argument očekuje redni broj test instance, izlaz je numerisan tekstualni fajl
   koji sadrži rezultat izvršavanja ulazne test instance
 \end{itemize}
@@ -1089,26 +1104,30 @@ iz Linux terminala na sledeći način:
 \section{Eksperimentalni rezultati}
 \label{sec:ekspRezultati}
 U ovoj sekciji biće prikazani eksperimentalni rezultati izvršavanja algoritama.
-U tabeli \ref{tbl:gso} prikazani su rezultati algoritma grananja sa odsecanjem,
+U tabelama \ref{tbl:gso} i \ref{tbl:bsgr} prikazani su rezultati algoritma grananja sa odsecanjem
+i algoritma pretrage bima
 na skupu test instanci $IPG_{\gamma=0.2}$ i $IPG_{\gamma=0.4}$. 
-Kolone redom označavaju: veličinu ulazne azbuke $\Sigma$ ($n=|\Sigma|$),
+Kolone redom označavaju: kardinalnost ulazne azbuke $\Sigma$ ($ka=|\Sigma|$),
 broj reči u skupu $\mathcal{L}$ ($m=|\mathcal{L}|$), dužinu gornje granice ($|gg|$),
-dužinu nadniske koju je algoritam granja sa odsecanjem pronasao ($GSO$),
+dužinu nadniske koju je algoritam granja sa odsecanjem pronašao ($GSO$),
 vreme izvršavanja algoritma ($t$),
 minimalnu dubinu pretrage ($minD$),
 maksimalnu dubinu pretrage ($maxD$).
+Kolona $VS$ predstavlja
+dužinu nadniske koju je pronašao algoritam pretrage bima koristeći
+heurističku funkciju većinsko spajanje, a $TVS$ koristeći
+heurističku funkciju težinsko većinsko spajanje.
+Rezultati pretrage bima su podeljeni u sekciji u zavisnosti od
+vredsnoti širine bima $\beta$.
 U tabelama \ref{tbl:bs1}, \ref{tbl:bs2}, \ref{tbl:bs3} predstavljeni su rezultati
 izvršavanja algoritma pretrage bima na test instancama
 $IP_{\gamma=0.1}$, $IP_{\gamma=0.2}$, $IP_{\gamma=0.4}$.
-% \begin{enumerate}
-%   \item Veličinu ulazne azbuke $\Sigma$ ($n=|\Sigma|$)
-%   \item Broj reči u skupu $\mathcal{L}$ ($m=|\mathcal{L}|$)
-%   \item Dužinu gornje granice ($|gg|$)
-%   \item Dužinu nadniske koju je algoritam granja sa odsecanjem pronasao ($GSO$)
-%   \item Vreme izvršavanja algoritma ($t$)
-%   \item Minimalnu dubinu pretrage (minD)
-%   \item Maksimalnu dubinu pretrage (maxD)
-% \end{enumerate}
+Na svim test podacima korišćene su sledeće azbuke:
+\begin{itemize}
+  \item $\Sigma_{2}=\{a,b\}$
+  \item $\Sigma_{4}=\{a,c,t,g\}$
+  \item $\Sigma_{16}=\{a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p\}$
+\end{itemize}
 
 \begin{table}[H]
 \centering
@@ -1197,6 +1216,96 @@ $IP_{\gamma=0.1}$, $IP_{\gamma=0.2}$, $IP_{\gamma=0.4}$.
  \label{tbl:gso}
 \end{table}
 
+\begin{table}[H]
+  \centering
+  \scalebox{1}{
+  \begin{tabular}{ |P{0.5cm}|P{0.5cm}|P{0.7cm}||P{0.7cm}|P{0.5cm}|P{0.8cm}|P{0.5cm}| P{0.7cm}|P{0.5cm}|P{0.8cm}|P{0.5cm}| P{0.7cm}|P{0.5cm}|P{0.8cm}|P{0.5cm}|}
+    \hline
+    \multicolumn{15}{|c|}{$IPG_{\gamma=0.2}$} \\
+    \hline
+    \multicolumn{3}{|c||}{}  & \multicolumn{4}{c|}{$\beta=4$} & \multicolumn{4}{c|}{$\beta=8$} & \multicolumn{4}{c|}{$\beta=16$}\\
+    \hline
+    $|\Sigma|$ & $m$ & $|gg|$ & $VS$ & $t(s)$ & $TVS$ & $t(s)$ & $VS$ & $t(s)$ & $TVS$ & $t(s)$ & $VS$ & $t(s)$ & $TVS$ & $t(s)$\\
+    \hline
+    2&	8&	20&	20&	0&	20&	0&	20&	0&	20&	0&	20&	0&	20&	0\\
+    \hline
+    2&	8&	24&	27&	0&	26&	0&	24&	0&	24&	0&	24&	0&	24&	0\\
+    \hline
+    2&	8&	28&	28&	0&	28&	0&	28&	0&	28&	0&	28&	0&	28&	0\\
+    \hline
+    2&	16&	20&	20&	0&	20&	0&	20&	0&	20&	0&	20&	0&	20&	0\\
+    \hline
+    2&	16&	24&	24&	0&	24&	0&	24&	0&	24&	0&	24&	0&	24&	0\\
+    \hline
+    2&	16&	28&	28&	0&	28&	0&	28&	0&	28&	0&	28&	0&	28&	0\\
+    \hline
+    2&	32&	20&	20&	0&	20&	0&	20&	0&	20&	0&	20&	0&	20&	0\\
+    \hline
+    2&	32&	24&	24&	0&	24&	0&	24&	0&	24&	0&	24&	0&	24&	0\\
+    \hline
+    2&	32&	28&	28&	0&	28&	0&	28&	0&	28&	0&	28&	0&	28&	0\\
+    \hline
+    4&	8&	12&	12&	0&	12&	0&	12&	0&	12&	0&	12&	0&	12&	0\\
+    \hline
+    4&	8&	13&	13&	0&	13&	0&	13&	0&	13&	0&	13&	0&	13&	0\\
+    \hline
+    4&	8&	14&	14&	0&	14&	0&	14&	0&	14&	0&	14&	0&	14&	0\\
+    \hline
+    4&	16&	12&	12&	0&	12&	0&	12&	0&	12&	0&	12&	0&	12&	0\\
+    \hline
+    4&	16&	13&	13&	0&	13&	0&	13&	0&	13&	0&	13&	0&	13&	0\\
+    \hline
+    4&	16&	14&	14&	0&	14&	0&	14&	0&	14&	0&	14&	0&	14&	0\\
+    \hline
+    4&	32&	12&	12&	0&	12&	0&	12&	0&	12&	0&	12&	0&	12&	0\\
+    \hline
+    4&	32&	13&	13&	0&	13&	0&	13&	0&	13&	0&	13&	0&	13&	0\\
+    \hline
+    4&	32&	14&	14&	0&	14&	0&	14&	0&	14&	0&	14&	0&	14&	0\\
+    \hline
+    \multicolumn{15}{|c|}{$IPG_{\gamma=0.4}$} \\
+    \hline
+    2&	8&	20&	19&	0&	18&	0&	18&	0&	18&	0&	18&	0&	18&	0\\
+    \hline
+    2&	8&	24&	21&	0&	21&	0&	21&	0&	21&	0&	21&	0&	21&	0\\
+    \hline
+    2&	8&	28&	25&	0&	25&	0&	25&	0&	25&	0&	25&	0&	25&	0\\
+    \hline
+    2&	16&	20&	21&	0&	20&	0&	20&	0&	19&	0&	19&	0&	19&	0\\
+    \hline
+    2&	16&	24&	22&	0&	22&	0&	22&	0&	21&	0&	22&	0&	21&	0\\
+    \hline
+    2&	16&	28&	26&	0&	26&	0&	26&	0&	26&	0&	26&	0&	26&	0\\
+    \hline
+    2&	32&	20&	24&	0&	22&	0&	22&	0&	21&	0&	21&	0&	21&	0\\
+    \hline
+    2&	32&	24&	27&	0&	26&	0&	26&	0&	25&	0&	26&	0&	25&	0\\
+    \hline
+    2&	32&	28&	32&	0&	30&	0&	31&	0&	27&	0&	30&	0&	27&	0\\
+    \hline
+    4&	8&	12&	12&	0&	12&	0&	12&	0&	12&	0&	12&	0&	12&	0\\
+    \hline
+    4&	8&	13&	13&	0&	13&	0&	13&	0&	13&	0&	13&	0&	13&	0\\
+    \hline
+    4&	8&	14&	14&	0&	14&	0&	14&	0&	14&	0&	14&	0&	14&	0\\
+    \hline
+    4&	16&	12&	12&	0&	12&	0&	12&	0&	12&	0&	12&	0&	12&	0\\
+    \hline
+    4&	16&	13&	13&	0&	13&	0&	13&	0&	13&	0&	13&	0&	13&	0\\
+    \hline
+    4&	16&	14&	14&	0&	14&	0&	14&	0&	14&	0&	14&	0&	14&	0\\
+    \hline
+    4&	32&	12&	12&	0&	12&	0&	12&	0&	12&	0&	12&	0&	12&	0\\
+    \hline
+    4&	32&	13&	13&	0&	13&	0&	13&	0&	13&	0&	13&	0&	13&	0\\
+    \hline
+    4&	32&	14&	14&	0&	14&	0&	14&	0&	14&	0&	14&	0&	14&	0\\
+    \hline
+   \end{tabular}
+  }
+   \caption{Rezultati pretrage bima na test instancama $IPG_{\gamma=0.2}$ i  $IPG_{\gamma=0.4}$}
+   \label{tbl:bsgr}
+  \end{table}
 
 \begin{table}[H]
   \centering
@@ -1537,18 +1646,6 @@ $IP_{\gamma=0.1}$, $IP_{\gamma=0.2}$, $IP_{\gamma=0.4}$.
        \caption{Rezultati pretrage bima na test instancama $IP_{\gamma=0.4}$}
        \label{tbl:bs3}
       \end{table}
-Kolona $VS$ predstavlja
-dužinu nadniske koju je pronašao algoritam pretrage bima koristeći
-heurističku funkciju većinsko spajanje, a $TVS$ koristeći
-heurističku funkciju težinsko većinsko spajanje.
-Rezultati su podeljeni u tri sekciji u zavisnosti od
-vredsnoti širine bima $\beta=\{100,200,400\}$.
-Na svim test podacima korišćene su sledeće azbuke:
-\begin{itemize}
-  \item $\Sigma_{2}=\{a,b\}$
-  \item $\Sigma_{4}=\{a,c,t,g\}$
-  \item $\Sigma_{16}=\{a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p\}$
-\end{itemize}
 
 \chapter{Diskusija eksperimentalnih rezultata}
 \label{chap:diskusijaRez}
