@@ -163,8 +163,15 @@ od simbola zadate konačne azbuke $\Sigma$, tako da su sve sekvence iz unapred z
 $\mathcal{L}$ sadržane u sekvenci $\omega$. Kada se kaže da su sve reči iz skupa $\mathcal{L}$
 sadržane, misli se na to da se svaka reč iz skupa $\mathcal{L}$ može dobiti uklanjanjem simbola iz reči $\omega$ ali 
 u zadatom redosledu \cite{SCSSProblemDef}. PNZN ima primene u mnogim oblastima informatike uključujući kompresiju podataka
-\cite{DataCompression}, optimizaciju upita \cite{MQOptimization}, analizu i poređenje teksta i bioloških sekvenci, \cite{ITAlgorithms} \cite{SeqComparison}
-kao i bioinformatiku \cite{ProbabilisticBS}.
+\cite{DataCompression}, optimizaciju upita \cite{MQOptimization}, analizu i poređenje teksta \cite{ITAlgorithms} \cite{SeqComparison}.
+% i bioloških sekvenci
+% kao i bioinformatiku \cite{ProbabilisticBS}.
+Treba istaći njegovu široku primenu u bioinformatici gde predstavlja
+ključan problem u analizi bioloških sekvenci \cite{SCSSBetterSolution}.
+Recimo da se posmatra određena sekvenca nukleotida i da
+je urađeno $k$ zapisa te sekvence nekim mernim aparatom.
+S obzirom da aparat greši, te sekvence će se razlikovati u određenim
+delovima, a opisani problem predstavlja PNZN.
 Kao rezultat velike primene u mnogim oblastima, postoji veliki broj istraživanja na temu ovog problema u pokušaju da se dođe
 do što boljeg rešenja. Trenutno najbolji algoritmi za rešavanje PNZN počivaju na metaheurističkoj metodi
 pretraga bima (\textit{eng.} beam search) koja će biti predstavljena u ovom radu. U nastavku uvodnog poglavlja biće formalno
@@ -910,7 +917,7 @@ funkcije su korišćene u algoritmu pretrage bima.
 
 \chapter{Evaluacija algoritama}
 \label{chap:evaluacijaAlg}
-U ovom poglavlju biće prikazani rezultati izvršavanja predstavljenih algoritama
+U ovom poglavlju biće prikazani i diskutovani rezultati predstavljenih algoritama
 kao i test podaci koji su korišćeni za testiranje i način na koji su test podaci generisani.
 Takođe će biti dat kratak pregled eksperimentalnog okruženja u kome se vršilo testiranje,
 hardverska i softverska specifikacija računara kao i specifičnosti implementacije.
@@ -1064,6 +1071,8 @@ fizičke niti, algoritmi nisu implementirani tako da podržavaju paralelno izvr�
 % \subsection{Specifičnosti implementacije i pokretanje programa}
 % \label{sec:specifinicnostiImplementacije}
 Svi predstavljeni algoritmi u radu implementirani su u programskom jeziku C++
+\footnote{GitHub repozitorijum projekta nalazi se na
+\url{https://github.com/milosmikovic/Algorithms_For_Solving_Shortest_Common_Supersequence_Problem}}
 kako bi se postigla što veća efikasnost u evaluaciji. Korišćen je
 GCC 9.4.0 prevodilac i standard jezika C++20. Ceo programski kod je organizovan
 unutar klasa, a svi prethodno navedeni algoritmi i pomoćne funkcije kao privatne
@@ -1119,6 +1128,10 @@ heurističku funkciju većinsko spajanje, a $TVS$ koristeći
 heurističku funkciju težinsko većinsko spajanje.
 Rezultati pretrage bima su podeljeni u sekciji u zavisnosti od
 vredsnoti širine bima $\beta$.
+U svim predstavljenim tabelama svaki red predstavlja jednu instancu problema.
+U tabelama koje sadrže rezultate pretrage bima u svakom redu su podebljane dve
+vrednosti, jedna se odnosi na najboli rezultat većinskog spajanja, a druga na
+najbolji rezultat težinskog većinskog spajanja.
 U tabelama \ref{tbl:bs1}, \ref{tbl:bs2}, \ref{tbl:bs3} predstavljeni su rezultati
 izvršavanja algoritma pretrage bima na test instancama
 $IP_{\gamma=0.1}$, $IP_{\gamma=0.2}$, $IP_{\gamma=0.4}$.
@@ -1647,7 +1660,7 @@ Na svim test podacima korišćene su sledeće azbuke:
        \label{tbl:bs3}
       \end{table}
 
-\chapter{Diskusija eksperimentalnih rezultata}
+\section{Diskusija eksperimentalnih rezultata}
 \label{chap:diskusijaRez}
 Najpre je potrebno
 analizirati generisane test instance problema kako bi se stvorila šira slika
@@ -1677,7 +1690,7 @@ teže isntance problema zbog veće heterogenosti reči u $\mathcal{L}$, i to
 se može videti iz tabele \ref{tbl:gso}. Na primer za instancu problema
 $\{n=4,m=32,|gg|=14\}$ vreme izvrsavanja $t_{\gamma=0.2}=64s$, a $t_{\gamma=0.4}=65s$
 je skoro identično iako su granice dubine dosta manje za $\gamma=0.4$.
-Naravno, težina problema raste do vrednosti $\gamma=0.5$, a zatim proporijonalno opada.
+Naravno, težina problema raste do vrednosti $\gamma=0.5$, a zatim proporcionalno opada.
 
 Rezultati algoritma grananja sa odsecanjem predstavljaju optimalne rezultate
 na test instancama, a vreme izvršavanja očekivano eksponencijalno raste u odnosu na
@@ -1707,18 +1720,29 @@ odnosno optimalno rešenje na većim azbukama je bliže $gg$.
 Nad binarnom azbukom se takođe primećuje da porastom $m$ raste i dužina pronađenih nadniski
 i približava se dužini gornje granice što potvrđuje prethodno donesene zaključke
 o test instancama problema.
+Analizom predstavljenih tabela primećuje se da težinsko većinsko spajanje
+najčešće daje kraće nadniske u odnosu na većinsko spajanje što je i očekivano.
+Posmatranjem tabele \ref{tbl:bsgr} takođe se primećuje da ako pronađe optimalno rešenje
+težinsko većinsko spajanje to čini za manje vrednosti širine bima u odnosu na
+većinsko spajanje. Iz tabele \ref{tbl:bs3} primećuje se da je za veće instance problema
+($|gg| \in \{500,2000\}$) potrebna i veća širina bima. S obzirom na to da su najbolje
+nadniske dobijene skoro podjednako često za $\beta=200$ i $\beta=400$, na ovim instancama problema
+bi se mogla izabrati vrednost za širinu bima unutar ovih intervala koja bi bila kompromis između
+kvaliteta dobijenih rešenja i vremena izvršavanja.
+
+
 
 \chapter{Zaključak i pravci daljeg rada}
 \label{chap:zakljucak}
 Problem najkraće zajedničke nadniske predstavlja izazovan i težak optimizacioni problem.
 Na njegovom što efikasnijem rešavanju radi se već četiri decenije.
-Treba istaći njegovu široku primenu u bioinformatici gde predstavlja
-ključan problem u analizi bioloških sekvenci \cite{SCSSBetterSolution}.
-Recimo da se posmatra određena sekvenca nukleotida i da
-je urađeno $k$ zapisa te sekvence nekim mernim aparatom.
-S obzirom da aparat greši, te sekvence će se razlikovati u određenim
-delovima, a opisani problem predstavlja PNZN. S obzirom na
-veliku primenu njegovo efikasno rešavanje donelo bi korist u mnogim oblastima informatike.
+% Treba istaći njegovu široku primenu u bioinformatici gde predstavlja
+% ključan problem u analizi bioloških sekvenci \cite{SCSSBetterSolution}.
+% Recimo da se posmatra određena sekvenca nukleotida i da
+% je urađeno $k$ zapisa te sekvence nekim mernim aparatom.
+% S obzirom da aparat greši, te sekvence će se razlikovati u određenim
+% delovima, a opisani problem predstavlja PNZN. S obzirom na
+% veliku primenu njegovo efikasno rešavanje donelo bi korist u mnogim oblastima informatike.
 U ovom radu predstavljena je kombinacija trenutno najbolje predložene metaheuristike
 pretraga bima sa pohlepnim heurstičkim funkcijama većinsko spajanje i težinsko
 većinsko spajanje. Predstavljeni algoritam je efikasan jer inkrementalno gradi rezultijuću nadnisku,
@@ -1740,11 +1764,11 @@ na kvalitetu dobijenih težina). U tom slučaju
 nadniska ne bi mogla da se inkrementalno gradi zbog pomenutog problema,
 već bi se heuristička ocena svake parcijalne reči računala
 u svakom koraku pretrage bima. Postoje indikacije da ovako
-konsturisan algoritam može da nadmaši predstavljeni algoritam, ali
+konstruisan algoritam može da nadmaši predstavljeni algoritam, ali
 bi vreme izvršavanja bilo daleko veće. Predstavljeni algoritam
 se takođe može modifikovati tako da umesto da u svakom koraku bira $\beta$
 elemenata sa najvećom heurističkom ocenom, taj izbor izvrši ruletskom selekcijom
-(\textit{eng.} Roulette Selection) ili nekom drugom vrstom selekcije.
+(\textit{eng.} roulette selection) ili nekom drugom vrstom selekcije.
 Pritom se u svakoj iteraciji može $k$ $(k<\beta)$ najbolje ocenjenih elemenata
 direktno prebaciti u novi bim.
 Predstavljeni su i algoritmi koji ne grade inkrementalno nadsniku počevši 
