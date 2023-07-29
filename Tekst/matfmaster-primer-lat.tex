@@ -108,19 +108,20 @@
 \apstr{%
 % \pangrami
 Problem najkraće zajedničke nadniske predstavlja jedan od dobro poznatih i ispitivanih
-NP-teških problema optimizacije. Zbog njegove široke primene u mnogim oblastima informatike,
+NP-teških problema optimizacije. Zbog njegove široke primene,
+% u mnogim oblastima informatike,
 na njegovom što efikasnijem rešenju radi se poslednje četiri decenije.
 Vremenom je predloženo mnoštvo algoritama koji kombinuju različite optimizacione
 tehnike i pristupe. U ovom radu predstavljena su dva algoritma koji rešavaju
 ovaj problem. Algoritam grananja sa odsecanjem uvek pronalazi optimalno rešenje
-problema ali je njegovo vreme izvršavanja u najgorem slučaju eksponencijalno.
+problema, ali je njegovo vreme izvršavanja u najgorem slučaju eksponencijalno.
 Drugi predstavljeni algoritam počiva na metaheurističkoj tehnici
 pretraga bima (\textit{eng.} beam search) u kombinaciji sa dve pohlepne
 heurističke funkcije većinsko spajanje (\textit{eng.} majority merge)
 i težinsko većinsko spajanje (\textit{eng.} weighted majority merge).
 U radu je detaljno opisan problem i konstrukcija pomenutih algoritama i heurističkih funkcija.
 Opisan je način na koji su generisane test instance problema i dat je prikaz
-rezultata na različitim instancama problema. Ukratko su opisane već korišćene tehnike
+rezultata na različitim instancama. Ukratko su opisane već korišćene tehnike
 za rešavanje ovog problema i date ideje za pravce daljeg usavršavanja predstavljenog algoritma
 ili formiranje novog.
 }
@@ -162,8 +163,8 @@ se može opisati kao problem pronalaženja najkraće reči $\omega$ sačinjene
 od simbola zadate konačne azbuke $\Sigma$, tako da su sve sekvence iz unapred zadatog konačnog skupa
 $\mathcal{L}$ sadržane u sekvenci $\omega$. Kada se kaže da su sve reči iz skupa $\mathcal{L}$
 sadržane, misli se na to da se svaka reč iz skupa $\mathcal{L}$ može dobiti uklanjanjem simbola iz reči $\omega$ ali 
-u zadatom redosledu \cite{SCSSProblemDef}. PNZN ima primene u mnogim oblastima informatike uključujući kompresiju podataka
-\cite{DataCompression}, optimizaciju upita \cite{MQOptimization}, analizu i poređenje teksta \cite{ITAlgorithms} \cite{SeqComparison}.
+u zadatom redosledu \cite{SCSSProblemDef}. PNZN ima primene u mnogim oblastima informatike, uključujući kompresiju podataka
+\cite{DataCompression}, optimizaciju upita \cite{MQOptimization}, analizu i poređenje teksta \cite{SeqComparison, ITAlgorithms}.
 % i bioloških sekvenci
 % kao i bioinformatiku \cite{ProbabilisticBS}.
 Treba istaći njegovu široku primenu u bioinformatici gde predstavlja
@@ -172,14 +173,15 @@ Recimo da se posmatra određena sekvenca nukleotida i da
 je urađeno $k$ zapisa te sekvence nekim mernim aparatom.
 S obzirom da aparat greši, te sekvence će se razlikovati u određenim
 delovima, a opisani problem predstavlja PNZN.
-Kao rezultat velike primene u mnogim oblastima, postoji veliki broj istraživanja na temu ovog problema u pokušaju da se dođe
+Kao rezultat primene u mnogim oblastima, postoji veliki broj istraživanja na temu ovog problema u pokušaju da se dođe
 do što boljeg rešenja. Trenutno najbolji algoritmi za rešavanje PNZN počivaju na metaheurističkoj metodi
 pretraga bima (\textit{eng.} beam search) koja će biti predstavljena u ovom radu. U nastavku uvodnog poglavlja biće formalno
 definisan problem najkraće zajedničke nadniske i biće dat pregled dosadašnjih istraživanja na temu ovog problema.
 
 \section{Problem najkraće zajedničke nadniske}
-U ovom poglavlju formalno ćemo definisati PNZN, ali pre toga ćemo dodatno precizirati i proširiti prethodno uvedenu notaciju. Konačna azbuku sastoji se od konačnog broja slova i označavaćemo je sa $\Sigma$. Svaka konačna reč
-$\omega=\omega(1)\omega(2)...\omega(n)$ sastoji se od konačnog broja slova azbuke gde $\omega(j)\in\Sigma$ predstavlja j-to slovo reči $\omega\in\Sigma^*$.
+U ovom poglavlju formalno ćemo definisati PNZN, ali pre toga ćemo dodatno precizirati i proširiti prethodno uvedenu notaciju. Konačna azbuka je skup koji se sastoji
+od konačnog broja slova i označavaćemo je sa $\Sigma$. Svaka konačna reč
+$\omega=\omega(1)\omega(2)...\omega(n)$ sastoji se od konačnog broja slova azbuke gde $\omega(j)\in\Sigma$ predstavlja \textit{j}-to slovo reči $\omega\in\Sigma^*$.
 Duzinu reči $\omega$ označavaćemo sa $|\omega|$, praznu reč sa $\varepsilon$ i važi da $|\varepsilon|=0$. 
 % U skladu sa uvedenom
 % notacijom $|\Sigma|$ predstavlja kardinalnost azbuke. Sa $\omega\unrhd\alpha$ označavaćemo broj pojavljivanja slova $\alpha$
@@ -192,7 +194,7 @@ a reč koja se dobija dodavanjem slova $\alpha$ na kraj reči $\omega$ sa $\omeg
 % reči $\omega$ sa $\omega|_{\alpha}$. 
 % Brisanje slova $\alpha$ sa početka svake reči u zadatom skupu, u skladu sa uvedenom notacijom
 % definišemo kao $\{\omega_{1},\omega_{2},...,\omega_{n}\}|_{\alpha}=\{\omega_{1}|_{\alpha},\omega_{2}|_{\alpha},...,\omega_{n}|_{\alpha}\}$.
-Sa $\omega[a:b]$\footnote{Slično kao indeksiranje nizova u programskom jeziku Python.} označavaćemo reč koja se dobija od
+Sa $\omega[a:b]$ označavaćemo\footnote{Slično kao indeksiranje nizova u programskom jeziku Python.} reč koja se dobija od
 reči $\omega$ počevši od pozicije $a$ do pozicije $b$ u reči $\omega$. Ako se izostavi vrednost pozicije $a$, podrazumeva se
 da je početna pozicija 0, slično ako se izostavi vrednost pozicije $b$ podrazumeva se vrednost $n-1$ ako $|\omega|=n$.
 Na primer, $\omega[:]$ predstavlja samu reč $\omega$. Pristupanje slovu na poziciji $i$ reči $\omega$ 
@@ -250,8 +252,8 @@ brzo u realnim uslovima i daje prihvatljivo dobra rešenja.
 Vremenom je predloženo mnogo heurističkih i metaheurističkih algoritama za rešavanje PNZN.
 Neke od poznatijih heurističkih funkcija koje su korišćene u rešavanju PNZN su alfabet (\textit{eng.} alphabet) \cite{AlphabetSCS}, većinsko spajanje (\textit{eng.} majority merge) 
 i težinsko većinsko spajanje (\textit{eng.} weighted majority merge) \cite{ProbabilisticBS}, turnirska (\textit{eng.} tournament) i pohlepna (\textit{eng.} greedy) \cite{Tournament},
-redukuj-proširi (\textit{eng.} reduce-expand) \cite{AlphabetSCS}. Pored navedenih funkcija, korišćeni su i metaheuristički algoritmi, genetski algoritam (\textit{eng.} genetic algorithm) \cite{SCSGenetic} i 
-optimizacija kolonijom mrava (\textit{eng.} ant colony optimization) \cite{SCSColony}, koji predstavljaju složenije optimizacione tehnike i imaju
+redukuj-proširi (\textit{eng.} reduce-expand) \cite{AlphabetSCS} itd. Pored navedenih funkcija, korišćeni su i metaheuristički algoritmi poput genetskog algoritma (\textit{eng.} genetic algorithm) \cite{SCSGenetic} i 
+optimizacije kolonijom mrava (\textit{eng.} ant colony optimization) \cite{SCSColony}, koji predstavljaju složenije optimizacione tehnike i imaju
 tendenciju ka dužem vremenu izvršavanja ne većim instancama problema \cite{SCSSBetterSolution}.
 
 Jedna od trenutno najboljih metaheuristika za rešavanje PNZN jeste pretraga bima (\textit{eng.} beam search). Ukratko, pretraga
@@ -260,7 +262,7 @@ obećavaju \cite{SCSBS}. Upravo zbog toga što se dobro pokazala u rešavanju PN
 (\textit{eng.} longest common subsequence) pretraga bima će biti korišćena u ovom radu i biće detaljnije opisana u daljem tekstu.
 S obzirom na to da pretraga bima podrazumeva postojanje heurističke funkcije koja će oceniti kvalitet čvorova na određenom nivou,
 u ovom radu izabrane su dve takve funkcije, većinsko spajanje (\textit{eng.} majority merge) i težinsko većinsko spajanje
-(\textit{eng.} weighted majority merge) koje su se dobro pokazale u prethodnim istraživanjima i one će detaljnije biti 
+(\textit{eng.} weighted majority merge), koje su se dobro pokazale u prethodnim istraživanjima i one će detaljnije biti 
 opisane u nastavku teksta.
 
 % % Primeri citiranja\mathsf{Y} 
@@ -554,7 +556,7 @@ Pre ažuriranja vrednosti najbolje nadniske ($nn$) i najbolje dužine ($nd$) pok
 reči $\omega$ u cilju dobijanja kraće nadniske, a time i većeg broja odsecanja u prostoru pretrage.
 Na primeru gore navedene instance problema $I$, kako se obilazak stabla vrši u dubinu i grananje u svakom
 rekurzivnom pozivu počinje prvim slovom azbuke, u ovom slučaju $a$, često se dobijaju rešenja
-oblika $\omega=aa...aR$, gde $\omega$ predstavlja rešenje PNZN, ali i $R$ predstavlja rešenje pa stoga
+oblika $\omega=aa...aR$, gde $\omega$ predstavlja rešenje PNZN, ali i $R$ predstavlja rešenje, pa stoga
 možemo ukloniti prefiks reči $\omega$, sve dok skraćivanjem i dalje dobijamo validno rešenje problema.
 Na kraju, vrši se grananje po svim slovima azbuke i rekurzivno poziva algoritam sa argumentom $\omega\alpha$
 koji proširuje trenutnu reč $\omega$ novim slovom iz azbuke $\Sigma$. Funkcija $\textrm{ZajedničkaNadniska}(\omega)$ vrši proveru
@@ -562,7 +564,7 @@ da li reč $\omega$ predstavlja zajednučku nadnisku reči iz skupa $\mathcal{L}
 da je skup $\mathcal{L}$ globalno dostupan. Pseudokod je dat u Algoritmu \ref{alg:zajNad}. 
 U svakom koraku petlje proverava se da li je trenutna reč $s\in\mathcal{L}$ podniska reči $\omega$,
 ako nije funkcija vraća $False$, a ako su sve reči podniske reči $\omega$ funkcija vraća $True$.
-U suštini važi jednostavna logička veza \ref{eqn:podniskaNadniska}:
+U suštini, važi jednostavna logička veza \ref{eqn:podniskaNadniska}:
 
 \begin{equation}
   \label{eqn:podniskaNadniska}
@@ -656,14 +658,14 @@ obradu prirodnog jezika (\textit{eng.} natural language processing models) u don
 izlaz date ciljne promenjive \cite{BSIntroduction}. Pored navedenih primena pretraga bima se intenzivno koristi u sledećim
 oblastima: kombinatorna optimizacija (\textit{eng.} combinatorial optimization), problemi planiranja (\textit{eng.} scheduling problems),
 problemi rutiranja vozila (\textit{eng.} vehicle routing problems), podešavanje hiperparametara u oblasti mašinskog učenja
-(\textit{eng.} machine learning hyperparameter tuning), problemi zadovoljenja ograničenja (\textit{eng.} constraint satisfaction problems). 
+(\textit{eng.} machine learning hyperparameter tuning), problemi zadovoljenja ograničenja (\textit{eng.} constraint satisfaction problems) itd. 
 
 Pretraga bima predstavlja vrstu pretrage grafa u širinu u cilju da
 se pronađe najbolji put od korenog čvora do ciljanog čvora u grafu. Kako bi se složenost izračunavanja držala u
 zadatim granicama, pretraga bima evaluira dostignute čvorove na određenom nivou ali bira samo podskup od $\beta$
 čvorova koji najviše obećavaju i sa tim podskupom čvorova napreduje dalje u pretrazi. Izabrani podskup od $\beta$ čvorova
 zvaćemo bim (\textit{eng.} beam) i označavaćemo ga sa $\mathcal{B}$, a $\beta$ parametar ćemo zvati širina bima (\textit{eng.} beam width) \cite{SCSBS}.
-U kontekstu PNZN graf koji pretražujemo $\mathbb{G}=(\mathbb{V},\mathbb{E})$ predstavlja usmeren aciklički graf, 
+U kontekstu PNZN, graf koji pretražujemo $\mathbb{G}=(\mathbb{V},\mathbb{E})$ predstavlja usmeren aciklički graf, 
 a pseudokod algoritma je prikazan u Algoritmu \ref{alg:bs}.
 
 Kao i u prethodno opisanom algoritmu podrazumeva se da je promenjiva $maxD$ globalno dostupna,
@@ -700,7 +702,7 @@ težine svakog slova dobijene heurističkom ocenom. Zatim se popunjava bim eleme
 svaki element sadrži slovo azbuke, odgovarajuću težinu
 i inicijalne pozicije. Nakon toga vrši se redukcija bima 
 kao što je prikazano u Algoritmu \ref{alg:redukujbim}. Ako je veličina bima manja od
-dozvoljene širine bima $\beta$ vrši se ažuriranje pozicija svakog elementa kao što je prikazano
+dozvoljene širine bima $\beta$, vrši se ažuriranje pozicija svakog elementa kao što je prikazano
 u Algoritmu \ref{alg:azurirajPozicije} i vrši se provera da li postoji element koji predstavlja
 rešenje PNZN na isti način koji je opisan u Algoritmu \ref{alg:zajNad}.
 Ako takav element postoji, postavlja se indikator za kraj algoritma, a pronađena
@@ -933,11 +935,11 @@ Optimalno rešenje najčešće nije jedinstveno,
 a broj optimalnih rešenja varira od instance do instance problema i raste sa porastom
 broja reči u skupu $\mathcal{L}$. Ono što je bitno, jeste dužina takvog rešenja i to je
 jedini validan parametar optimalnosti. Algoritam pretrage bima ne garantuje pronalaženje
-optimalnog rešenja dok algoritam grananja sa odsecanjem garantuje. Naizgled on može poslužiti
+optimalnog rešenja dok algoritam grananja sa odsecanjem garantuje. Naizgled, on može poslužiti
 za testiranje algoritma pretrage bima, ali
 vreme izvšavanja grananja sa odsecanjem eksponencijalno raste sa porastom parametra $maxD$
 pa vreme izvšavanja ovog algoritma čak i na manjim instancama PNZN postaje predugo.
-Na primer ako najduža reč u skupu $\mathcal{L}$ ima dvadeset slova i pritom je
+Na primer, ako najduža reč u skupu $\mathcal{L}$ ima dvadeset slova i pritom je
 data proizvoljna azbuka kardinalnosti $|\Sigma|=4$, u najgorem slučaju
 algoritam grananja sa odsecanjem treba da obradi $(4^{80}-1)/3$ čvorova.
 S obzirom na navedene činjenice i manjak test podataka u literaturi, osmišljen je
@@ -976,7 +978,7 @@ vršiti u odnosu na njenu dužinu.
 
 Na primer, neka je data azbuka $\Sigma=\{a,b\}$. Najpre se generiše reč $gg$ željene
 dužine slučajnim odabirom slova iz azbuke i smešta u tekstualnu datoteku 
-na željenu lokaciju. Neka je $gg=abba$ i neka su otali parametri redom
+na željenu lokaciju. Neka je $gg=abba$ i neka su ostali parametri redom
 $putanja$ do generisane reči $gg$, $ka=2$, $m=4$, $\gamma=0.2$.
 Zatim se poziva opisani algoritam \ref{alg:generatorTestInstanci} sa uvedenim
 parametrima koji generiše $m$ reči sa verovatnoćom uklanjanja $\gamma$. Neka je dobijen skup
@@ -1053,20 +1055,20 @@ na osnovu verovatnoće uklanjanja slova i svaki skup sadrži po 18 instanci prob
 Svi rezultati izvršavanja algoritama dobijeni su na računaru pod Linux operativnim sistemom
 sledećih sistemskih specifikacija:
 \begin{itemize}
-  \item Operativni sistem — Ubuntu 20.04.6 LTS
-  \item Kernel — Linux 5.15.0-46-generic
+  \item Operativni sistem — Ubuntu 20.04.6 LTS;
+  \item Kernel — Linux 5.15.0-46-generic.
   % \item Arhitektura - x86-64
 \end{itemize}
 Hardverske komponente računara na kome se vršilo testiranje su sledeće:
 \begin{itemize}
-  \item Procesor — AMD Ryzen 3 1300X, 3.5GHz
-  \item Arhitektura — x86-64
-  \item Broj jezgara — 4
-  \item Keš memorija — L1(384KiB), L2(2MiB), L3(8MiB)
-  \item Ram memorija — Kingston, 8GB DDR4
-  \item Grafička kartica — Asus Radeon RX 570 (4GB GDDR5)
+  \item Procesor — AMD Ryzen 3 1300X, 3.5GHz;
+  \item Arhitektura — x86-64;
+  \item Broj jezgara — 4;
+  \item Keš memorija — L1(384KiB), L2(2MiB), L3(8MiB);
+  \item Ram memorija — Kingston, 8GB DDR4;
+  \item Grafička kartica — Asus Radeon RX 570 (4GB GDDR5).
 \end{itemize}
-Treba napomenuti još to da iako procesor ima četiri jezgra i četiri
+Treba napomenuti da iako procesor ima četiri jezgra i četiri
 fizičke niti, algoritmi nisu implementirani tako da podržavaju paralelno izvršavanje.
 % \subsection{Specifičnosti implementacije i pokretanje programa}
 % \label{sec:specifinicnostiImplementacije}
@@ -1119,7 +1121,7 @@ na skupu test instanci $IPG_{\gamma=0.2}$ i $IPG_{\gamma=0.4}$.
 Kolone redom označavaju: kardinalnost ulazne azbuke $\Sigma$ ($ka=|\Sigma|$),
 broj reči u skupu $\mathcal{L}$ ($m=|\mathcal{L}|$), dužinu gornje granice ($|gg|$),
 dužinu nadniske koju je algoritam granja sa odsecanjem pronašao ($GSO$),
-vreme izvršavanja algoritma ($t$),
+vreme izvršavanja algoritma u sekundama ($t$),
 minimalnu dubinu pretrage ($minD$),
 maksimalnu dubinu pretrage ($maxD$).
 Kolona $VS$ predstavlja
@@ -1675,7 +1677,7 @@ biti $k$ puta kraće od gornje granice $gg$.
 Praćenjem vrednosti iz tabele \ref{tbl:gso}, jasno se vidi
 razlika parametara $mindD$ i $maxD$ za različite vrednost $\gamma$,
 što pokazuje da su za veće vrednosti ovog parametra reči u $\mathcal{L}$ kraće,
-ali su pritom međusobno različitije. Odnosno za manje vrednosti
+ali su pritom međusobno različitije. Odnosno, za manje vrednosti
 ovog parametra dobija se skup reči koje su međusobno sličnije i duže.
 Takođe ako se posmatra optimalna dužina nadniske koja je dobijena algoritmom
 granja sa odsecanjem
@@ -1711,7 +1713,7 @@ slučaju teži balansiranju dužina reči.
 Na test instancama $IP_{\gamma=0.2}$ primećuju se nešto lošiji rezultati
 na binarnoj azbuci za manje vrednosti parametra $m$. To je iz razloga
 što azbuku čine samo dva slova, pa iako je verovatnoća uklanjanja relativno mala,
-sobzirom da je azbuka mala i da je broj reči mali, uklanjanjem
+s obzirom da je azbuka mala i da je broj reči mali, uklanjanjem
 slova vise se narušava poredak u rečima što nije slučaj na većim azbukama.
 Test instance $IP_{\gamma=0.4}$ predstavljaju teže isntance PNZN.
 Rezultati su očekivano lošiji zbog velike heterogenosti reči. Pronađene nadniske nad binarnom azbukom
