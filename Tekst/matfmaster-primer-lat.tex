@@ -175,7 +175,7 @@ S obzirom da aparat greši, te sekvence će se razlikovati u određenim
 delovima, a opisani problem predstavlja PNZN.
 Kao rezultat primene u mnogim oblastima, postoji veliki broj istraživanja na temu ovog problema u pokušaju da se dođe
 do što boljeg rešenja. Trenutno najbolji algoritmi za rešavanje PNZN počivaju na metaheurističkoj metodi
-pretraga bima (\textit{eng.} beam search) koja će biti predstavljena u ovom radu. U nastavku uvodnog poglavlja biće formalno
+pretraga bima (\textit{eng.} beam search), koja će biti predstavljena u ovom radu. U nastavku uvodnog poglavlja biće formalno
 definisan problem najkraće zajedničke nadniske i biće dat pregled dosadašnjih istraživanja na temu ovog problema.
 
 \section{Problem najkraće zajedničke nadniske}
@@ -224,7 +224,9 @@ skupa $\mathcal{L}$ ($\omega\succ\omega_{i}, \forall\omega_{i}\in\mathcal{L} \te
 Na primer za instancu PNZN $\mathcal{I}=(\{a,c,t,g\},\{act,cta,aca\})$, najmanja zajednička nadniska
 instance $\mathcal{I}$ je $acta$.
 
-Može se pokazati da je PNZN NP-težak problem, čak i ako su jaka ograničenja postavljena na $\mathcal{L}$ ili $\Sigma$. 
+Optimalno rešenje najčešće nije jedinstveno, a broj optimalnih rešenja
+raste sa porastom složenosti instance problema.
+Može se pokazati da je PNZN NP-kompletan problem, čak i ako su jaka ograničenja postavljena na $\mathcal{L}$ ili $\Sigma$. 
 Dokazano je da je PNZN NP-kompletan problem nad svakom azbukom $\Sigma$ za koju važi da $|\Sigma|\geqslant2$ \cite{NPComplete}
 ili kada su sve reči $\omega \in \mathcal{L}$ dužine dva \cite{SCSNP}. Ovim rezultatima NP-težine se mora
 pristupiti sa oprezom, jer predstavljaju samo najgori scenario što često u praksi nije slučaj. U odnosu na to,
