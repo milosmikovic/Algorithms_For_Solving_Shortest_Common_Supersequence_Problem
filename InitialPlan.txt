@@ -233,7 +233,7 @@ Stefan Miskovic:
 - da li da ostane eng italic ili ne?
 - Sigma* je skup svih reci nad azbukom?
 - NP-tezak umesto NP-kompletan bi trebalo da stoji? strana 2
-
+...
 
 
 
